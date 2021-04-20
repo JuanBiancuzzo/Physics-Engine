@@ -14,11 +14,11 @@ struct Vector2
 
     Vector2 operator-(const Vector2 &otro) const;
 
+    float operator*(const Vector2 &otro) const; // producto interno
+
     Vector2 operator*(float alpha) const;
 
-    Vector2 operator/(float alpha) const;
-
-    float operator*(const Vector2 &otro) const; // producto interno
+    Vector2 operator/(float alpha) const;    
 
     void operator+=(const Vector2 &otro);
 
@@ -26,9 +26,13 @@ struct Vector2
 
     void operator*=(float alpha);
 
+    void operator/=(float alpha);
+
     float modulo() const;
 
     float distancia(const Vector2 &otro) const;
 
     void imprimir() const;
+
+    
 };

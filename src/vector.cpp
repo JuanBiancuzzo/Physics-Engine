@@ -21,14 +21,14 @@ Vector2 Vector2::operator*(float alpha) const
     return Vector2(x * alpha, y * alpha);
 }
 
-Vector2 Vector2::operator/(float alpha) const
-{
-    return Vector2(x / alpha, y / alpha);
-}
-
 float Vector2::operator*(const Vector2 &otro) const
 {
     return (x * otro.x + y * otro.y);
+}
+
+Vector2 Vector2::operator/(float alpha) const
+{
+    return Vector2(x / alpha, y / alpha);
 }
 
 void Vector2::operator+=(const Vector2 &otro)
@@ -43,8 +43,14 @@ void Vector2::operator-=(const Vector2 &otro)
     y -= otro.y;
 }
 
-void Vector2::operator*= (float alpha) {
+void Vector2::operator*=(float alpha)
+{
     *this = *this * alpha;
+}
+
+void Vector2::operator/=(float alpha)
+{
+    *this = *this / alpha;
 }
 
 float Vector2::modulo() const
