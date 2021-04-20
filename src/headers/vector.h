@@ -24,6 +24,8 @@ struct Vector2
 
     void operator-=(const Vector2 &otro);
 
+    void operator*=(float alpha);
+
     float modulo() const;
 
     float distancia(const Vector2 &otro) const;

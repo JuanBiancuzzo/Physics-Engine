@@ -43,6 +43,10 @@ void Vector2::operator-=(const Vector2 &otro)
     y -= otro.y;
 }
 
+void Vector2::operator*= (float alpha) {
+    *this = *this * alpha;
+}
+
 float Vector2::modulo() const
 {
     return sqrt(pow(x, 2) + pow(y, 2));
