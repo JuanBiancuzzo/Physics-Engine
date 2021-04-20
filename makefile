@@ -1,5 +1,5 @@
 CPP=g++
-NAME=estudiarCpp
+NAME=gofmp
 FILES= src/*.cpp
 CPPFLAGS=-g -std=c++14
 CPPLINKS=
