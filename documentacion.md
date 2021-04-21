@@ -1,14 +1,14 @@
 # Documentacion
 Aca voy a tener todos (por lo menos mi intento es que sea lo mas posible) los detalles tecnicos de lo que este haciendo, y porque lo estoy haciendo de tal manera
 
-### Vector
+## Vector
 La idea es representar los vectores en dos dimensiones. Esta implementado en los archivo vector.h y vector.cpp
 
-#### Constructor
+### Constructor
 Cree dos constructores, uno que tomas los valores de x e y, y otra que no, en el caso de que no entonces se inicializan los valores en .0f y .0f
 
-#### Interfaz con el usuario
-##### Tenemos los metodos:
+### Interfaz con el usuario
+#### Tenemos los metodos:
  * modulo
  * distancia
  * imprimir
@@ -18,7 +18,7 @@ Entonces puede ser que mas adelante cree mas metodos donde no se calcule la raiz
 
 El metodo de imprimir es principalmente para debug
 
-##### Operadores
+#### Operadores
 Hice modificaciones a los operadores para que sea mucho mas limpeo las operaciones entre vectores
  * Suma
  * Resta
@@ -31,7 +31,7 @@ Nuevamente en esto me estoy basando en las definiciones matematica para trabajar
 
 Mi pensamiento detras de hacer asi es que uno pueda usar formulas donde se tiene calculo de vecotres y que sea lo mas parecido a esas cuentas
 
-###### Nota
+##### Nota
 No implemente lo que se conoce como producto vectorial, donde se multiplican dos vectores y el resultado es otro vector perpendicular a los otros dos
 
 Esto es porque como estamos en dos dimensiones el producto vectorial siempre va a tener una componente en la direccion z, y como estamos viendo vectores de dos dimensiones no tiene sentido tenerlo. Lo que es probable es que en el futuro agregue un metodo que devuelva un vector que sea perpendicular al que se esta aplicando
