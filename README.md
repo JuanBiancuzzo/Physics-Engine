@@ -11,3 +11,6 @@ La idea de usar particulas me parecio mas divertido porque me da situaciones com
 Por ahora voy a crear un paquete (?) de vector2, aunque yo se que hay librerias ya hechas prefiero hacerlo yo mismo para ir practicando con structs, constructores y usar un paquete 
 
 Despues la idea es crear un paquete de una particula
+
+### Documentacion
+Voy a estar documentando lo maximo posible todo mi codigo, y se puede ver [aca](documentacion.md).
