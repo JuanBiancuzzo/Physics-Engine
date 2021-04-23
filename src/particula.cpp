@@ -5,6 +5,11 @@ Particula::Particula()
 {
 }
 
+Particula::Particula(const Vector2 &pos)
+    : c_pos(pos), c_vel(Vector2()), c_fuerza(Vector2()), c_masa(1.0f), c_radio(1.0f)
+{
+}
+
 Particula::Particula(const Vector2 &pos, float masa, float radio)
     : c_pos(pos), c_vel(Vector2()), c_fuerza(Vector2()), c_masa(masa), c_radio(radio)
 {
