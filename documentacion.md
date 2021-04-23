@@ -2,8 +2,8 @@
 Aca voy a tener todos (por lo menos mi intento es que sea lo mas posible) los detalles tecnicos de lo que este haciendo, y porque lo estoy haciendo de tal manera
 
 #### Menu:
- * [Vectores](##Vector)
- * [Particulas](##Particula)
+ * [Vectores](#Vector)
+ * [Particulas](#Particula)
 
 ## Vector
 La idea es representar los vectores en dos dimensiones. Esta implementado en los archivo vector.h y vector.cpp
