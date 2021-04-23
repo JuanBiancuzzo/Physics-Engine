@@ -1,6 +1,10 @@
 # Documentacion
 Aca voy a tener todos (por lo menos mi intento es que sea lo mas posible) los detalles tecnicos de lo que este haciendo, y porque lo estoy haciendo de tal manera
 
+#### Menu:
+ * [Vectores](##Vector)
+ * [Particulas](##Particula)
+
 ## Vector
 La idea es representar los vectores en dos dimensiones. Esta implementado en los archivo vector.h y vector.cpp
 
@@ -38,5 +42,23 @@ No implemente lo que se conoce como producto vectorial, donde se multiplican dos
 
 Esto es porque como estamos en dos dimensiones el producto vectorial siempre va a tener una componente en la direccion z, y como estamos viendo vectores de dos dimensiones no tiene sentido tenerlo. Lo que es probable es que en el futuro agregue un metodo que devuelva un vector que sea perpendicular al que se esta aplicando
 
+## Particula
+Una particula va a tener una posicion, una velocidad, masa y un radio. Por ahora eso va a ser la representacion de una particula y posiblemente mas adelante va a ir cambiando para adoptar mas caracteristicas
 
+### Constructor
+Tenemos 3 posibilidades para crear una particula
+ 1. Sin ningun parametro, donde su posicion va a ser en 0, 0 su masa de 1 y su radio de 1.
+ 2. Con su posicion, pero su masa y radio siguen siendo 1
+ 3. Con su posicion, con su masa, y su radio
 
+### Interfaz con el usuario
+#### Tenemos los metodos
+ * Aplicar fuerza
+ * Actualizar particula
+ * Colision con otra particula
+
+Aplicar fuerza y actualizar la particula estan vinculado de una cierta manera, mas conceptual pero de igual forma conectados. Aplicar fuerza seria la forma de ir acumulando todo lo que se le aplique a la particula, y actualizar la particula es usando todas esas fuerzas acumuladas aplicarlas al movimiento de la particulla y reiniciando las fuerzas ya que no son acumulativas
+
+La colision entre dos particulas usamos a la particula como circulos, por lo tanto si la distancia entre las dos particulas es menor a la suma de sus radios significa que estan chocando
+
+Todavia creo que le faltan cosas a la clase de particula pero todavia no veo que es lo que falta, entonces voy a avanzar e intentar usarla para ver que es lo que me falta para completarla
