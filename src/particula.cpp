@@ -1,30 +1,30 @@
 #include "headers/particula.h"
 
-Particula::Particula() 
-    : c_pos(Vector2()), c_vel(Vector2()), c_acc(Vector2()), c_masa(1.0f)
+Particula::Particula()
+    : c_pos(Vector2()), c_vel(Vector2()), c_fuerza(Vector2()), c_masa(1.0f), c_radio(1.0f)
 {
 }
 
-Particula::Particula(const Vector2 &pos, float masa)
-    : c_pos(pos), c_vel(Vector2()), c_acc(Vector2()), c_masa(masa)
+Particula::Particula(const Vector2 &pos, float masa, float radio)
+    : c_pos(pos), c_vel(Vector2()), c_fuerza(Vector2()), c_masa(masa), c_radio(radio)
 {
-}
-
-Vector2 Particula::posicion() const
-{
-    return c_pos;
 }
 
 void Particula::aplicar_fuerza(const Vector2 &fuerza) 
 {
-    c_acc = fuerza / c_masa;
+    c_fuerza += fuerza;
 }
 
 void Particula::actualizar(float delta_t) 
 {
-    c_vel += c_acc * delta_t;
+    c_vel += (c_fuerza/c_masa) * delta_t;
     c_pos += c_vel * delta_t;
 
-    // la aceleracion no es acumulativa
-    c_acc *= .0f;
+    // las fuerzas no son acumulativas
+    c_fuerza *= .0f;
+}
+
+bool Particula::colisiona(const Particula &otro) const
+{
+    return (c_pos.distancia(otro.c_pos) <= this->c_radio + otro.c_radio, 2);
 }
