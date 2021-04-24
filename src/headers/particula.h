@@ -6,11 +6,13 @@ class Particula
 {
 public:
     Vector2 c_pos, c_vel;
+    int c_index;
+    void *c_padre;
+    const float c_masa, c_radio;
 
 private:
     Vector2 c_fuerza;
-    const float c_masa, c_radio; 
-
+    
 public:
     Particula();
     Particula(const Vector2 &pos);
