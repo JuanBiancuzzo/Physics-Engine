@@ -24,18 +24,19 @@ void QuadTree::actualizar(Particula &particula)
     Node *hoja_nueva = c_raiz->buscar_hoja(particula);
 
     if (hoja_nueva != particula.c_padre)
-        c_raiz->actualizar(particula, hoja_nueva);
+        c_raiz->actualizar(particula);
 }
 
 Particula* QuadTree::eliminar(Particula &particula)
 {
-    if (!c_area.contiene(particula))
-        return nullptr;
-    return c_raiz->eliminar(particula);
+    if (c_area.contiene(particula))
+        return c_raiz->eliminar(particula);
+    return nullptr;
 }
 
 void QuadTree::buscar(const Rectangulo &frontera, Particula *output[], int &cantidad)
 {
-    if (c_area.intersecta(frontera)) 
+    cantidad = 0;
+    if (c_area.intersecta(frontera))
         c_raiz->buscar(frontera, output, cantidad);
 }

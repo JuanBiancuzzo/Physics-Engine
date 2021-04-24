@@ -85,26 +85,47 @@ void Node::insertar(Particula *particula)
     }
 }
 
-void Node::actualizar(Particula &particula, Node *nuevo_nodo)
+void Node::actualizar(Particula &particula)
 {
     eliminar(particula);
-    nuevo_nodo->insertar(&particula);
+    insertar(&particula);
+}
+
+void Node::juntar() 
+{ 
+    if (c_cant_particulas >= capacidad_particulas)
+        return;
+    int cantidad = 0;
+    buscar(c_area, c_particulas, cantidad);
+
+    for (int i = 0; i < cantidad; i++)
+    {
+        c_particulas[i]->c_index = i;
+        c_particulas[i]->c_padre = this;
+    }
+
+    c_dividido = false;
+    for (Node *node : c_subdivisiones)
+        node->~Node();
 }
 
 Particula *Node::eliminar(Particula &particula)
 {
-    Node *subdivision = (Node *)(particula.c_padre);
-
-    int index = particula.c_index;
-    Particula *aux = subdivision->c_particulas[index];
-
-    int ultimo_index = subdivision->c_cant_particulas - 1;
-    Particula *ultima_particula = subdivision->c_particulas[ultimo_index];
-    subdivision->c_particulas[index] = ultima_particula;
-    ultima_particula->c_index = index;
+    if (!c_dividido)
+    {
+        Particula *eliminada = c_particulas[particula.c_index];
+        c_particulas[particula.c_index] = c_particulas[c_cant_particulas - 1];
+        c_cant_particulas--;
+        return eliminada;
+    }
+  
+    int index = calcular_index(particula);
     c_cant_particulas--;
+    Particula *eliminada = c_subdivisiones[index]->eliminar(particula);
+    if (c_cant_particulas < capacidad_particulas)
+        juntar();
 
-    return aux;
+    return eliminada;
 }
 
 void Node::buscar(const Rectangulo &frontera, Particula *output[], int &cantidad)

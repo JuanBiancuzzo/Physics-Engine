@@ -21,7 +21,7 @@ public:
     ~Node();
 
     void insertar(Particula *particula);
-    void actualizar(Particula &particula, Node *nuevo_nodo);
+    void actualizar(Particula &particula);
     Particula *eliminar(Particula &particula);
     void buscar(const Rectangulo &frontera, Particula *output[], int &cantidad);
 
@@ -30,4 +30,5 @@ public:
 private:
     int calcular_index(const Particula &particula) const;
     void subdividir();
+    void juntar();
 };
