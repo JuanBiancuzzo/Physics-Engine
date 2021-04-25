@@ -4,8 +4,8 @@ Aca voy a tener todos (por lo menos mi intento es que sea lo mas posible) los de
 #### Menu:
  * [Vectores](#Vector)
  * [Particulas](#Particula)
- * [Entidad] (#Entidad)
- * [Area] (#Area)
+   * [Entidad](#Entidad)
+ * [Area](#Area)
  * [Quadtree](#QuadTree)
  * [Nodo](#Nodo)
 
