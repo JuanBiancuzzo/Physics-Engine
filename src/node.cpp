@@ -67,10 +67,9 @@ void Node::subdividir()
 
 void Node::insertar(Entidad *entidad)
 {
-
-    int index = calcular_index(*entidad);
     if (c_cant_entidades >= capacidad_entidades)
     {
+        int index = calcular_index(*entidad);
         if (!c_dividido)
             subdividir();
         c_subdivisiones[index]->insertar(entidad);
@@ -91,8 +90,8 @@ void Node::actualizar(Entidad &entidad)
     insertar(&entidad);
 }
 
-void Node::juntar() 
-{ 
+void Node::juntar()
+{
     if (c_cant_entidades >= capacidad_entidades)
         return;
     int cantidad = 0;
@@ -118,7 +117,7 @@ Entidad *Node::eliminar(Entidad &entidad)
         c_cant_entidades--;
         return eliminada;
     }
-  
+
     int index = calcular_index(entidad);
     c_cant_entidades--;
     Entidad *eliminada = c_subdivisiones[index]->eliminar(entidad);
