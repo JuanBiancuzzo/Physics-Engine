@@ -10,14 +10,14 @@ public:
     Rectangulo c_area;
 
 private:
-    Node* c_raiz;
+    Node *c_raiz;
 
 public:
-    QuadTree(const Rectangulo& nueva_area);
+    QuadTree(const Rectangulo &nueva_area);
     ~QuadTree();
 
     bool insertar(Entidad *entidad);
-    void actualizar(Entidad &entidad);
-    Entidad* eliminar(Entidad &entidad);
+    bool actualizar(Entidad &entidad);
+    Entidad *eliminar(Entidad &entidad);
     void buscar(const Rectangulo &frontera, Entidad *output[], int &cantidad);
 };

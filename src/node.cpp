@@ -15,16 +15,12 @@ Node::~Node()
 
 Node *Node::buscar_hoja(const Entidad &entidad)
 {
-    if (c_area.contiene(entidad))
+    if (c_dividido)
     {
-        if (c_dividido)
-        {
-            int index = calcular_index(entidad);
-            return (c_subdivisiones[index])->buscar_hoja(entidad);
-        }
-        return this;
+        int index = calcular_index(entidad);
+        return (c_subdivisiones[index])->buscar_hoja(entidad);
     }
-    return nullptr;
+    return this;
 }
 
 int Node::calcular_index(const Entidad &entidad) const
@@ -136,8 +132,8 @@ void Node::buscar(const Rectangulo &frontera, Entidad *output[], int &cantidad)
 
     if (c_dividido)
     {
-        for (int i = 0; i < capacidad_sub; i++)
-            c_subdivisiones[i]->buscar(frontera, output, cantidad);
+        for (Node *subdivision : c_subdivisiones)
+            subdivision->buscar(frontera, output, cantidad);
         return;
     }
 

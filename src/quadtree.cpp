@@ -19,12 +19,15 @@ bool QuadTree::insertar(Entidad *entidad)
     return true;
 }
 
-void QuadTree::actualizar(Entidad &entidad)
+bool QuadTree::actualizar(Entidad &entidad)
 {
+    if (!c_area.contiene(entidad))
+        return false;
     Node *hoja_nueva = c_raiz->buscar_hoja(entidad);
 
     if (hoja_nueva != entidad.c_padre)
         c_raiz->actualizar(entidad);
+    return true;
 }
 
 Entidad *QuadTree::eliminar(Entidad &entidad)
