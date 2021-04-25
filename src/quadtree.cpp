@@ -11,30 +11,30 @@ QuadTree::~QuadTree()
     delete c_raiz;
 }
 
-bool QuadTree::insertar(Particula *particula) 
+bool QuadTree::insertar(Entidad *entidad) 
 {
-    if (!c_area.contiene(*particula))
+    if (!c_area.contiene(*entidad))
         return false;
-    c_raiz->insertar(particula);
+    c_raiz->insertar(entidad);
     return true;
 }
 
-void QuadTree::actualizar(Particula &particula)
+void QuadTree::actualizar(Entidad &entidad)
 {
-    Node *hoja_nueva = c_raiz->buscar_hoja(particula);
+    Node *hoja_nueva = c_raiz->buscar_hoja(entidad);
 
-    if (hoja_nueva != particula.c_padre)
-        c_raiz->actualizar(particula);
+    if (hoja_nueva != entidad.c_padre)
+        c_raiz->actualizar(entidad);
 }
 
-Particula* QuadTree::eliminar(Particula &particula)
+Entidad* QuadTree::eliminar(Entidad &entidad)
 {
-    if (c_area.contiene(particula))
-        return c_raiz->eliminar(particula);
+    if (c_area.contiene(entidad))
+        return c_raiz->eliminar(entidad);
     return nullptr;
 }
 
-void QuadTree::buscar(const Rectangulo &frontera, Particula *output[], int &cantidad)
+void QuadTree::buscar(const Rectangulo &frontera, Entidad *output[], int &cantidad)
 {
     cantidad = 0;
     if (c_area.intersecta(frontera))

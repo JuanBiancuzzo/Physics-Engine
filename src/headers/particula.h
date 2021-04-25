@@ -1,13 +1,11 @@
 #pragma once
 
-#include "vector.h"
+#include "entidad.h"
 
-class Particula
+class Particula : public Entidad
 {
 public:
-    Vector2 c_pos, c_vel;
-    int c_index;
-    void *c_padre;
+    Vector2 c_vel;
     const float c_masa, c_radio;
 
 private:
@@ -16,6 +14,7 @@ private:
 public:
     Particula();
     Particula(const Vector2 &pos);
+    Particula(const Vector2 &pos, float masa);
     Particula(const Vector2 &pos, float masa, float radio);
 
     void aplicar_fuerza(const Vector2 &fuerza);

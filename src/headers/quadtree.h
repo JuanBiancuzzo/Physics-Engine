@@ -1,6 +1,6 @@
 #pragma once
 
-#include "particula.h"
+#include "entidad.h"
 #include "rectangulo.h"
 #include "node.h"
 
@@ -16,8 +16,8 @@ public:
     QuadTree(const Rectangulo& nueva_area);
     ~QuadTree();
 
-    bool insertar(Particula *particula);
-    void actualizar(Particula &particula);
-    Particula* eliminar(Particula &particula);
-    void buscar(const Rectangulo &frontera, Particula *output[], int &cantidad);
+    bool insertar(Entidad *entidad);
+    void actualizar(Entidad &entidad);
+    Entidad* eliminar(Entidad &entidad);
+    void buscar(const Rectangulo &frontera, Entidad *output[], int &cantidad);
 };

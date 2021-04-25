@@ -1,17 +1,22 @@
 #include "headers/particula.h"
 
 Particula::Particula()
-    : c_pos(Vector2()), c_index(0), c_padre(nullptr), c_vel(Vector2()), c_masa(1.0f), c_radio(1.0f), c_fuerza(Vector2())
+    : c_vel(Vector2()), c_masa(1.0f), c_radio(1.0f), c_fuerza(Vector2()), Entidad()
 {
 }
 
 Particula::Particula(const Vector2 &pos)
-    : c_pos(pos), c_index(0), c_padre(nullptr), c_vel(Vector2()), c_masa(1.0f), c_radio(1.0f), c_fuerza(Vector2())
+    : c_vel(Vector2()), c_masa(1.0f), c_radio(1.0f), c_fuerza(Vector2()), Entidad(pos)
+{
+}
+
+Particula::Particula(const Vector2 &pos, float masa)
+    : c_vel(Vector2()), c_masa(masa), c_radio(1.0f), c_fuerza(Vector2()), Entidad(pos)
 {
 }
 
 Particula::Particula(const Vector2 &pos, float masa, float radio)
-    : c_pos(pos), c_index(0), c_padre(nullptr), c_vel(Vector2()), c_masa(masa), c_radio(radio), c_fuerza(Vector2())
+    : c_vel(Vector2()), c_masa(masa), c_radio(radio), c_fuerza(Vector2()), Entidad(pos)
 {
 }
 

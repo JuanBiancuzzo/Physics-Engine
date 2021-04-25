@@ -1,34 +1,34 @@
 #pragma once
 
-#include "particula.h"
+#include "entidad.h"
 #include "rectangulo.h"
 
 class Node
 {
 private:
-    static const int capacidad_particulas = 4;
+    static const int capacidad_entidades = 4;
     static const int capacidad_sub = 4;
 
 public:
     Rectangulo c_area;
     bool c_dividido;
-    Particula *c_particulas[capacidad_particulas];
-    int c_cant_particulas;
+    Entidad *c_entidades[capacidad_entidades];
+    int c_cant_entidades;
     Node *c_subdivisiones[capacidad_sub];
 
 public:
     Node(const Rectangulo &nueva_area);
     ~Node();
 
-    void insertar(Particula *particula);
-    void actualizar(Particula &particula);
-    Particula *eliminar(Particula &particula);
-    void buscar(const Rectangulo &frontera, Particula *output[], int &cantidad);
+    void insertar(Entidad *entidad);
+    void actualizar(Entidad &entidad);
+    Entidad *eliminar(Entidad &entidad);
+    void buscar(const Rectangulo &frontera, Entidad *output[], int &cantidad);
 
-    Node *buscar_hoja(const Particula &particula);
+    Node *buscar_hoja(const Entidad &entidad);
 
 private:
-    int calcular_index(const Particula &particula) const;
+    int calcular_index(const Entidad &entidad) const;
     void subdividir();
     void juntar();
 };

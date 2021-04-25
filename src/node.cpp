@@ -2,7 +2,7 @@
 #include "headers/node.h"
 
 Node::Node(const Rectangulo &nueva_area)
-    : c_area(nueva_area), c_dividido(false), c_cant_particulas(0)
+    : c_area(nueva_area), c_dividido(false), c_cant_entidades(0)
 {
 }
 
@@ -13,26 +13,26 @@ Node::~Node()
             delete node;
 }
 
-Node *Node::buscar_hoja(const Particula &particula)
+Node *Node::buscar_hoja(const Entidad &entidad)
 {
-    if (c_area.contiene(particula))
+    if (c_area.contiene(entidad))
     {
         if (c_dividido)
         {
-            int index = calcular_index(particula);
-            return (c_subdivisiones[index])->buscar_hoja(particula);
+            int index = calcular_index(entidad);
+            return (c_subdivisiones[index])->buscar_hoja(entidad);
         }
         return this;
     }
     return nullptr;
 }
 
-int Node::calcular_index(const Particula &particula) const
+int Node::calcular_index(const Entidad &entidad) const
 {
-    Vector2 delta = particula.c_pos - c_area.c_pos;
+    Vector2 delta = entidad.c_pos - c_area.c_pos;
 
-    int index_x = (!delta.x) ? 0 : static_cast<int>((1 + delta.x / abs(delta.x)) / 2);
-    int index_y = (!delta.y) ? 0 : static_cast<int>((1 - delta.y / abs(delta.y)) / 2);
+    int index_x = (delta.x == 0) ? 0 : static_cast<int>((1 + delta.x / abs(delta.x)) / 2);
+    int index_y = (delta.y == 0) ? 0 : static_cast<int>((1 - delta.y / abs(delta.y)) / 2);
 
     return (index_x + 2 * index_y);
 }
@@ -57,51 +57,51 @@ void Node::subdividir()
             c_subdivisiones[index] = new Node(Rectangulo(Vector2(nuevo_x, nuevo_y), nuevo_w, nuevo_h));
         }
     }
-    for (int i = 0; i < c_cant_particulas; i++)
+    for (int i = 0; i < c_cant_entidades; i++)
     {
-        int index = this->calcular_index(*(c_particulas[i]));
-        this->c_subdivisiones[index]->insertar(c_particulas[i]);
+        int index = this->calcular_index(*(c_entidades[i]));
+        this->c_subdivisiones[index]->insertar(c_entidades[i]);
     }
     c_dividido = true;
 }
 
-void Node::insertar(Particula *particula)
+void Node::insertar(Entidad *entidad)
 {
 
-    int index = calcular_index(*particula);
-    if (c_cant_particulas >= capacidad_particulas)
+    int index = calcular_index(*entidad);
+    if (c_cant_entidades >= capacidad_entidades)
     {
         if (!c_dividido)
             subdividir();
-        c_subdivisiones[index]->insertar(particula);
-        c_cant_particulas++;
+        c_subdivisiones[index]->insertar(entidad);
+        c_cant_entidades++;
     }
     else
     {
-        particula->c_index = c_cant_particulas;
-        particula->c_padre = this;
-        c_particulas[c_cant_particulas] = particula;
-        c_cant_particulas++;
+        entidad->c_index = c_cant_entidades;
+        entidad->c_padre = this;
+        c_entidades[c_cant_entidades] = entidad;
+        c_cant_entidades++;
     }
 }
 
-void Node::actualizar(Particula &particula)
+void Node::actualizar(Entidad &entidad)
 {
-    eliminar(particula);
-    insertar(&particula);
+    eliminar(entidad);
+    insertar(&entidad);
 }
 
 void Node::juntar() 
 { 
-    if (c_cant_particulas >= capacidad_particulas)
+    if (c_cant_entidades >= capacidad_entidades)
         return;
     int cantidad = 0;
-    buscar(c_area, c_particulas, cantidad);
+    buscar(c_area, c_entidades, cantidad);
 
     for (int i = 0; i < cantidad; i++)
     {
-        c_particulas[i]->c_index = i;
-        c_particulas[i]->c_padre = this;
+        c_entidades[i]->c_index = i;
+        c_entidades[i]->c_padre = this;
     }
 
     c_dividido = false;
@@ -109,26 +109,26 @@ void Node::juntar()
         node->~Node();
 }
 
-Particula *Node::eliminar(Particula &particula)
+Entidad *Node::eliminar(Entidad &entidad)
 {
     if (!c_dividido)
     {
-        Particula *eliminada = c_particulas[particula.c_index];
-        c_particulas[particula.c_index] = c_particulas[c_cant_particulas - 1];
-        c_cant_particulas--;
+        Entidad *eliminada = c_entidades[entidad.c_index];
+        c_entidades[entidad.c_index] = c_entidades[c_cant_entidades - 1];
+        c_cant_entidades--;
         return eliminada;
     }
   
-    int index = calcular_index(particula);
-    c_cant_particulas--;
-    Particula *eliminada = c_subdivisiones[index]->eliminar(particula);
-    if (c_cant_particulas < capacidad_particulas)
+    int index = calcular_index(entidad);
+    c_cant_entidades--;
+    Entidad *eliminada = c_subdivisiones[index]->eliminar(entidad);
+    if (c_cant_entidades < capacidad_entidades)
         juntar();
 
     return eliminada;
 }
 
-void Node::buscar(const Rectangulo &frontera, Particula *output[], int &cantidad)
+void Node::buscar(const Rectangulo &frontera, Entidad *output[], int &cantidad)
 {
     if (!c_area.intersecta(frontera))
         return;
@@ -137,16 +137,15 @@ void Node::buscar(const Rectangulo &frontera, Particula *output[], int &cantidad
     {
         for (int i = 0; i < capacidad_sub; i++)
             c_subdivisiones[i]->buscar(frontera, output, cantidad);
+        return;
     }
-    else
+
+    for (int i = 0; i < c_cant_entidades; i++)
     {
-        for (int i = 0; i < c_cant_particulas; i++)
+        if (frontera.contiene(*c_entidades[i]))
         {
-            if (frontera.contiene(*c_particulas[i]))
-            {
-                output[cantidad] = c_particulas[i];
-                cantidad++;
-            }
+            output[cantidad] = c_entidades[i];
+            cantidad++;
         }
     }
 }
