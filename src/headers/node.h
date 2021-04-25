@@ -5,12 +5,12 @@
 
 class Node
 {
+public:
+    Rectangulo c_area;
+
 private:
     static const int capacidad_entidades = 4;
     static const int capacidad_sub = 4;
-
-public:
-    Rectangulo c_area;
     bool c_dividido;
     Entidad *c_entidades[capacidad_entidades];
     int c_cant_entidades;
