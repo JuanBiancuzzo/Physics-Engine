@@ -14,10 +14,10 @@ Rectangulo::Rectangulo(const Vector2 pos, float w, float h)
 bool Rectangulo::contiene(const Entidad &entidad) const
 {
     return !(
-        c_pos.x + c_w < entidad.c_pos.x ||
-        c_pos.x - c_w > entidad.c_pos.x ||
-        c_pos.y + c_h < entidad.c_pos.y ||
-        c_pos.y - c_h > entidad.c_pos.y);
+        c_pos.x + c_w <= entidad.c_pos.x ||
+        c_pos.x - c_w >= entidad.c_pos.x ||
+        c_pos.y + c_h <= entidad.c_pos.y ||
+        c_pos.y - c_h >= entidad.c_pos.y);
 }
 
 bool Rectangulo::intersecta(const Rectangulo &frontera) const
