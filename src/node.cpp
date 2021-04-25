@@ -85,7 +85,9 @@ void Node::insertar(Entidad *entidad)
 
 void Node::actualizar(Entidad &entidad)
 {
-    eliminar(entidad);
+    Entidad entidad_vieja = entidad;
+    entidad_vieja.c_pos = ((Node *)entidad.c_padre)->c_area.c_pos;
+    eliminar(entidad_vieja);
     insertar(&entidad);
 }
 
