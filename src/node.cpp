@@ -23,6 +23,10 @@ Node *Node::buscar_hoja(const Entidad &entidad)
     return this;
 }
 
+/* _________
+ * |_0_|_1_| -> esta es la forma en la que se van a organizar
+ * |_2_|_3_|
+ */
 int Node::calcular_index(const Entidad &entidad) const
 {
     Vector2 delta = entidad.c_pos - c_area.c_pos;
@@ -33,10 +37,6 @@ int Node::calcular_index(const Entidad &entidad) const
     return (index_x + 2 * index_y);
 }
 
-/* _________
- * |_0_|_1_| -> esta es la forma en la que se van a organizar
- * |_2_|_3_|
- */
 void Node::subdividir()
 {
     float nuevo_w = c_area.c_w / 2;
@@ -55,8 +55,8 @@ void Node::subdividir()
     }
     for (int i = 0; i < c_cant_entidades; i++)
     {
-        int index = this->calcular_index(*(c_entidades[i]));
-        this->c_subdivisiones[index]->insertar(c_entidades[i]);
+        int index = calcular_index(*(c_entidades[i]));
+        c_subdivisiones[index]->insertar(c_entidades[i]);
     }
     c_dividido = true;
 }
