@@ -7,10 +7,12 @@ Para esto primero estoy aprendiendo C++, con el objetivo de hacer un falling san
 La idea de usar particulas me parecio mas divertido porque me da situaciones como deteccion de colisiones y como optimizar para muchas particulas, el uso de la fisica newtoniana y como manejar su errar en una simulacion discontinua
 
 ### Idea de progreso
+Ahora ya cree unas librerias (no los hice muy bien las librerias pero por ahora es suficiente para avanzar) de vectores en dos dimensiones, las particulas y los quadtrees
 
-Por ahora voy a crear un paquete (?) de vector2, aunque yo se que hay librerias ya hechas prefiero hacerlo yo mismo para ir practicando con structs, constructores y usar un paquete 
+Ahora la idea es crear un sistema de fisicas para las particulas, creo que va a ser una extension de la particula 
 
-Despues la idea es crear un paquete de una particula
+### Explicacion de todo el codigo
+Voy a estar explicando todo el codigo que escribo, y se puede interpresar como una forma de documentacion, pero realmente es mas una explicacion, todo esto lo pueden ver [aca](explicaciones.md)
 
-### Documentacion
-Voy a estar documentando lo maximo posible todo mi codigo, y se puede ver [aca](documentacion.md).
+### Documentacion 
+Por ahora no tengo nada escrito porque estuve haciendo la explicacion, pero cuando lo cambie va a estar [aca](#documentacion.md)
