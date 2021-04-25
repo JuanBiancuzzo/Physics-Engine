@@ -9,12 +9,12 @@ public:
     int c_index;
     void *c_padre;
 
-    Entidad() 
+    Entidad()
         : c_pos(Vector2()), c_index(0), c_padre(nullptr)
     {
     }
-    Entidad(const Vector2 &pos) 
-        : c_pos(pos), c_index(0), c_padre(nullptr) 
+    Entidad(const Vector2 &pos)
+        : c_pos(pos), c_index(0), c_padre(nullptr)
     {
     }
 };

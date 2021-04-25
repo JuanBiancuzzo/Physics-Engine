@@ -11,7 +11,7 @@ QuadTree::~QuadTree()
     delete c_raiz;
 }
 
-bool QuadTree::insertar(Entidad *entidad) 
+bool QuadTree::insertar(Entidad *entidad)
 {
     if (!c_area.contiene(*entidad))
         return false;
@@ -27,7 +27,7 @@ void QuadTree::actualizar(Entidad &entidad)
         c_raiz->actualizar(entidad);
 }
 
-Entidad* QuadTree::eliminar(Entidad &entidad)
+Entidad *QuadTree::eliminar(Entidad &entidad)
 {
     if (c_area.contiene(entidad))
         return c_raiz->eliminar(entidad);
