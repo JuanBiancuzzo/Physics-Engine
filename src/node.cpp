@@ -112,7 +112,7 @@ Entidad *Node::eliminar(Entidad &entidad)
     Entidad *eliminar;
     if (!c_dividido)
     {
-        eliminada = c_entidades[entidad.c_index];
+        eliminar = c_entidades[entidad.c_index];
         c_entidades[entidad.c_index] = c_entidades[c_cant_entidades - 1];
         c_cant_entidades--;
     }
@@ -120,12 +120,11 @@ Entidad *Node::eliminar(Entidad &entidad)
     {
         int index = calcular_index(entidad);
         c_cant_entidades--;
-        eliminada = c_subdivisiones[index]->eliminar(entidad);
+        eliminar = c_subdivisiones[index]->eliminar(entidad);
         if (c_cant_entidades < capacidad_entidades)
             juntar();
     }
-
-    return eliminada;
+    return eliminar;
 }
 
 void Node::buscar(const Rectangulo &frontera, Entidad *output[], int &cantidad)
