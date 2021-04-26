@@ -58,12 +58,17 @@ float Vector2::modulo() const
     return sqrt(pow(x, 2) + pow(y, 2));
 }
 
-float Vector2::distancia(const Vector2 &otro) const 
+float Vector2::distancia(const Vector2 &otro) const
 {
     return (*this - otro).modulo();
 }
 
-void Vector2::imprimir() const 
+float Vector2::distancia_cuadrada(const Vector2 &otro) const
+{
+    return pow(x - otro.x, 2) + pow(y - otro.y, 2);
+}
+
+void Vector2::imprimir() const
 {
     std::cout << x << ", " << y << std::endl;
 }

@@ -1,5 +1,7 @@
 #include "headers/particula.h"
 
+#include <math.h>
+
 Particula::Particula()
     : c_vel(Vector2()), c_masa(1.0f), c_radio(1.0f), c_fuerza(Vector2()), Entidad()
 {
@@ -20,14 +22,14 @@ Particula::Particula(const Vector2 &pos, float masa, float radio)
 {
 }
 
-void Particula::aplicar_fuerza(const Vector2 &fuerza) 
+void Particula::aplicar_fuerza(const Vector2 &fuerza)
 {
     c_fuerza += fuerza;
 }
 
-void Particula::actualizar(float delta_t) 
+void Particula::actualizar(float delta_t)
 {
-    c_vel += (c_fuerza/c_masa) * delta_t;
+    c_vel += (c_fuerza / c_masa) * delta_t;
     c_pos += c_vel * delta_t;
 
     // las fuerzas no son acumulativas
@@ -36,5 +38,5 @@ void Particula::actualizar(float delta_t)
 
 bool Particula::colisiona(const Particula &otro) const
 {
-    return (c_pos.distancia(otro.c_pos) <= this->c_radio + otro.c_radio, 2);
+    return (c_pos.distancia_cuadrada(otro.c_pos) <= pow(this->c_radio + otro.c_radio, 2));
 }

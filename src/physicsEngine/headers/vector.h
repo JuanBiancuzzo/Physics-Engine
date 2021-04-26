@@ -18,7 +18,7 @@ struct Vector2
 
     Vector2 operator*(float alpha) const;
 
-    Vector2 operator/(float alpha) const;    
+    Vector2 operator/(float alpha) const;
 
     void operator+=(const Vector2 &otro);
 
@@ -32,7 +32,7 @@ struct Vector2
 
     float distancia(const Vector2 &otro) const;
 
-    void imprimir() const;
+    float distancia_cuadrada(const Vector2 &otro) const;
 
-    
+    void imprimir() const;
 };

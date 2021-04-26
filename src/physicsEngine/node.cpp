@@ -2,7 +2,7 @@
 #include "headers/node.h"
 
 Node::Node(const Rectangulo &nueva_area)
-    : c_area(nueva_area), c_dividido(false), c_cant_entidades(0)
+    : c_area(nueva_area), c_cant_entidades(0), c_dividido(false)
 {
 }
 

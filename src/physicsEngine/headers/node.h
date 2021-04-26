@@ -11,10 +11,12 @@ public:
 private:
     static const int capacidad_entidades = 4;
     static const int capacidad_sub = 4;
-    bool c_dividido;
+
     Entidad *c_entidades[capacidad_entidades];
     int c_cant_entidades;
+
     Node *c_subdivisiones[capacidad_sub];
+    bool c_dividido;
 
 public:
     Node(const Rectangulo &nueva_area);
