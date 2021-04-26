@@ -13,10 +13,8 @@ Fisicas::~Fisicas()
 
 bool Fisicas::lugar_libre(const Particula &particula)
 {
-    Entidad *grupo[1];
-    int colisiones = 0;
-    c_qt.buscar(Rectangulo(particula.c_pos, particula.c_radio, particula.c_radio), grupo, colisiones);
-    return (colisiones == 0);
+    float r = particula.c_radio;
+    return !c_qt.cantidad(Rectangulo(particula.c_pos, r * 2, r * 2));
 }
 
 bool Fisicas::insertar_particula(const Particula &particula)
