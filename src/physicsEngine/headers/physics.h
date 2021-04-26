@@ -17,9 +17,12 @@ public:
     Fisicas(const Rectangulo &mundo);
     ~Fisicas();
 
-    void insertar_particula(const Particula &particula);
-    void insertar_particula(const Vector2 &pos);
+    bool insertar_particula(const Particula &particula);
+    bool insertar_particula(const Vector2 &pos);
 
     void mostrar() const;
     void avanzar(const float delta_tiempo);
+
+private:
+    bool lugar_libre(const Particula &particula);
 };

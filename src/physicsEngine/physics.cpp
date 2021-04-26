@@ -11,16 +11,28 @@ Fisicas::~Fisicas()
         delete particula;
 }
 
-void Fisicas::insertar_particula(const Particula &particula)
+bool Fisicas::lugar_libre(const Particula &particula)
 {
+    Entidad *grupo[1];
+    int colisiones = 0;
+    c_qt.buscar(Rectangulo(particula.c_pos, particula.c_radio, particula.c_radio), grupo, colisiones);
+    return (colisiones == 0);
+}
+
+bool Fisicas::insertar_particula(const Particula &particula)
+{
+    if (!lugar_libre(particula))
+        return false;
+
     Particula *p = new Particula(particula.c_pos, particula.c_masa, particula.c_radio);
     c_qt.insertar(p);
     c_particulas.emplace_back(p);
+    return true;
 }
 
-void Fisicas::insertar_particula(const Vector2 &pos)
+bool Fisicas::insertar_particula(const Vector2 &pos)
 {
-    insertar_particula(Particula(pos));
+    return insertar_particula(Particula(pos));
 }
 
 void Fisicas::mostrar() const
