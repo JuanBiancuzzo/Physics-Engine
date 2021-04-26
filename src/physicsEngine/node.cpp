@@ -146,3 +146,20 @@ void Node::buscar(const Rectangulo &frontera, Entidad *output[], int &cantidad)
         }
     }
 }
+
+void Node::cantidad(const Rectangulo &frontera, int &cantidad)
+{
+    if (!c_area.intersecta(frontera))
+        return;
+
+    if (c_dividido)
+    {
+        for (Node *subdivision : c_subdivisiones)
+            subdivision->cantidad(frontera, cantidad);
+        return;
+    }
+
+    for (int i = 0; i < c_cant_entidades; i++)
+        if (frontera.contiene(*c_entidades[i]))
+            cantidad++;
+}

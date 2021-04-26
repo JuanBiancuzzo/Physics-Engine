@@ -43,3 +43,11 @@ void QuadTree::buscar(const Rectangulo &frontera, Entidad *output[], int &cantid
     if (c_area.intersecta(frontera))
         c_raiz->buscar(frontera, output, cantidad);
 }
+
+int QuadTree::cantidad(const Rectangulo &frontera)
+{
+    int cantidad = 0;
+    if (c_area.intersecta(frontera))
+        c_raiz->cantidad(frontera, cantidad);
+    return cantidad;
+}

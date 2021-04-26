@@ -20,4 +20,5 @@ public:
     bool actualizar(Entidad &entidad);
     Entidad *eliminar(Entidad &entidad);
     void buscar(const Rectangulo &frontera, Entidad *output[], int &cantidad);
+    int cantidad(const Rectangulo &frontera);
 };
