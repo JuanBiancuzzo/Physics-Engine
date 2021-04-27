@@ -58,6 +58,11 @@ float Vector2::modulo() const
     return sqrt(pow(x, 2) + pow(y, 2));
 }
 
+float Vector2::modulo_cuadrado() const
+{
+    return pow(x, 2) + pow(y, 2);
+}
+
 float Vector2::distancia(const Vector2 &otro) const
 {
     return (*this - otro).modulo();
@@ -66,6 +71,16 @@ float Vector2::distancia(const Vector2 &otro) const
 float Vector2::distancia_cuadrada(const Vector2 &otro) const
 {
     return pow(x - otro.x, 2) + pow(y - otro.y, 2);
+}
+
+Vector2 Vector2::proyeccion(const Vector2 &otro) const
+{
+    return ((*this * otro) / otro.modulo_cuadrado()) * otro;
+}
+
+Vector2 Vector2::normal() const
+{
+    return (*this / this->modulo);
 }
 
 void Vector2::imprimir() const
