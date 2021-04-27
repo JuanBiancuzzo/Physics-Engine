@@ -10,7 +10,8 @@ public:
 
 private:
     Vector2 c_fuerza;
-    
+    Vector2 c_fuerza_interaccion;
+
 public:
     Particula();
     Particula(const Vector2 &pos);
@@ -18,6 +19,7 @@ public:
     Particula(const Vector2 &pos, float masa, float radio);
 
     void aplicar_fuerza(const Vector2 &fuerza);
+    void aplicar_interaccion(const Vector2 &fuerza);
 
     void actualizar(float delta_t);
 
