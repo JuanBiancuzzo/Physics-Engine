@@ -53,6 +53,11 @@ void Vector2::operator/=(float alpha)
     *this = *this / alpha;
 }
 
+bool Vector2::operator==(const Vector2 &otro) const
+{
+    return !(this->x != otro.x || this->y != otro.y);
+}
+
 float Vector2::modulo() const
 {
     return sqrt(pow(x, 2) + pow(y, 2));

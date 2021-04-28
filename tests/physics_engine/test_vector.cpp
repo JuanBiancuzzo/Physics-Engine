@@ -122,6 +122,26 @@ TEST(VectorTest, Division_igual_de_un_vector_con_un_escalar)
     ASSERT_EQ(vector.y, aux.y / escalar);
 }
 
+TEST(VectorTest, Comparasion_de_dos_vectores_iguales_devuelve_true)
+{
+    Vector2 vector1(42.3f, -61.7f), vector2(42.3f, -61.7f);
+    bool resultado;
+
+    resultado = vector1 == vector2;
+
+    ASSERT_EQ(resultado, true);
+}
+
+TEST(VectorTest, Comparasion_de_dos_vectores_diferentes_devuelve_false)
+{
+    Vector2 vector1(42.3f, -61.7f), vector2(4.3f, -631.7f);
+    bool resultado;
+
+    resultado = vector1 == vector2;
+
+    ASSERT_EQ(resultado, false);
+}
+
 TEST(VectorTest, calcular_el_modulo_de_un_vector)
 {
     Vector2 vector(3.0f, 4.0f);
