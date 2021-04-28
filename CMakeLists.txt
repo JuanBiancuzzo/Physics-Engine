@@ -5,7 +5,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp -o3")
 
-add_library(Core src/physics_engine/physics.cpp)
+add_library(Core 
+    src/physics_engine/physics.cpp
+    src/physics_engine/vector.cpp
+)
 add_executable(Main main/main.cpp)
 
 target_link_libraries(Main Core)
@@ -21,7 +24,8 @@ target_compile_definitions(gtest
 add_executable(tests)
 target_sources(tests
   PRIVATE
-    tests/test_physics_engine.cpp
+    tests/physics_engine/test_physics_engine.cpp
+    tests/physics_engine/test_vector.cpp
 )
 set_target_properties(tests PROPERTIES COMPILE_FLAGS "${cxx_strict}")
 target_link_libraries(tests gtest gtest_main Core)

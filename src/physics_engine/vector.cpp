@@ -75,12 +75,12 @@ float Vector2::distancia_cuadrada(const Vector2 &otro) const
 
 Vector2 Vector2::proyeccion(const Vector2 &otro) const
 {
-    return ((*this * otro) / otro.modulo_cuadrado()) * otro;
+    return otro * (((*this) * otro) / otro.modulo_cuadrado());
 }
 
 Vector2 Vector2::normal() const
 {
-    return (*this / this->modulo);
+    return (*this / this->modulo());
 }
 
 void Vector2::imprimir() const
