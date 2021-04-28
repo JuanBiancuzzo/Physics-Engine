@@ -10,6 +10,7 @@ public:
     float c_w, c_h;
 
 public:
+    Rectangulo();
     Rectangulo(const Vector2 pos);
     Rectangulo(const Vector2 pos, float w, float h);
 
