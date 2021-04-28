@@ -15,4 +15,4 @@ Ahora la idea es crear un sistema de fisicas para las particulas, creo que va a 
 Voy a estar explicando todo el codigo que escribo, y se puede interpresar como una forma de documentacion, pero realmente es mas una explicacion, todo esto lo pueden ver [aca](explicaciones.md)
 
 ### Documentacion 
-Por ahora no tengo nada escrito porque estuve haciendo la explicacion, pero cuando lo cambie va a estar [aca](#documentacion.md)
+Por ahora no tengo nada escrito porque estuve haciendo la explicacion, pero cuando lo cambie va a estar [aca](#documentation.md)
