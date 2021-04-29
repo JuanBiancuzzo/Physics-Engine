@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../../src/physics_engine/headers/particula.h"
+#include "../../../src/physics_engine/particula.h"
 
 TEST(ParticulaTest, Inicializar_particula_sin_parametros)
 {

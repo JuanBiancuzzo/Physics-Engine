@@ -1,5 +1,5 @@
 
-#include "headers/node.h"
+#include "node.h"
 
 Node::Node(const Rectangulo &nueva_area)
     : c_area(nueva_area), c_cant_entidades(0), c_dividido(false)
@@ -31,8 +31,8 @@ int Node::calcular_index(const Entidad &entidad) const
 {
     Vector2 delta = entidad.c_pos - c_area.c_pos;
 
-    int index_x = (delta.x == 0) ? 0 : static_cast<int>((1 + delta.x / abs(delta.x)) / 2);
-    int index_y = (delta.y == 0) ? 0 : static_cast<int>((1 - delta.y / abs(delta.y)) / 2);
+    int index_x = (delta.x == 0) ? 0 : static_cast<int>((1 + delta.x / abs((int)delta.x)) / 2);
+    int index_y = (delta.y == 0) ? 0 : static_cast<int>((1 - delta.y / abs((int)delta.y)) / 2);
 
     return (index_x + 2 * index_y);
 }

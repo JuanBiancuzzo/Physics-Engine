@@ -1,6 +1,6 @@
 #pragma once
 
-#include "entidad.h"
+#include "../herramientas/basicas/entidad.h"
 
 class Particula : public Entidad
 {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vector.h"
+#include "../basicas/vector.h"
 
 class Entidad
 {

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "entidad.h"
-#include "rectangulo.h"
+#include "../basicas/entidad.h"
+#include "../basicas/rectangulo.h"
 
 class Node
 {

@@ -1,4 +1,4 @@
-#include "headers/particula.h"
+#include "particula.h"
 
 #include <math.h>
 

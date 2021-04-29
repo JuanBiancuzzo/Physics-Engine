@@ -1,4 +1,4 @@
-#include "headers/quadtree.h"
+#include "quadtree.h"
 
 QuadTree::QuadTree(const Rectangulo &nueva_area)
     : c_area(nueva_area)

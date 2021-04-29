@@ -1,4 +1,4 @@
-#include "headers/physics.h"
+#include "physics.h"
 
 // Fisicas::Fisicas(const Rectangulo &mundo)
 //     : c_qt(mundo), c_cantidad(0)

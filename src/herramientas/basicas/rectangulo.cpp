@@ -1,5 +1,5 @@
 
-#include "headers/rectangulo.h"
+#include "rectangulo.h"
 
 Rectangulo::Rectangulo()
     : c_pos(Vector2()), c_w(1.0f), c_h(1.0f)

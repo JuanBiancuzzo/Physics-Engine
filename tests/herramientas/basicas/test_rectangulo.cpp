@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../../src/physics_engine/headers/rectangulo.h"
+#include "../../../src/herramientas/basicas/rectangulo.h"
 
 TEST(RectanguloTest, Inicializar_rectangulo_sin_parametros)
 {

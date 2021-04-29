@@ -5,9 +5,17 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp -o3")
 
+set(SOURCE_ENGINE "${PROJECT_SOURCE_DIR}/src/physics_engine")
+set(SOURCE_HERRAMIENTAS "${PROJECT_SOURCE_DIR}/src/herramientas")
+set(SOURCE_BASICAS "${PROJECT_SOURCE_DIR}/src/herramientas/basicas")
+
 add_library(Core 
-    src/physics_engine/physics.cpp
-    src/physics_engine/vector.cpp
+    ${SOURCE_ENGINE}/physics.cpp 
+    ${SOURCE_ENGINE}/particula.cpp
+    ${SOURCE_BASICAS}/vector.cpp 
+    ${SOURCE_BASICAS}/rectangulo.cpp
+    ${SOURCE_HERRAMIENTAS}/quadtree/node.cpp
+    ${SOURCE_HERRAMIENTAS}/quadtree/quadtree.cpp
 )
 add_executable(Main main/main.cpp)
 
@@ -22,10 +30,17 @@ target_compile_definitions(gtest
     GTEST_HAS_TR1_TUPLE=0
 )
 add_executable(tests)
+
+set(TEST_ENGINE "${PROJECT_SOURCE_DIR}/tests/physics_engine") 
+set(TEST_HERRAMIENTAS "${PROJECT_SOURCE_DIR}/tests/herramientas") 
+set(TEST_BASICAS "${PROJECT_SOURCE_DIR}/tests/herramientas/basicas") 
+
 target_sources(tests
   PRIVATE
-    tests/physics_engine/test_physics_engine.cpp
-    tests/physics_engine/test_vector.cpp
+    ${TEST_ENGINE}/test_physics_engine.cpp
+    ${TEST_ENGINE}/test_particula.cpp
+    ${TEST_BASICAS}/test_vector.cpp
+    ${TEST_BASICAS}/test_rectangulo.cpp
 )
 set_target_properties(tests PROPERTIES COMPILE_FLAGS "${cxx_strict}")
 target_link_libraries(tests gtest gtest_main Core)
