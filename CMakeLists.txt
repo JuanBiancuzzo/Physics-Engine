@@ -12,8 +12,9 @@ set(SOURCE_BASICAS "${PROJECT_SOURCE_DIR}/src/herramientas/basicas")
 add_library(Core 
     ${SOURCE_ENGINE}/physics.cpp 
     ${SOURCE_ENGINE}/particula.cpp
+    ${SOURCE_ENGINE}/body.cpp
     ${SOURCE_BASICAS}/vector.cpp 
-    ${SOURCE_BASICAS}/rectangulo.cpp
+    ${SOURCE_BASICAS}/area.cpp
     ${SOURCE_HERRAMIENTAS}/quadtree/node.cpp
     ${SOURCE_HERRAMIENTAS}/quadtree/quadtree.cpp
 )
@@ -37,10 +38,12 @@ set(TEST_BASICAS "${PROJECT_SOURCE_DIR}/tests/herramientas/basicas")
 
 target_sources(tests
   PRIVATE
+    ${TEST_BASICAS}/test_vector.cpp
+    ${TEST_BASICAS}/test_area.cpp
+    ${TEST_HERRAMIENTAS}/quadtree/test_nodo.cpp
+    ${TEST_HERRAMIENTAS}/quadtree/test_quadtree.cpp
     ${TEST_ENGINE}/test_physics_engine.cpp
     ${TEST_ENGINE}/test_particula.cpp
-    ${TEST_BASICAS}/test_vector.cpp
-    ${TEST_BASICAS}/test_rectangulo.cpp
 )
 set_target_properties(tests PROPERTIES COMPILE_FLAGS "${cxx_strict}")
 target_link_libraries(tests gtest gtest_main Core)
