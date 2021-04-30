@@ -3,9 +3,10 @@
 #include <vector>
 
 #include "../herramientas/quadtree/quadtree.h"
-#include "particula.h"
-#include "../herramientas/basicas/rectangulo.h"
+#include "../herramientas/basicas/area.h"
 #include "../herramientas/basicas/vector.h"
+
+#include "body.h"
 
 // class Fisicas
 // {

@@ -1,24 +1,22 @@
 #include "particula.h"
 
-#include <math.h>
-
 Particula::Particula()
-    : c_masa(1.0f), c_radio(1.0f), c_vel(Vector2()), c_acc(Vector2()), Entidad()
+    : c_cuerpo(), Body()
 {
 }
 
 Particula::Particula(const Vector2 &pos)
-    : c_masa(1.0f), c_radio(1.0f), c_vel(Vector2()), c_acc(Vector2()), Entidad(pos)
+    : c_cuerpo(pos), Body(pos)
 {
 }
 
 Particula::Particula(const Vector2 &pos, float masa)
-    : c_masa(masa), c_radio(1.0f), c_vel(Vector2()), c_acc(Vector2()), Entidad(pos)
+    : c_cuerpo(pos), Body(pos, masa)
 {
 }
 
 Particula::Particula(const Vector2 &pos, float masa, float radio)
-    : c_masa(masa), c_radio(radio), c_vel(Vector2()), c_acc(Vector2()), Entidad(pos)
+    : c_cuerpo(pos, radio), Body(pos, masa)
 {
 }
 
@@ -31,6 +29,7 @@ void Particula::actualizar(float delta_t)
 {
     c_vel += c_acc * delta_t;
     c_pos += c_vel * delta_t;
+    c_cuerpo.actualizar(c_pos);
 
     // las fuerzas no son acumulativas
     c_acc *= .0f;
@@ -38,5 +37,5 @@ void Particula::actualizar(float delta_t)
 
 bool Particula::colisiona(const Particula &otro) const
 {
-    return (c_pos.distancia_cuadrada(otro.c_pos) <= pow(this->c_radio + otro.c_radio, 2));
+    return c_cuerpo.intersecta(otro.c_cuerpo);
 }

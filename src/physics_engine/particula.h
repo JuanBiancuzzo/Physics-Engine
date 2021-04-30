@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../herramientas/basicas/entidad.h"
+#include "body.h"
+#include "../herramientas/basicas/area.h"
 
-class Particula : public Entidad
+class Particula : public Body
 {
 public:
-    const float c_masa, c_radio;
-    Vector2 c_vel, c_acc;
+    Circulo c_cuerpo;
 
 public:
     Particula();

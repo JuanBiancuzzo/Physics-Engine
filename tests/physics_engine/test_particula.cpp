@@ -1,6 +1,8 @@
 #include "gtest/gtest.h"
 #include "../../../src/physics_engine/particula.h"
 
+#include <iostream>
+
 TEST(ParticulaTest, Inicializar_particula_sin_parametros)
 {
     Particula particula;
@@ -9,7 +11,7 @@ TEST(ParticulaTest, Inicializar_particula_sin_parametros)
     ASSERT_EQ(particula.c_vel, Vector2());
     ASSERT_EQ(particula.c_acc, Vector2());
     ASSERT_EQ(particula.c_masa, 1.0f);
-    ASSERT_EQ(particula.c_radio, 1.0f);
+    ASSERT_EQ(particula.c_cuerpo.c_r, 1.0f);
 }
 
 TEST(ParticulaTest, Inicializar_particula_con_posicion)
@@ -21,7 +23,7 @@ TEST(ParticulaTest, Inicializar_particula_con_posicion)
     ASSERT_EQ(particula.c_vel, Vector2());
     ASSERT_EQ(particula.c_acc, Vector2());
     ASSERT_EQ(particula.c_masa, 1.0f);
-    ASSERT_EQ(particula.c_radio, 1.0f);
+    ASSERT_EQ(particula.c_cuerpo.c_r, 1.0f);
 }
 
 TEST(ParticulaTest, Inicializar_particula_con_posicion_y_masa)
@@ -34,7 +36,7 @@ TEST(ParticulaTest, Inicializar_particula_con_posicion_y_masa)
     ASSERT_EQ(particula.c_vel, Vector2());
     ASSERT_EQ(particula.c_acc, Vector2());
     ASSERT_EQ(particula.c_masa, masa);
-    ASSERT_EQ(particula.c_radio, 1.0f);
+    ASSERT_EQ(particula.c_cuerpo.c_r, 1.0f);
 }
 
 TEST(ParticulaTest, Inicializar_particula_con_posicion_masa_y_radio)
@@ -47,7 +49,7 @@ TEST(ParticulaTest, Inicializar_particula_con_posicion_masa_y_radio)
     ASSERT_EQ(particula.c_vel, Vector2());
     ASSERT_EQ(particula.c_acc, Vector2());
     ASSERT_EQ(particula.c_masa, masa);
-    ASSERT_EQ(particula.c_radio, radio);
+    ASSERT_EQ(particula.c_cuerpo.c_r, radio);
 }
 
 TEST(ParticulaTest, aplicar_fuerza_con_masa_default)
@@ -154,12 +156,12 @@ TEST(ParticulaTest, colision_dos_particulas_sin_particulas_intersectando_radios_
     ASSERT_EQ(resultado, false);
 }
 
-TEST(ParticulaTest, colision_dos_particulas_tocandose_bordes_devuelve_true)
+TEST(ParticulaTest, colision_dos_particulas_tocandose_bordes_devuelve_false)
 {
     Particula particula1(Vector2(-0.0f, -1.0f)), particula2(Vector2(.0f, 1.0f));
     bool resultado;
 
     resultado = particula1.colisiona(particula2);
 
-    ASSERT_EQ(resultado, true);
+    ASSERT_EQ(resultado, false);
 }
