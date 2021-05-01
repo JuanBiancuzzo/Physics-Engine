@@ -1,21 +1,18 @@
 #pragma once
 
-#include "body.h"
+#include "../herramientas/entidad.h"
+#include "../herramientas/vector.h"
 #include "../herramientas/area.h"
 
-class Particula : public Body
+class Particula : public Entidad
 {
 public:
-    Circulo c_cuerpo;
+    Vector2 c_vel, c_acc;
+    const float c_masa;
+    Area *c_estructura;
 
 public:
-    Particula();
-    Particula(const Vector2 &pos);
-    Particula(const Vector2 &pos, float masa);
-    Particula(const Vector2 &pos, float masa, float radio);
+    Particula(const Vector2 &pos, float masa, Area *estructura);
 
-    void aplicar_fuerza(const Vector2 &fuerza);
-
-    void actualizar(float delta_t);
-    bool colisiona(const Particula &otro) const;
+    void actualizar(const float dt);
 };

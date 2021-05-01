@@ -11,7 +11,6 @@ set(SOURCE_HERRAMIENTAS "${PROJECT_SOURCE_DIR}/src/herramientas")
 add_library(Core 
     ${SOURCE_ENGINE}/physics.cpp 
     ${SOURCE_ENGINE}/particula.cpp
-    ${SOURCE_ENGINE}/body.cpp
     ${SOURCE_HERRAMIENTAS}/vector.cpp 
     ${SOURCE_HERRAMIENTAS}/area.cpp
     ${SOURCE_HERRAMIENTAS}/quadtree.cpp
