@@ -8,11 +8,18 @@
 
 #include "body.h"
 
+struct Colision
+{
+    Body *A;
+    Body *B;
+};
+
 class Fisicas
 {
 private:
     QuadTree c_qt;
     std::vector<Body *> c_bodys;
+    Vector2 gravedad;
 
 public:
     Fisicas(const Rectangulo &mundo);
@@ -21,7 +28,8 @@ public:
     bool insertar_particula(Body *body);
 
     void mostrar() const;
-    void avanzar(const float delta_tiempo);
+    void avanzar(const float dt);
+    void resolverColisiones(const float dt);
 
 private:
     bool lugar_libre(const Body *body);
