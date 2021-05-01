@@ -1,20 +1,30 @@
 #include "body.h"
 
 Body::Body()
-    : Entidad(), c_vel(Vector2()), c_acc(Vector2()), c_masa(1.0f)
+    : Entidad(), c_vel(Vector2()), c_acc(Vector2()), c_masa(1.0f), c_estructura(nullptr)
 {
 }
 
 Body::Body(const Vector2 &pos)
-    : Entidad(pos), c_vel(Vector2()), c_acc(Vector2()), c_masa(1.0f)
+    : Entidad(pos), c_vel(Vector2()), c_acc(Vector2()), c_masa(1.0f), c_estructura(nullptr)
+{
+}
+
+Body::Body(const Vector2 &pos, Area *estructura)
+    : Entidad(pos), c_vel(Vector2()), c_acc(Vector2()), c_masa(1.0f), c_estructura(estructura)
 {
 }
 
 Body::Body(const Vector2 &pos, float masa)
-    : Entidad(pos), c_vel(Vector2()), c_acc(Vector2()), c_masa(masa)
+    : Entidad(pos), c_vel(Vector2()), c_acc(Vector2()), c_masa(masa), c_estructura(nullptr)
 {
 }
 
-void Body::actualizar()
+Body::Body(const Vector2 &pos, float masa, Area *estructura)
+    : Entidad(pos), c_vel(Vector2()), c_acc(Vector2()), c_masa(masa), c_estructura(estructura)
+{
+}
+
+void Body::actualizar(const float dt)
 {
 }

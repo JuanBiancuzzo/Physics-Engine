@@ -1,7 +1,7 @@
 #pragma once
 
 #include "body.h"
-#include "../herramientas/basicas/area.h"
+#include "../herramientas/area.h"
 
 class Particula : public Body
 {
