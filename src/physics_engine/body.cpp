@@ -27,4 +27,6 @@ Body::Body(const Vector2 &pos, float masa, Area *estructura)
 
 void Body::actualizar(const float dt)
 {
+    c_vel += c_acc * dt;
+    c_estructura->c_pos += c_vel * dt;
 }
