@@ -7,23 +7,23 @@ Fisicas::Fisicas(const Rectangulo &mundo)
 
 Fisicas::~Fisicas()
 {
-    c_bodys.clear();
+    c_particulas.clear();
 }
 
-bool Fisicas::lugar_libre(const Body *body)
+bool Fisicas::lugar_libre(const Particula *particula)
 {
-    if (!body->c_estructura)
+    if (!particula->c_estructura)
         return true;
-    return !c_qt.cantidad(body->c_estructura);
+    return !c_qt.cantidad(particula->c_estructura);
 }
 
-bool Fisicas::insertar_particula(Body *body)
+bool Fisicas::insertar_particula(Particula *particula)
 {
-    if (!lugar_libre(body))
+    if (!lugar_libre(particula))
         return false;
 
-    c_qt.insertar(body);
-    c_bodys.emplace_back(body);
+    c_qt.insertar(particula);
+    c_particulas.emplace_back(particula);
     return true;
 }
 
@@ -35,9 +35,9 @@ void Fisicas::mostrar() const
 void Fisicas::avanzar(const float dt)
 {
     // c_particulas esta ordenado de mayor velocidad a menor velocidad - aka un heap
-    for (Body *body : c_bodys)
+    for (Particula *particula : c_particulas)
     {
-        body->c_acc += gravedad / body->c_masa;
+        particula->c_acc += gravedad / particula->c_masa;
         // calcular fuerzas
         /*
              * rozamiento
@@ -50,10 +50,10 @@ void Fisicas::avanzar(const float dt)
 
     resolverColisiones(dt);
 
-    for (Body *body : c_bodys)
+    for (Particula *particula : c_particulas)
     {
-        body->actualizar(dt);
-        c_qt.actualizar(body);
+        particula->actualizar(dt);
+        c_qt.actualizar(particula);
     }
 }
 
@@ -61,16 +61,17 @@ void Fisicas::resolverColisiones(const float dt)
 {
     std::vector<Colision> colisiones;
 
-    for (Body *body : c_bodys)
+    for (Particula *particula : c_particulas)
     {
 
         std::vector<Entidad *> choques;
-        c_qt.buscar(body->c_estructura, choques);
-        for (auto colision : choques)
+        c_qt.buscar(particula->c_estructura, choques);
+        for (Entidad *c : choques)
         {
-            if (body == colision)
+            Particula *colision = (Particula *)c;
+            if (particula == colision)
                 return;
-            // colisiones.push_back({body, colision});
+            colisiones.push_back(Colision(particula, colision));
         }
     }
 }

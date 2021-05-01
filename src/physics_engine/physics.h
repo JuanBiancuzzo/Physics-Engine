@@ -6,31 +6,36 @@
 #include "../herramientas/area.h"
 #include "../herramientas/vector.h"
 
-#include "body.h"
+#include "particula.h"
 
 struct Colision
 {
-    Body *A;
-    Body *B;
+    Particula *A;
+    Particula *B;
+
+    Colision(Particula *a, Particula *b)
+        : A(a), B(b)
+    {
+    }
 };
 
 class Fisicas
 {
 private:
     QuadTree c_qt;
-    std::vector<Body *> c_bodys;
+    std::vector<Particula *> c_particulas;
     Vector2 gravedad;
 
 public:
     Fisicas(const Rectangulo &mundo);
     ~Fisicas();
 
-    bool insertar_particula(Body *body);
+    bool insertar_particula(Particula *particula);
 
     void mostrar() const;
     void avanzar(const float dt);
     void resolverColisiones(const float dt);
 
 private:
-    bool lugar_libre(const Body *body);
+    bool lugar_libre(const Particula *particula);
 };
