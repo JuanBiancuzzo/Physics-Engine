@@ -3,6 +3,8 @@
 #include "area.h"
 #include "entidad.h"
 
+#include <vector>
+
 class Node;
 
 class QuadTree
@@ -20,7 +22,7 @@ public:
     bool insertar(Entidad *entidad);
     bool actualizar(Entidad *entidad);
     void eliminar(Entidad *entidad);
-    void buscar(const Area *frontera, Entidad *output[], int &cantidad);
+    void buscar(const Area *frontera, std::vector<Entidad *> &output);
     int cantidad(const Area *frontera);
 };
 
@@ -46,7 +48,7 @@ public:
     void insertar(Entidad *entidad);
     void actualizar(Entidad *entidad);
     void eliminar(Entidad *entidad);
-    void buscar(const Area *frontera, Entidad *output[], int &cantidad);
+    void buscar(const Area *frontera, std::vector<Entidad *> &output);
     void cantidad(const Area *frontera, int &cantidad);
 
     Node *buscar_hoja(const Entidad *entidad);

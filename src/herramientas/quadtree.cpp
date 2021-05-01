@@ -36,11 +36,10 @@ void QuadTree::eliminar(Entidad *entidad)
         c_raiz->eliminar(entidad);
 }
 
-void QuadTree::buscar(const Area *frontera, Entidad *output[], int &cantidad)
+void QuadTree::buscar(const Area *frontera, std::vector<Entidad *> &output)
 {
-    cantidad = 0;
     if (c_area.intersecta(*frontera))
-        c_raiz->buscar(frontera, output, cantidad);
+        c_raiz->buscar(frontera, output);
 }
 
 int QuadTree::cantidad(const Area *frontera)
@@ -143,11 +142,13 @@ void Node::juntar()
 {
     if (c_cant_entidades >= capacidad_entidades)
         return;
-    int cantidad = 0;
-    buscar(&c_area, c_entidades, cantidad);
 
-    for (int i = 0; i < cantidad; i++)
+    std::vector<Entidad *> entidades_esparcidas;
+    buscar(&c_area, entidades_esparcidas);
+
+    for (int i = 0; i < entidades_esparcidas.size(); i++)
     {
+        c_entidades[i] = *(entidades_esparcidas.begin() + i);
         c_entidades[i]->c_index = i;
         c_entidades[i]->c_padre = this;
     }
@@ -173,7 +174,7 @@ void Node::eliminar(Entidad *entidad)
     c_cant_entidades--;
 }
 
-void Node::buscar(const Area *frontera, Entidad *output[], int &cantidad)
+void Node::buscar(const Area *frontera, std::vector<Entidad *> &output)
 {
     if (!c_area.intersecta(*frontera))
         return;
@@ -181,18 +182,13 @@ void Node::buscar(const Area *frontera, Entidad *output[], int &cantidad)
     if (c_dividido)
     {
         for (Node *subdivision : c_subdivisiones)
-            subdivision->buscar(frontera, output, cantidad);
+            subdivision->buscar(frontera, output);
         return;
     }
 
     for (int i = 0; i < c_cant_entidades; i++)
-    {
         if (frontera->contiene(*c_entidades[i]))
-        {
-            output[cantidad] = c_entidades[i];
-            cantidad++;
-        }
-    }
+            output.push_back(c_entidades[i]);
 }
 
 void Node::cantidad(const Area *frontera, int &cantidad)
