@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../../../src/herramientas/basicas/area.h"
+#include "../../../src/herramientas/area.h"
 
 TEST(RectanguloTest, Inicializar_rectangulo_sin_parametros)
 {

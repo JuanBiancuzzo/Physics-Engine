@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../../../src/herramientas/basicas/vector.h"
+#include "../../../src/herramientas/vector.h"
 
 #include <math.h>
 
