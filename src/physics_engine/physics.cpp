@@ -12,8 +12,6 @@ Fisicas::~Fisicas()
 
 bool Fisicas::lugar_libre(const Particula *particula)
 {
-    if (!particula->c_estructura)
-        return true;
     return !c_qt.cantidad(particula->c_estructura);
 }
 
@@ -34,10 +32,10 @@ void Fisicas::mostrar() const
 
 void Fisicas::avanzar(const float dt)
 {
-    // c_particulas esta ordenado de mayor velocidad a menor velocidad - aka un heap
+
     for (Particula *particula : c_particulas)
     {
-        particula->c_acc += gravedad / particula->c_masa;
+        particula->c_fuerza += gravedad;
         // calcular fuerzas
         /*
              * rozamiento
@@ -59,19 +57,22 @@ void Fisicas::avanzar(const float dt)
 
 void Fisicas::resolverColisiones(const float dt)
 {
-    std::vector<Colision> colisiones;
+    /* 
+     * seria mejor tener un array de grafos asi se puede paralelizar
+     * pero como todavia no se como hacer eso, voy a poderlo en un
+     * solo grafo todo y deberia ser capaz
+     */
 
-    for (Particula *particula : c_particulas)
-    {
+    Vector2 fuerza = particula->c_fuerza + (particula->c_vel * particula->c_masa) / dt;
 
-        std::vector<Entidad *> choques;
-        c_qt.buscar(particula->c_estructura, choques);
-        for (Entidad *c : choques)
-        {
-            Particula *colision = (Particula *)c;
-            if (particula == colision)
-                return;
-            colisiones.push_back(Colision(particula, colision));
-        }
-    }
+    // Grafo grafo_colision;
+    // for (Particula *particula : c_particulas)
+    // {
+    //     std::vector<Entidad *> colisiones;
+    //     c_qt.buscar(particula->c_estructura, colisiones);
+
+    //     for (Entidad *colision : colisiones)
+    //         grafo_colision.agregar_vinculo(particula, colision);
+    // }
+    // grafo_colision.expandir_fuerzas();
 }

@@ -26,13 +26,13 @@ Rectangulo::Rectangulo(const Vector2 pos, float w, float h)
 {
 }
 
-bool Rectangulo::contiene(const Entidad &entidad) const
+bool Rectangulo::contiene(const Particula &particula) const
 {
     return !(
-        c_pos.x + c_w < entidad.c_pos.x ||
-        c_pos.x - c_w > entidad.c_pos.x ||
-        c_pos.y + c_h < entidad.c_pos.y ||
-        c_pos.y - c_h > entidad.c_pos.y);
+        c_pos.x + c_w < particula.c_pos.x ||
+        c_pos.x - c_w > particula.c_pos.x ||
+        c_pos.y + c_h < particula.c_pos.y ||
+        c_pos.y - c_h > particula.c_pos.y);
 }
 
 float Rectangulo::distancia_borde_cuadrado(const Vector2 &dir) const
@@ -63,9 +63,9 @@ Circulo::Circulo(const Vector2 pos, float r)
 {
 }
 
-bool Circulo::contiene(const Entidad &entidad) const
+bool Circulo::contiene(const Particula &particula) const
 {
-    return (c_pos.distancia_cuadrada(entidad.c_pos) < c_r * c_r);
+    return (c_pos.distancia_cuadrada(particula.c_pos) < c_r * c_r);
 }
 
 float Circulo::distancia_borde_cuadrado(const Vector2 &dir) const

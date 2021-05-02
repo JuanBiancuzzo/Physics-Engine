@@ -11,32 +11,32 @@ QuadTree::~QuadTree()
     delete c_raiz;
 }
 
-bool QuadTree::insertar(Entidad *entidad)
+bool QuadTree::insertar(Particula *particula)
 {
-    if (!c_area.contiene(*entidad))
+    if (!c_area.contiene(*particula))
         return false;
-    c_raiz->insertar(entidad);
+    c_raiz->insertar(particula);
     return true;
 }
 
-bool QuadTree::actualizar(Entidad *entidad)
+bool QuadTree::actualizar(Particula *particula)
 {
-    if (!c_area.contiene(*entidad))
+    if (!c_area.contiene(*particula))
         return false;
-    Node *hoja_nueva = c_raiz->buscar_hoja(entidad);
+    Node *hoja_nueva = c_raiz->buscar_hoja(particula);
 
-    if (hoja_nueva != entidad->c_padre)
-        c_raiz->actualizar(entidad);
+    if (hoja_nueva != particula->c_padre)
+        c_raiz->actualizar(particula);
     return true;
 }
 
-void QuadTree::eliminar(Entidad *entidad)
+void QuadTree::eliminar(Particula *particula)
 {
-    if (c_area.contiene(*entidad))
-        c_raiz->eliminar(entidad);
+    if (c_area.contiene(*particula))
+        c_raiz->eliminar(particula);
 }
 
-void QuadTree::buscar(const Area *frontera, std::vector<Entidad *> &output)
+void QuadTree::buscar(const Area *frontera, std::vector<Particula *> &output)
 {
     if (c_area.intersecta(*frontera))
         c_raiz->buscar(frontera, output);
@@ -53,7 +53,7 @@ int QuadTree::cantidad(const Area *frontera)
 /* ----- Nodo ----- */
 
 Node::Node(const Rectangulo &nueva_area)
-    : c_area(nueva_area), c_cant_entidades(0), c_dividido(false)
+    : c_area(nueva_area), c_cant_particulas(0), c_dividido(false)
 {
 }
 
@@ -64,12 +64,12 @@ Node::~Node()
             delete node;
 }
 
-Node *Node::buscar_hoja(const Entidad *entidad)
+Node *Node::buscar_hoja(const Particula *particula)
 {
     if (c_dividido)
     {
-        int index = calcular_index(entidad);
-        return (c_subdivisiones[index])->buscar_hoja(entidad);
+        int index = calcular_index(particula);
+        return (c_subdivisiones[index])->buscar_hoja(particula);
     }
     return this;
 }
@@ -78,9 +78,9 @@ Node *Node::buscar_hoja(const Entidad *entidad)
  * |_0_|_1_| -> esta es la forma en la que se van a organizar
  * |_2_|_3_|
  */
-int Node::calcular_index(const Entidad *entidad) const
+int Node::calcular_index(const Particula *particula) const
 {
-    Vector2 delta = entidad->c_pos - c_area.c_pos;
+    Vector2 delta = particula->c_pos - c_area.c_pos;
 
     int index_x = (delta.x == 0) ? 0 : static_cast<int>((1 + delta.x / abs((int)delta.x)) / 2);
     int index_y = (delta.y == 0) ? 0 : static_cast<int>((1 - delta.y / abs((int)delta.y)) / 2);
@@ -104,53 +104,53 @@ void Node::subdividir()
             c_subdivisiones[index] = new Node(Rectangulo(Vector2(nuevo_x, nuevo_y), nuevo_w, nuevo_h));
         }
     }
-    for (int i = 0; i < c_cant_entidades; i++)
+    for (int i = 0; i < c_cant_particulas; i++)
     {
-        int index = calcular_index(c_entidades[i]);
-        c_subdivisiones[index]->insertar(c_entidades[i]);
+        int index = calcular_index(c_particulas[i]);
+        c_subdivisiones[index]->insertar(c_particulas[i]);
     }
     c_dividido = true;
 }
 
-void Node::insertar(Entidad *entidad)
+void Node::insertar(Particula *particula)
 {
-    if (c_cant_entidades >= capacidad_entidades)
+    if (c_cant_particulas >= capacidad_particulas)
     {
-        int index = calcular_index(entidad);
+        int index = calcular_index(particula);
         if (!c_dividido)
             subdividir();
-        c_subdivisiones[index]->insertar(entidad);
+        c_subdivisiones[index]->insertar(particula);
     }
     else
     {
-        entidad->c_index = c_cant_entidades;
-        entidad->c_padre = this;
-        c_entidades[c_cant_entidades] = entidad;
+        particula->c_index = c_cant_particulas;
+        particula->c_padre = this;
+        c_particulas[c_cant_particulas] = particula;
     }
-    c_cant_entidades++;
+    c_cant_particulas++;
 }
 
-void Node::actualizar(Entidad *entidad)
+void Node::actualizar(Particula *particula)
 {
-    Entidad entidad_vieja = *entidad;
-    entidad_vieja.c_pos = ((Node *)entidad->c_padre)->c_area.c_pos;
+    Particula entidad_vieja = *particula;
+    entidad_vieja.c_pos = ((Node *)particula->c_padre)->c_area.c_pos;
     eliminar(&entidad_vieja);
-    insertar(entidad);
+    insertar(particula);
 }
 
 void Node::juntar()
 {
-    if (c_cant_entidades >= capacidad_entidades)
+    if (c_cant_particulas >= capacidad_particulas)
         return;
 
-    std::vector<Entidad *> entidades_esparcidas;
-    buscar(&c_area, entidades_esparcidas);
+    std::vector<Particula *> particulas_esparcidas;
+    buscar(&c_area, particulas_esparcidas);
 
-    for (int i = 0; i < entidades_esparcidas.size(); i++)
+    for (int i = 0; i < particulas_esparcidas.size(); i++)
     {
-        c_entidades[i] = *(entidades_esparcidas.begin() + i);
-        c_entidades[i]->c_index = i;
-        c_entidades[i]->c_padre = this;
+        c_particulas[i] = *(particulas_esparcidas.begin() + i);
+        c_particulas[i]->c_index = i;
+        c_particulas[i]->c_padre = this;
     }
 
     c_dividido = false;
@@ -158,23 +158,23 @@ void Node::juntar()
         node->~Node();
 }
 
-void Node::eliminar(Entidad *entidad)
+void Node::eliminar(Particula *particula)
 {
     if (c_dividido)
     {
-        int index = calcular_index(entidad);
-        c_cant_entidades--;
-        c_subdivisiones[index]->eliminar(entidad);
-        if (c_cant_entidades < capacidad_entidades)
+        int index = calcular_index(particula);
+        c_cant_particulas--;
+        c_subdivisiones[index]->eliminar(particula);
+        if (c_cant_particulas < capacidad_particulas)
             juntar();
         return;
     }
 
-    c_entidades[entidad->c_index] = c_entidades[c_cant_entidades - 1];
-    c_cant_entidades--;
+    c_particulas[particula->c_index] = c_particulas[c_cant_particulas - 1];
+    c_cant_particulas--;
 }
 
-void Node::buscar(const Area *frontera, std::vector<Entidad *> &output)
+void Node::buscar(const Area *frontera, std::vector<Particula *> &output)
 {
     if (!c_area.intersecta(*frontera))
         return;
@@ -186,9 +186,9 @@ void Node::buscar(const Area *frontera, std::vector<Entidad *> &output)
         return;
     }
 
-    for (int i = 0; i < c_cant_entidades; i++)
-        if (frontera->contiene(*c_entidades[i]))
-            output.push_back(c_entidades[i]);
+    for (int i = 0; i < c_cant_particulas; i++)
+        if (frontera->contiene(*c_particulas[i]))
+            output.push_back(c_particulas[i]);
 }
 
 void Node::cantidad(const Area *frontera, int &cantidad)
@@ -203,7 +203,7 @@ void Node::cantidad(const Area *frontera, int &cantidad)
         return;
     }
 
-    for (int i = 0; i < c_cant_entidades; i++)
-        if (frontera->contiene(*c_entidades[i]))
+    for (int i = 0; i < c_cant_particulas; i++)
+        if (frontera->contiene(*c_particulas[i]))
             cantidad++;
 }
