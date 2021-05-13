@@ -25,11 +25,6 @@ bool Fisicas::insertar_particula(Particula *particula)
     return true;
 }
 
-void Fisicas::mostrar() const
-{
-    // cuando tenga una forma de renderizas aca deberia estar
-}
-
 void Fisicas::avanzar(const float dt)
 {
 
@@ -57,22 +52,77 @@ void Fisicas::avanzar(const float dt)
 
 void Fisicas::resolverColisiones(const float dt)
 {
-    /* 
-     * seria mejor tener un array de grafos asi se puede paralelizar
-     * pero como todavia no se como hacer eso, voy a poderlo en un
-     * solo grafo todo y deberia ser capaz
-     */
+    //Vector2 fuerza = particula->c_fuerza + (particula->c_vel * particula->c_masa) / dt;
 
+    Sistema_particulas sistema(c_particulas, c_qt);
+    sistema.aplicar_fuerzas(dt);
+}
+
+Sistema_particulas::Sistema_particulas(std::vector<Particula *> &particulas, QuadTree &qt)
+{
+    for (Particula *particula : particulas)
+        if (!hay_entidad(particula, c_particulas))
+            crear_grafo(particula, qt);
+}
+
+bool Sistema_particulas::hay_entidad(Entidad *entidad, std::vector<Entidad *> entidades)
+{
+    for (Entidad *e : entidades)
+        if (e == entidad)
+            return true;
+    return false;
+}
+
+bool Sistema_particulas::hay_entidad(Entidad *entidad, std::vector<Particula *> entidades)
+{
+    for (Particula *p : entidades)
+        if (p == entidad)
+            return true;
+    return false;
+}
+
+void Sistema_particulas::recursividad(Entidad *entidad, std::vector<Entidad *> &entidades, QuadTree &qt, Grafo &grafo)
+{
+    entidades.push_back(entidad);
+    c_particulas.push_back((Particula *)entidad);
+
+    std::vector<Entidad *> vecinos;
+    qt.buscar(((Particula *)entidad)->c_estructura, vecinos);
+    grafo.agregar_vertice(entidad, vecinos);
+
+    for (Entidad *e : vecinos)
+        if (!hay_entidad(e, entidades))
+            recursividad(e, entidades, qt, grafo);
+}
+
+void Sistema_particulas::crear_grafo(Particula *particula, QuadTree &qt)
+{
+    std::vector<Entidad *> particulas;
+    Grafo grafo;
+
+    recursividad(particula, particulas, qt, grafo);
+
+    c_grafos.push_back(grafo);
+}
+
+void recursivo_dos(Vertice &vertice, Grafo &sistema, const float dt)
+{
+    Particula *particula = (Particula *)vertice.c_clave;
     Vector2 fuerza = particula->c_fuerza + (particula->c_vel * particula->c_masa) / dt;
 
-    // Grafo grafo_colision;
-    // for (Particula *particula : c_particulas)
+    // for (std::pair<Entidad *, Vector2> par : vertice.c_vecinos)
     // {
-    //     std::vector<Entidad *> colisiones;
-    //     c_qt.buscar(particula->c_estructura, colisiones);
-
-    //     for (Entidad *colision : colisiones)
-    //         grafo_colision.agregar_vinculo(particula, colision);
     // }
-    // grafo_colision.expandir_fuerzas();
+}
+
+void Sistema_particulas::aplicar_fuerzas(const float dt)
+{
+    for (Grafo &sistema : c_grafos)
+    {
+        // std::vector<Vertice> maximos;
+        // sistema.encontrar_maximos(maximos);
+
+        // for (Vertice vertice : maximos)
+        //     recursivo_dos(vertice, sistema, dt);
+    }
 }

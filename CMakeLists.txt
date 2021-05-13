@@ -14,6 +14,7 @@ add_library(Core
     ${SOURCE_HERRAMIENTAS}/vector.cpp 
     ${SOURCE_HERRAMIENTAS}/area.cpp
     ${SOURCE_HERRAMIENTAS}/quadtree.cpp
+    ${SOURCE_HERRAMIENTAS}/grafo.cpp
 )
 add_executable(Main main/main.cpp)
 

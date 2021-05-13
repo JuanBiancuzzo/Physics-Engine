@@ -87,8 +87,3 @@ Vector2 Vector2::normal() const
 {
     return (*this / this->modulo());
 }
-
-void Vector2::imprimir() const
-{
-    std::cout << x << ", " << y << std::endl;
-}

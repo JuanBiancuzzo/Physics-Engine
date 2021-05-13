@@ -1,7 +1,6 @@
 #pragma once
 
 #include "vector.h"
-#include "../physics_engine/particula.h"
 
 class Area
 {
@@ -10,7 +9,7 @@ public:
 
 public:
     Area(const Vector2 &pos);
-    virtual bool contiene(const Particula &particula) const = 0;
+    virtual bool contiene(const Vector2 &pos) const = 0;
     virtual float distancia_borde_cuadrado(const Vector2 &dir) const = 0;
     virtual bool intersecta(const Area &frontera) const = 0;
     void actualizar(Vector2 &pos);
@@ -26,7 +25,7 @@ public:
     Rectangulo(const Vector2 pos);
     Rectangulo(const Vector2 pos, float w, float h);
 
-    bool contiene(const Particula &particula) const;
+    bool contiene(const Vector2 &pos) const;
     float distancia_borde_cuadrado(const Vector2 &dir) const;
     bool intersecta(const Area &frontera) const;
 };
@@ -41,7 +40,7 @@ public:
     Circulo(const Vector2 pos);
     Circulo(const Vector2 pos, float r);
 
-    bool contiene(const Particula &Particula) const;
+    bool contiene(const Vector2 &pos) const;
     float distancia_borde_cuadrado(const Vector2 &dir) const;
     bool intersecta(const Area &frontera) const;
 };

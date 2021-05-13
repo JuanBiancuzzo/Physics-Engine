@@ -1,9 +1,11 @@
 #pragma once
 
 #include "area.h"
+#include "entidad.h"
 #include "../physics_engine/particula.h"
 
 #include <vector>
+#include <array>
 
 class Node;
 
@@ -19,10 +21,10 @@ public:
     QuadTree(const Rectangulo &nueva_area);
     ~QuadTree();
 
-    bool insertar(Particula *particula);
-    bool actualizar(Particula *particula);
-    void eliminar(Particula *particula);
-    void buscar(const Area *frontera, std::vector<Particula *> &output);
+    bool insertar(Entidad *entidad);
+    bool actualizar(Entidad *entidad);
+    void eliminar(Entidad *entidad);
+    void buscar(const Area *frontera, std::vector<Entidad *> &output);
     int cantidad(const Area *frontera);
 };
 
@@ -32,29 +34,26 @@ public:
     Rectangulo c_area;
 
 private:
-    static const int capacidad_particulas = 4;
-    static const int capacidad_sub = 4;
-
-    Particula *c_particulas[capacidad_particulas];
+    std::array<Entidad*, 4> c_particulas;
     int c_cant_particulas;
 
-    Node *c_subdivisiones[capacidad_sub];
+    std::array<Nodo*, 4> c_subdivisiones;
     bool c_dividido;
 
 public:
     Node(const Rectangulo &nueva_area);
     ~Node();
 
-    void insertar(Particula *particula);
-    void actualizar(Particula *particula);
-    void eliminar(Particula *particula);
-    void buscar(const Area *frontera, std::vector<Particula *> &output);
+    void insertar(Entidad *entidad);
+    void actualizar(Entidad *entidad);
+    void eliminar(Entidad *entidad);
+    void buscar(const Area *frontera, std::vector<Entidad *> &output);
     void cantidad(const Area *frontera, int &cantidad);
 
-    Node *buscar_hoja(const Particula *particula);
+    Node *buscar_hoja(const Vector2 &posicion);
 
 private:
-    int calcular_index(const Particula *particula) const;
+    int calcular_index(const Vector2 &posicion) const;
     void subdividir();
     void juntar();
 };

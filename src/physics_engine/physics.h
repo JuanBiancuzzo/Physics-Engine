@@ -22,10 +22,27 @@ public:
 
     bool insertar_particula(Particula *particula);
 
-    void mostrar() const;
     void avanzar(const float dt);
     void resolverColisiones(const float dt);
 
 private:
     bool lugar_libre(const Particula *particula);
+};
+
+class Sistema_particulas
+{
+private:
+    std::vector<Grafo> c_grafos;
+    std::vector<Particula *> c_particulas;
+
+public:
+    Sistema_particulas(std::vector<Particula *> &particulas, QuadTree &qt);
+
+    void crear_grafo(Particula *particula, QuadTree &qt);
+    void recursividad(Entidad *entidad, std::vector<Entidad *> &entidades, QuadTree &qt, Grafo &grafo);
+    void aplicar_fuerzas(const float dt);
+
+private:
+    bool hay_entidad(Entidad *entidad, std::vector<Entidad *> entidades);
+    bool hay_entidad(Entidad *entidad, std::vector<Particula *> entidades);
 };
