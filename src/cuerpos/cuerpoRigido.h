@@ -20,7 +20,7 @@ public:
     Vector2 m_pos;
 
 public:
-    virtual ~CuerpoRigido();
+    CuerpoRigido(Vector2 posicion) : m_pos(posicion) {}
 
     virtual PuntoDeColision colisiona(CuerpoRigido *cuerpo_rigido) = 0;
     virtual PuntoDeColision colisiona(Circulo *circulo) = 0;
