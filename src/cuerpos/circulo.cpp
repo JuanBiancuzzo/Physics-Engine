@@ -1,8 +1,10 @@
 
 #include "ciruclo.h"
 
-Circulo::Circulo(float radio)
-    : m_radio(radio)
+#include "colisiones.cpp"
+
+Circulo::Circulo(Vector2 posicion, float radio)
+    : CuerpoRigido(posicion), m_radio(radio)
 {
 }
 
