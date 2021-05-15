@@ -14,7 +14,7 @@ PuntoDeColision Linea::colisiona(CuerpoRigido *cuerpo_rigido)
 
 PuntoDeColision Linea::colisiona(Circulo *circulo)
 {
-    PuntoDeColision punto = colsion::colision_circulo_linea(circulo, this);
+    PuntoDeColision punto = colision::colision_circulo_linea(circulo, this);
 
     Vector2 temp = punto.B;
     punto.B = punto.A;
