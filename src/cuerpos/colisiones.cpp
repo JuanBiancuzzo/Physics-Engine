@@ -3,6 +3,8 @@
 #include "ciruclo.h"
 #include "linea.h"
 
+#include <algorithm>
+
 namespace colision
 {
     PuntoDeColision colision_circulo_circulo(Circulo *prin, Circulo *secun)
@@ -16,7 +18,12 @@ namespace colision
 
     PuntoDeColision colision_circulo_linea(Circulo *circulo, Linea *linea)
     {
-        Vector2 B = linea->m_pos + (liena->m_final - linea->m_pos).proyeccion(circulo->m_pos - linea->m_pos);
+        float proyeccion = (liena->m_final - linea->m_pos) * (circulo->m_pos - linea->m_pos);
+        float largo = (liena->m_final - linea->m_pos) * (liena->m_final - linea->m_pos);
+
+        float t = max(0, min(largo, proyeccion)) / largo;
+
+        Vector2 B = linea->m_pos + (liena->m_final - linea->m_pos) * t;
         Vector2 A = (B - circulo->m_pos).normal() * circulo->m_radio;
         bool colisionan = circulo->m_radio >= (B - circulo->m_pos).modulo();
 
