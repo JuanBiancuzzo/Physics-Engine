@@ -6,9 +6,13 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp -o3")
 
 set(SOURCE "${PROJECT_SOURCE_DIR}/src")
+set(SOURCE_CUERPOS "${PROJECT_SOURCE_DIR}/src/cuerpos")
 
 add_library(Core
   ${SOURCE}/motorDeFisicas.cpp
+  ${SOURCE_CUERPOS}/linea.cpp
+  ${SOURCE_CUERPOS}/circulo.cpp
+  ${SOURCE_CUERPOS}/colisiones.cpp
 )
 add_executable(Main main/main.cpp)
 
