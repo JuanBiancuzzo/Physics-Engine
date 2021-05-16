@@ -2,6 +2,7 @@
 
 #include "ciruclo.h"
 #include "linea.h"
+#include "AABB.h"
 
 namespace colision
 {
@@ -11,7 +12,7 @@ namespace colision
         Vector2 B = (prin->m_pos - secun->m_pos).normal() * secun->m_radio;
         bool colisionan = prin->m_radio + secun->m_radio >= (prin->m_pos - secun->m_pos).modulo();
 
-        return PuntoDeColision(A, B, colisionan);
+        return {A, B, (B - A).normal(), (B - A).modulo(), colisionan};
     }
 
     PuntoDeColision colision_circulo_linea(Circulo *circulo, Linea *linea)
@@ -25,7 +26,7 @@ namespace colision
         Vector2 A = (B - circulo->m_pos).normal() * circulo->m_radio;
         bool colisionan = circulo->m_radio >= (B - circulo->m_pos).modulo();
 
-        return PuntoDeColision(A, B, colisionan);
+        return {A, B, (B - A).normal(), (B - A).modulo(), colisionan};
     }
 
     PuntoDeColision colision_linea_linea(Linea *prin, Linea *secun)
@@ -37,20 +38,20 @@ namespace colision
     {
         Vector2 diferencia = secun->m_pos - prin->m_pos;
         Vector2 A = prin->punto_borde(diferencia);
-        Vector2 B = secun->punto_borde(-1 * diferencia);
+        Vector2 B = secun->punto_borde(diferencia * -1.0f);
         bool colisionan = prin->m_pos.distancia_cuadrada(A) + secun->m_pos.distancia_cuadrada(B) >= diferencia.modulo_cuadrado();
 
-        return PuntoDeColision(A, B, colisionan);
+        return {A, B, (B - A).normal(), (B - A).modulo(), colisionan};
     }
 
     PuntoDeColision colision_circulo_aabb(Circulo *circulo, AABB *aabb)
     {
         Vector2 diferencia = aabb->m_pos - circulo->m_pos;
-        Vector2 A = diferencia.normal() * prin->m_radio;
-        Vector2 B = aabb->punto_borde(-1 * diferencia);
+        Vector2 A = diferencia.normal() * circulo->m_radio;
+        Vector2 B = aabb->punto_borde(diferencia * -1.0f);
         bool colisionan = circulo->m_pos.distancia_cuadrada(A) + aabb->m_pos.distancia_cuadrada(B) >= diferencia.modulo_cuadrado();
 
-        return PuntoDeColision(A, B, colisionan);
+        return {A, B, (B - A).normal(), (B - A).modulo(), colisionan};
     }
 
     PuntoDeColision colision_aabb_linea(AABB *aabb, Linea *linea)
