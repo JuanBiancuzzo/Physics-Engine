@@ -22,3 +22,8 @@ PuntoDeColision Circulo::colisiona(Linea *linea)
 {
     return colision::colision_circulo_linea(this, linea);
 }
+
+PuntoDeColision Circulo::colisiona(AABB *aabb)
+{
+    return colision::colision_circulo_aabb(this, aabb);
+}
