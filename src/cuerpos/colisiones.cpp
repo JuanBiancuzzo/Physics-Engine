@@ -11,7 +11,7 @@ namespace colision
         Vector2 B = (prin->m_pos - secun->m_pos).normal() * secun->m_radio;
         bool colisionan = prin->m_radio + secun->m_radio >= (prin->m_pos - secun->m_pos).modulo();
 
-        return {A, B, (B - A).normal(), (B - A).modulo(), colisionan};
+        return PuntoDeColision(A, B, colisionan);
     }
 
     PuntoDeColision colision_circulo_linea(Circulo *circulo, Linea *linea)
@@ -25,11 +25,38 @@ namespace colision
         Vector2 A = (B - circulo->m_pos).normal() * circulo->m_radio;
         bool colisionan = circulo->m_radio >= (B - circulo->m_pos).modulo();
 
-        return {A, B, (B - A).normal(), (B - A).modulo(), colisionan};
+        return PuntoDeColision(A, B, colisionan);
     }
 
     PuntoDeColision colision_linea_linea(Linea *prin, Linea *secun)
     {
+        return {}; // no quiero colisiones entre linea y circulo
+    }
+
+    PuntoDeColision colision_aabb_aabb(AABB *prin, AABB *secun)
+    {
+        Vector2 diferencia = secun->m_pos - prin->m_pos;
+        Vector2 A = prin->punto_borde(diferencia);
+        Vector2 B = secun->punto_borde(-1 * diferencia);
+        bool colisionan = prin->m_pos.distancia_cuadrada(A) + secun->m_pos.distancia_cuadrada(B) >= diferencia.modulo_cuadrado();
+
+        return PuntoDeColision(A, B, colisionan);
+    }
+
+    PuntoDeColision colision_circulo_aabb(Circulo *circulo, AABB *aabb)
+    {
+        Vector2 diferencia = aabb->m_pos - circulo->m_pos;
+        Vector2 A = diferencia.normal() * prin->m_radio;
+        Vector2 B = aabb->punto_borde(-1 * diferencia);
+        bool colisionan = circulo->m_pos.distancia_cuadrada(A) + aabb->m_pos.distancia_cuadrada(B) >= diferencia.modulo_cuadrado();
+
+        return PuntoDeColision(A, B, colisionan);
+    }
+
+    PuntoDeColision colision_aabb_linea(AABB *aabb, Linea *linea)
+    {
+        // implementar
+
         return {};
     }
 }

@@ -21,6 +21,11 @@ struct PuntoDeColision
         this.A = temp;
         this.normal *= -1.0f;
     }
+
+    PuntoDeColision(Vector2 &a, Vector2 &b, bool colisiona)
+        : A(a), B(b), normal((b - a).normal()), distancia((b - a).modulo()), colisiono(colisiona)
+    {
+    }
 };
 
 class CuerpoRigido
