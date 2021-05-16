@@ -1,8 +1,6 @@
 #include "cuerpoRigido.h"
 
-#include "ciruclo.h"
-#include "linea.h"
-#include "AABB.h"
+#include "cuerpos.h"
 
 namespace colision
 {
