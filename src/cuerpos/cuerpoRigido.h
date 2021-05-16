@@ -14,12 +14,13 @@ struct PuntoDeColision
     float distancia;
     bool colisiono;
 
-    void invertir()
+    PuntoDeColision invertir()
     {
-        Vector2 temp = this.B;
-        this.B = this.A;
-        this.A = temp;
-        this.normal *= -1.0f;
+        Vector2 temp = this->B;
+        this->B = this->A;
+        this->A = temp;
+        this->normal *= -1.0f;
+        return *this;
     }
 
     PuntoDeColision(Vector2 &a, Vector2 &b, bool colisiona)

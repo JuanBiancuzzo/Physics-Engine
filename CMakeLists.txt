@@ -10,8 +10,10 @@ set(SOURCE_CUERPOS "${PROJECT_SOURCE_DIR}/src/cuerpos")
 
 add_library(Core
   ${SOURCE}/motorDeFisicas.cpp
+  ${SOURCE}/quadtree.cpp
   ${SOURCE_CUERPOS}/linea.cpp
   ${SOURCE_CUERPOS}/circulo.cpp
+  ${SOURCE_CUERPOS}/AABB.cpp
   ${SOURCE_CUERPOS}/colisiones.cpp
 )
 add_executable(Main main/main.cpp)

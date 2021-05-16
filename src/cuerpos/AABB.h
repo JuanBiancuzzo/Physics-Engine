@@ -8,7 +8,7 @@ public:
     float m_ancho, m_alto;
 
 public:
-    Circulo(Vector2 posicion, float ancho, float alto);
+    AABB(Vector2 posicion, float ancho, float alto);
 
     PuntoDeColision colisiona(CuerpoRigido *cuerpo_rigido);
     PuntoDeColision colisiona(Circulo *circulo);
