@@ -54,8 +54,27 @@ namespace colision
 
     PuntoDeColision colision_aabb_linea(AABB *aabb, Linea *linea)
     {
-        // implementar
+        Vector2 dir(linea->m_final - linea->m_pos);
+        Vector2 t_cerca(((aabb->m_pos.x - aabb->m_ancho) - linea->m_pos.x) / dir.x,\
+                         (aabb->m_pos.y - aabb->m_ancho) - linea->m_pos.y) / dir.y);
+        Vector2 t_lejos(((aabb->m_pos.x + aabb->m_ancho) - linea->m_pos.x) / dir.x, \
+                         (aabb->m_pos.y - aabb->m_ancho) - linea->m_pos.y) / dir.y);
 
-        return {};
+        if (t_cerca.x > t_lejos.x)
+            std::swap(t_cerca.x, t_lejos.x);
+        if (t_cerca.y > t_lejos.y)
+            std::swap(t_cerca.y, t_lejos.y);
+
+        bool colisionan = !(t_cerca.x > t_lejos.y || t_cerca.y > t_lejos.x);
+
+        float t_cerca_colision = std::max<float>(t_cerca.x, t_cerca.y);
+        float t_lejos_colision = std::min<float>(t_lejos.x, t_lejos.y);
+
+        Vector2 A = linea->m_pos + dir * t_cerca_colision;
+        Vector2 B = linea->m_pos + dir * t_lejos_colision;
+
+        colisionan = (colisionan) ? !(t < t_lejos_colision) : colisionan;
+
+        return {A, B, (B - A).normal(), (B - A).modulo(), colisionan};
     }
 }
