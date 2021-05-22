@@ -1,5 +1,9 @@
 # Game of Life meets physics
 
+## Esta es la version vieja
+Deje de lado esta version porque quiero mejorarla, pero para ver mejores iteraciones ir a la rama main, o otras ramas
+
+## Idea general
 La idea de este proyecto es principalmente para que aprenda a usar C++, posiblemente Opengl y en el mejor de los casos Vulkan
 
 Para esto primero estoy aprendiendo C++, con el objetivo de hacer un falling sand simulator, pero mi forma de cambiarlo es que no voy a tener una matriz donde esten los materiales sino que van a ser particulas y en el unico momento que se va a ver como si fuera una matriz es cuando se muestre por pantalla
