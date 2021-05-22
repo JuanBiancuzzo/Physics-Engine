@@ -22,7 +22,6 @@ public:
     bool insertar(Entidad *entidad);
     bool actualizar(Entidad *entidad);
     void eliminar(Entidad *entidad);
-    int cantidad(const AABB *frontera);
     template <typename T>
     void buscar(const AABB *frontera, std::vector<T *> &output);
 };
@@ -30,12 +29,13 @@ public:
 class Node
 {
 private:
-    static const int cant_subdivisiones = 4;
-    static const int cant_particulas = 4;
+    static const int cap_subdivisiones = 4;
+    static const int cap_particulas = 4;
 
     AABB m_area;
-    std::array<Node *, cant_subdivisiones> m_subdivisiones;
-    std::array<Entidad *, cant_particulas> m_particulas;
+    std::array<Node *, cap_subdivisiones> m_subdivisiones;
+    std::array<Entidad *, cap_particulas> m_particulas;
+    int m_cant_particulas;
     bool m_dividido;
 
 public:
@@ -45,7 +45,6 @@ public:
     void insertar(Entidad *entidad);
     void actualizar(Entidad *entidad);
     void eliminar(Entidad *entidad);
-    void cantidad(const AABB *frontera, int &cantidad);
     template <typename T>
     void buscar(const AABB *frontera, std::vector<T *> &output);
 
