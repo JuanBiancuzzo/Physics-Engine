@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+const float delta = 0.01f;
+
 struct Vector2
 {
     float x, y;
