@@ -18,6 +18,13 @@ private:
 public:
     QuadTree(Vector2 posicion, float ancho, float alto);
     ~QuadTree();
+
+    bool insertar(Entidad *entidad);
+    bool actualizar(Entidad *entidad);
+    void eliminar(Entidad *entidad);
+    int cantidad(const AABB *frontera);
+    template <typename T>
+    void buscar(const AABB *frontera, std::vector<T *> &output);
 };
 
 class Node
@@ -34,6 +41,19 @@ private:
 public:
     Node(Vector2 posicion, float ancho, float alto);
     ~Node();
+
+    void insertar(Entidad *entidad);
+    void actualizar(Entidad *entidad);
+    void eliminar(Entidad *entidad);
+    void cantidad(const AABB *frontera, int &cantidad);
+    template <typename T>
+    void buscar(const AABB *frontera, std::vector<T *> &output);
+
+    Node *buscar_hoja(const Vector2 &posicion);
+
+private:
+    void subdividir();
+    void juntar();
 };
 
 class Entidad
