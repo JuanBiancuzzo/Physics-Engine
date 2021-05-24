@@ -21,9 +21,9 @@ public:
 
     bool insertar(Entidad *entidad);
     bool actualizar(Entidad *entidad);
-    void eliminar(Entidad *entidad);
+    bool eliminar(Entidad *entidad);
     template <typename T>
-    void buscar(const AABB *frontera, std::vector<T *> &output);
+    std::vector<T *> buscar(CuerpoRigido *frontera);
 };
 
 class Node
@@ -34,32 +34,38 @@ private:
 
     AABB m_area;
     std::array<Node *, cap_subdivisiones> m_subdivisiones;
-    std::array<Entidad *, cap_particulas> m_particulas;
+    Entidad *m_particulas[cap_particulas];
     int m_cant_particulas;
     bool m_dividido;
+
+    static int m_contador;
 
 public:
     Node(Vector2 posicion, float ancho, float alto);
     ~Node();
 
-    void insertar(Entidad *entidad);
-    void actualizar(Entidad *entidad);
-    void eliminar(Entidad *entidad);
+    bool insertar(Entidad *entidad);
+    bool actualizar(Entidad *entidad);
+    bool eliminar(Entidad *entidad);
     template <typename T>
-    void buscar(const AABB *frontera, std::vector<T *> &output);
+    void buscar(CuerpoRigido *frontera, std::vector<T *> &output);
 
-    Node *buscar_hoja(const Vector2 &posicion);
+    bool hay_entidad(Entidad *entidad);
+    int contador();
 
 private:
     void subdividir();
     void juntar();
 };
 
+int Node::m_contador = 0;
+
 class Entidad
 {
 public:
     CuerpoRigido *m_cuerpo;
-    std::vector<Node *> m_padres;
+    std::vector<std::pair<Node *, int>> m_padres;
+    int m_contador;
 
 public:
     Entidad(CuerpoRigido *cuerpo);

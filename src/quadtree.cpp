@@ -1,5 +1,7 @@
 #include "quadtree.h"
 
+#include <iterator>
+
 QuadTree::QuadTree(Vector2 posicion, float ancho, float alto)
     : m_area(AABB(posicion, ancho, alto))
 {
@@ -14,29 +16,31 @@ QuadTree::~QuadTree()
 
 bool QuadTree::insertar(Entidad *entidad)
 {
-    if (!entidad->m_cuerpo->colisiona(&m_area).colisiono)
-        return false;
-    m_raiz->insertar(entidad);
-    return true;
+    return m_raiz->insertar(entidad);
 }
 
 bool QuadTree::actualizar(Entidad *entidad)
 {
-    return false;
+    bool resultado = false;
+    for (auto &padre : entidad->m_padres)
+        if (padre.first->hay_entidad(entidad))
+            resultado = resultado || m_raiz->actualizar(entidad);
+
+    return resultado;
 }
 
-void QuadTree::eliminar(Entidad *entidad)
+bool QuadTree::eliminar(Entidad *entidad)
 {
-}
-
-int QuadTree::cantidad(const AABB *frontera)
-{
-    return 0;
+    return m_raiz->eliminar(entidad);
 }
 
 template <typename T>
-void QuadTree::buscar(const AABB *frontera, std::vector<T *> &output)
+std::vector<T *> QuadTree::buscar(CuerpoRigido *frontera)
 {
+    std::vector<T *> output;
+    m_raiz->contador();
+    m_raiz->buscar(frontera, output);
+    return output;
 }
 
 Node::Node(Vector2 posicion, float ancho, float alto)
@@ -47,73 +51,150 @@ Node::Node(Vector2 posicion, float ancho, float alto)
 Node::~Node()
 {
     if (m_dividido)
-    {
         for (Node *subdivision : m_subdivisiones)
         {
             subdivision->~Node();
             delete subdivision;
         }
+}
+
+bool Node::insertar(Entidad *entidad)
+{
+    if (!entidad->m_cuerpo->colisiona(&m_area).colisiono)
+        return false;
+
+    if (m_cant_particulas < cap_particulas)
+    {
+        m_particulas[m_cant_particulas] = entidad;
+        entidad->m_padres.emplace_back(std::make_pair(this, cap_particulas));
     }
+    else
+    {
+        if (!m_dividido)
+            subdividir();
+        for (Node *subdivision : m_subdivisiones)
+            subdivision->insertar(entidad);
+    }
+
+    m_cant_particulas++;
+    return true;
 }
 
-void Node::insertar(Entidad *entidad)
+bool Node::actualizar(Entidad *entidad)
 {
+    return eliminar(entidad) || insertar(entidad);
 }
 
-void Node::actualizar(Entidad *entidad)
+bool Node::eliminar(Entidad *entidad)
 {
-}
+    if (!entidad->m_cuerpo->colisiona(&m_area).colisiono)
+        return false;
 
-void Node::eliminar(Entidad *entidad)
-{
+    m_cant_particulas--;
+    if (m_dividido)
+    {
+        for (Node *subdivision : m_subdivisiones)
+            subdivision->eliminar(entidad);
+        juntar();
+    }
+    else
+    {
+        for (auto it = entidad->m_padres.begin(); it != entidad->m_padres.end(); it++)
+        {
+            if (it->first == this)
+            {
+                m_particulas[it->second] = m_particulas[m_cant_particulas];
+                entidad->m_padres.erase(it);
+                break;
+            }
+        }
+    }
+
+    return true;
 }
 
 template <typename T>
-void Node::buscar(const AABB *frontera, std::vector<T *> &output)
+void Node::buscar(CuerpoRigido *frontera, std::vector<T *> &output)
 {
+    if (!frontera->colisiona(&m_area).colisiono)
+        return;
+
+    if (m_dividido)
+        for (Node *subdivision : m_subdivisiones)
+            subdivision->buscar(frontera, output);
+    else
+        for (int i = 0; i < m_cant_particulas; i++)
+            if (m_particulas[i]->m_contador != m_contador || frontera->colisiona(m_particulas[i]->m_cuerpo).colisiono)
+            {
+                output.emplace_back(m_particulas[i]);
+                m_particulas[i]->m_contador = m_contador;
+            }
 }
 
-Node *Node::buscar_hoja(const Vector2 &posicion)
+bool Node::hay_entidad(Entidad *entidad)
 {
-    return nullptr;
+    for (int i = 0; i < m_cant_particulas; i++)
+        if (m_particulas[i] == entidad)
+            return true;
+    return false;
+}
+
+int Node::contador()
+{
+    m_contador++;
+    return m_contador;
 }
 
 void Node::subdividir()
 {
     float nuevo_ancho = m_area.m_ancho / 2;
-    float nuevo_ancho = m_area.m_ancho / 2;
+    float nuevo_alto = m_area.m_alto / 2;
 
     for (int i = 0; i < m_subdivisiones.size() / 2; i++)
     {
         for (int j = 0; j < m_subdivisiones.size() / 2; j++)
         {
             float nuevo_x = m_area.m_pos.x + nuevo_ancho * (2 * j - 1);
-            float nuevo_y = m_area.m_pos.y + nuevo_ancho * (1 - 2 * i);
+            float nuevo_y = m_area.m_pos.y + nuevo_alto * (1 - 2 * i);
 
             int index = j + 2 * i;
-            m_subdivisiones[index] = new Node(Vector2(nuevo_x, nuevo_y), nuevo_ancho, nuevo_ancho);
+            m_subdivisiones[index] = new Node(Vector2(nuevo_x, nuevo_y), nuevo_ancho, nuevo_alto);
         }
     }
+
     for (Entidad *entidad : m_particulas)
+    {
+        for (auto it = entidad->m_padres.begin(); it != entidad->m_padres.end(); it++)
+            if (it->first == this)
+            {
+                entidad->m_padres.erase(it);
+                break;
+            }
         for (Node *subdivision : m_subdivisiones)
             subdivision->insertar(entidad);
+    }
 
     m_dividido = true;
 }
 
 void Node::juntar()
 {
-    std::vector<Entidad *> entidades_esparcidas;
-    buscar<Entidad *>(&m_area, entidades_esparcidas);
-
-    if (entidades_esparcidas.size() >= m_particulas.size())
+    if (m_cant_particulas >= cap_particulas)
         return;
 
-    for (int i = 0; i < entidades_esparcidas.size(); i++)
+    contador();
+    std::vector<Entidad *> output;
+    buscar<Entidad>(&m_area, output);
+
+    for (int i = 0; i < output.size(); i++)
     {
-        m_particulas[i] = entidades_esparcidas.begin()[i];
-        m_particulas[i].push_back(this);
+        m_particulas[i] = output[i];
+        m_particulas[i]->m_padres.emplace_back(std::make_pair(this, i));
     }
+
+    for (Node *subdivision : m_subdivisiones)
+        for (Entidad *entidad : output)
+            subdivision->eliminar(entidad);
 
     m_dividido = false;
     for (Node *subdivision : m_subdivisiones)
@@ -121,7 +202,7 @@ void Node::juntar()
 }
 
 Entidad::Entidad(CuerpoRigido *cuerpo)
-    : m_cuerpo(cuerpo)
+    : m_cuerpo(cuerpo), m_contador(-1)
 {
     m_padres.reserve(1);
 }
