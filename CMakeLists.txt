@@ -11,6 +11,7 @@ set(SOURCE_CUERPOS "${PROJECT_SOURCE_DIR}/src/cuerpos")
 add_library(Core
   ${SOURCE}/motorDeFisicas.cpp
   ${SOURCE}/quadtree.cpp
+  ${SOURCE}/vector.cpp
   ${SOURCE_CUERPOS}/colisiones.cpp
 )
 add_executable(Main main/main.cpp)
@@ -29,8 +30,9 @@ add_executable(tests)
 
 set(TEST "${PROJECT_SOURCE_DIR}/tests")
 
-target_sources(tests
-  PRIVATE ${TEST}/testPorDefecto.cpp
+target_sources(tests PRIVATE 
+    ${TEST}/vector_test.cpp
+    ${TEST}/quadtree_test.cpp
 )
 set_target_properties(tests PROPERTIES COMPILE_FLAGS "${cxx_strict}")
 target_link_libraries(tests gtest gtest_main Core)
