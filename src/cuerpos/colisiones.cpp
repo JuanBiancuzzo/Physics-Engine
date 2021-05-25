@@ -1,6 +1,4 @@
-#include "cuerpoRigido.h"
-
-#include "cuerpos.h"
+#include "colisiones.h"
 
 namespace colision
 {

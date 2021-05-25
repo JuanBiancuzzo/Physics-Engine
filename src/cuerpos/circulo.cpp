@@ -1,5 +1,5 @@
 
-#include "ciruclo.h"
+#include "circulo.h"
 
 #include "colisiones.cpp"
 

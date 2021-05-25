@@ -1,7 +1,5 @@
 #include "quadtree.h"
 
-#include <iterator>
-
 QuadTree::QuadTree(Vector2 posicion, float ancho, float alto)
     : m_area(AABB(posicion, ancho, alto))
 {
@@ -47,6 +45,8 @@ Node::Node(Vector2 posicion, float ancho, float alto)
     : m_area(AABB(posicion, ancho, alto)), m_cant_particulas(0), m_dividido(false)
 {
 }
+
+int Node::m_contador = 0;
 
 Node::~Node()
 {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "vector.h"
-#include "cuerpos/cuerpos.h"
+#include "cuerpos/colisiones.h"
 
 #include <vector>
 #include <array>
@@ -57,8 +57,6 @@ private:
     void subdividir();
     void juntar();
 };
-
-int Node::m_contador = 0;
 
 class Entidad
 {
