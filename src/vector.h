@@ -14,7 +14,7 @@ struct Vector2
 
     Vector2 operator+(const Vector2 &otro) const;
     Vector2 operator-(const Vector2 &otro) const;
-    float operator*(const Vector2 &otro) const; // producto interno
+    float operator*(const Vector2 &otro) const; // producto escalar
     Vector2 operator*(float alpha) const;
     Vector2 operator/(float alpha) const;
 
