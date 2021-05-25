@@ -1,6 +1,4 @@
-#include "AABB.h"
-
-#include "colisiones.cpp"
+#include "colisiones.h"
 
 AABB::AABB(Vector2 posicion, float ancho, float alto)
     : CuerpoRigido(posicion), m_ancho(ancho), m_alto(alto)

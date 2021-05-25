@@ -1,6 +1,4 @@
-#include "linea.h"
-
-#include "colisiones.cpp"
+#include "colisiones.h"
 
 Linea::Linea(Vector2 principio, Vector2 final)
     : CuerpoRigido(principio), m_final(final)

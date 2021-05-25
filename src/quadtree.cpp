@@ -66,7 +66,7 @@ bool Node::insertar(Entidad *entidad)
     if (m_cant_particulas < cap_particulas)
     {
         m_particulas[m_cant_particulas] = entidad;
-        entidad->m_padres.emplace_back(std::make_pair(this, cap_particulas));
+        entidad->m_padres.emplace_back(std::make_pair(this, m_cant_particulas));
     }
     else
     {

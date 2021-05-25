@@ -13,6 +13,9 @@ add_library(Core
   ${SOURCE}/quadtree.cpp
   ${SOURCE}/vector.cpp
   ${SOURCE_CUERPOS}/colisiones.cpp
+  ${SOURCE_CUERPOS}/linea.cpp
+  ${SOURCE_CUERPOS}/circulo.cpp
+  ${SOURCE_CUERPOS}/AABB.cpp
 )
 add_executable(Main main/main.cpp)
 
