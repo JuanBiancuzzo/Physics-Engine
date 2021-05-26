@@ -15,5 +15,5 @@ public:
     PuntoDeColision colisiona(Linea *linea);
     PuntoDeColision colisiona(AABB *aabb);
 
-    Vector2 punto_borde(const Vector2 &direccion) const;
+    Vector2 punto_borde(Vector2 &direccion);
 };

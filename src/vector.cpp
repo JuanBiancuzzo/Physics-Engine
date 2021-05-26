@@ -88,5 +88,7 @@ Vector2 Vector2::proyeccion(const Vector2 &otro) const
 
 Vector2 Vector2::normal() const
 {
+    if (this->modulo() == 0.0f)
+        return *this;
     return (*this / this->modulo());
 }

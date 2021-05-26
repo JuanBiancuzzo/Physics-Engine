@@ -25,9 +25,11 @@ PuntoDeColision AABB::colisiona(AABB *aabb)
     return colision::colision_aabb_aabb(this, aabb);
 }
 
-Vector2 AABB::punto_borde(const Vector2 &direccion) const
+Vector2 AABB::punto_borde(Vector2 &direccion)
 {
-    float relacion = (direccion.y == 0) ? 0 : direccion.x / direccion.y;
+    if (direccion == Vector2())
+        direccion += Vector2(.01f, .01f);
+    float relacion = (-0.01f < direccion.y && direccion.y < 0.01f) ? 0 : direccion.x / direccion.y;
     float valor = (relacion > 1 || relacion < -1) ? m_ancho / direccion.x : m_alto / direccion.y;
     return (direccion * valor);
 }

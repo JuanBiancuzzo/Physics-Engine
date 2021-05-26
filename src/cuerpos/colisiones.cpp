@@ -34,7 +34,8 @@ namespace colision
     {
         Vector2 diferencia = secun->m_pos - prin->m_pos;
         Vector2 A = prin->punto_borde(diferencia);
-        Vector2 B = secun->punto_borde(diferencia * -1.0f);
+        diferencia *= -1.0f;
+        Vector2 B = secun->punto_borde(diferencia);
         bool colisionan = prin->m_pos.distancia_cuadrada(A) + secun->m_pos.distancia_cuadrada(B) >= diferencia.modulo_cuadrado();
 
         return {A, B, (B - A).normal(), (B - A).modulo(), colisionan};
@@ -44,7 +45,8 @@ namespace colision
     {
         Vector2 diferencia = aabb->m_pos - circulo->m_pos;
         Vector2 A = diferencia.normal() * circulo->m_radio;
-        Vector2 B = aabb->punto_borde(diferencia * -1.0f);
+        diferencia *= -1.0f;
+        Vector2 B = aabb->punto_borde(diferencia);
         bool colisionan = circulo->m_pos.distancia_cuadrada(A) + aabb->m_pos.distancia_cuadrada(B) >= diferencia.modulo_cuadrado();
 
         return {A, B, (B - A).normal(), (B - A).modulo(), colisionan};
