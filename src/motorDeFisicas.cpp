@@ -1,2 +1,2 @@
 #include "motorDeFisicas.h"
-#include "cuerpos/cuerpos.h"
+#include "cuerpos/colisiones.h"

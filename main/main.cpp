@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "../src/motorDeFisicas.cpp"
+#include "../src/motorDeFisicas.h"
 
 int main()
 {

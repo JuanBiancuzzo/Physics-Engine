@@ -60,7 +60,7 @@ Node::~Node()
 
 bool Node::insertar(Entidad *entidad)
 {
-    if (!entidad->m_cuerpo->colisiona(&m_area).colisiono)
+    if (!m_area.colisiona(entidad->m_cuerpo).colisiono)
         return false;
 
     if (m_cant_particulas < cap_particulas)
@@ -87,7 +87,7 @@ bool Node::actualizar(Entidad *entidad)
 
 bool Node::eliminar(Entidad *entidad)
 {
-    if (!entidad->m_cuerpo->colisiona(&m_area).colisiono)
+    if (!m_area.colisiona(entidad->m_cuerpo).colisiono)
         return false;
 
     m_cant_particulas--;
@@ -116,7 +116,7 @@ bool Node::eliminar(Entidad *entidad)
 template <typename T>
 void Node::buscar(CuerpoRigido *frontera, std::vector<T *> &output)
 {
-    if (!frontera->colisiona(&m_area).colisiono)
+    if (!m_area.colisiona(frontera).colisiono)
         return;
 
     if (m_dividido)
