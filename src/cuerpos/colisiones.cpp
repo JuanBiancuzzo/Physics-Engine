@@ -19,8 +19,8 @@ namespace colision
         float t = std::max<float>(.0f, std::min<float>(largo, proyeccion)) / largo;
 
         Vector2 B = linea->m_pos + (linea->m_final - linea->m_pos) * t;
-        Vector2 A = (B - circulo->m_pos).normal() * circulo->m_radio;
-        bool colisionan = circulo->m_radio >= (B - circulo->m_pos).modulo();
+        Vector2 A = B.normal() * circulo->m_radio;
+        bool colisionan = circulo->m_radio >= B.modulo();
 
         return {A, B, (B - A).normal(), (B - A).modulo(), colisionan};
     }
@@ -36,7 +36,7 @@ namespace colision
         Vector2 A = prin->punto_borde(diferencia);
         diferencia *= -1.0f;
         Vector2 B = secun->punto_borde(diferencia);
-        bool colisionan = prin->m_pos.distancia_cuadrada(A) + secun->m_pos.distancia_cuadrada(B) >= diferencia.modulo_cuadrado();
+        bool colisionan = A.modulo() + B.modulo() >= diferencia.modulo_cuadrado();
 
         return {A, B, (B - A).normal(), (B - A).modulo(), colisionan};
     }
@@ -47,7 +47,7 @@ namespace colision
         Vector2 A = diferencia.normal() * circulo->m_radio;
         diferencia *= -1.0f;
         Vector2 B = aabb->punto_borde(diferencia);
-        bool colisionan = circulo->m_pos.distancia_cuadrada(A) + aabb->m_pos.distancia_cuadrada(B) >= diferencia.modulo_cuadrado();
+        bool colisionan = A.modulo() + B.modulo() >= diferencia.modulo();
 
         return {A, B, (B - A).normal(), (B - A).modulo(), colisionan};
     }
