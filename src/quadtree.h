@@ -17,6 +17,7 @@ private:
 
 public:
     QuadTree(Vector2 posicion, float ancho, float alto);
+    QuadTree(AABB &aabb);
     ~QuadTree();
 
     bool insertar(Entidad *entidad);
@@ -39,6 +40,7 @@ private:
 
 public:
     Node(Vector2 posicion, float ancho, float alto);
+    Node(AABB &aabb);
     ~Node();
 
     bool insertar(Entidad *entidad);

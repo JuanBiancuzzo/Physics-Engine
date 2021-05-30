@@ -6,6 +6,12 @@ QuadTree::QuadTree(Vector2 posicion, float ancho, float alto)
     m_raiz = new Node(posicion, ancho, alto);
 }
 
+QuadTree::QuadTree(AABB &aabb)
+    : m_area(aabb)
+{
+    m_raiz = new Node(aabb);
+}
+
 QuadTree::~QuadTree()
 {
     delete m_raiz;
@@ -42,6 +48,11 @@ Node::Node(Vector2 posicion, float ancho, float alto)
 {
 }
 
+Node::Node(AABB &aabb)
+    : m_area(aabb), m_cant_entidades(0), m_divisible(true)
+{
+}
+
 Node::~Node()
 {
     if (!m_subdivisiones.empty())
@@ -66,7 +77,6 @@ bool Node::insertar(Entidad *entidad)
         for (Node *subdivision : m_subdivisiones)
             subdivision->insertar(entidad);
     }
-
     m_cant_entidades++;
     return true;
 }
