@@ -43,7 +43,9 @@ bool hay_entidad(std::vector<Entidad *> lista, Entidad *entidad)
 
 TEST(QuadtreeTest, Insertando_5_entidades_para_que_se_subdivida_el_espacio)
 {
-    QuadTree qt(Vector2(), 64.0f, 64.0f);
+    AABB area(Vector2(), 64.0f, 64.0f);
+    QuadTree qt(area);
+
     Circulo c1(Vector2(4.0f, 4.0f), .0f);
     Entidad e1(&c1);
     qt.insertar(&e1);
@@ -60,8 +62,7 @@ TEST(QuadtreeTest, Insertando_5_entidades_para_que_se_subdivida_el_espacio)
     Entidad e5(&c5);
     qt.insertar(&e5);
 
-    AABB area_de_busqueda(Vector2(), 64.0f, 64.0f);
-    std::vector<Entidad *> buscar = qt.buscar(&area_de_busqueda);
+    std::vector<Entidad *> buscar = qt.buscar(&area);
 
     ASSERT_EQ(buscar.size(), 5);
 

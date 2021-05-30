@@ -36,7 +36,7 @@ namespace colision
         Vector2 A = prin->punto_borde(diferencia);
         diferencia *= -1.0f;
         Vector2 B = secun->punto_borde(diferencia);
-        bool colisionan = A.modulo() + B.modulo() >= diferencia.modulo_cuadrado();
+        bool colisionan = A.modulo() + B.modulo() >= diferencia.modulo();
 
         return {A, B, (B - A).normal(), (B - A).modulo(), colisionan};
     }
