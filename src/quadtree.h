@@ -21,7 +21,7 @@ public:
     ~QuadTree();
 
     bool insertar(Entidad *entidad);
-    bool actualizar(Entidad *entidad);
+    void actualizar(Entidad *entidad);
     bool eliminar(Entidad *entidad);
     std::vector<Entidad *> buscar(CuerpoRigido *frontera);
 };
@@ -44,22 +44,22 @@ public:
     ~Node();
 
     bool insertar(Entidad *entidad);
-    bool actualizar(Entidad *entidad);
     bool eliminar(Entidad *entidad);
     void buscar(CuerpoRigido *frontera, std::vector<Entidad *> &output);
 
-    bool hay_entidad(Entidad *entidad);
+    void nodos_padre(Entidad *entidad, std::vector<Node *> &padres);
 
 private:
     void subdividir();
     void juntar();
+    bool es_divisible();
 };
 
 class Entidad
 {
 public:
     CuerpoRigido *m_cuerpo;
-    std::vector<std::pair<Node *, int>> m_padres;
+    std::vector<Node *> m_padres;
 
 public:
     Entidad(CuerpoRigido *cuerpo);
