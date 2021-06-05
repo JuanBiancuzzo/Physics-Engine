@@ -91,6 +91,30 @@ TEST(QuadtreeTest, Insertando_5_entidades_todos_tiene_solo_un_padre)
         delete c;
 }
 
+TEST(QuadtreeTest, Insertar_5_entidades_para_que_no_sea_divisible_y_los_5_tienen_el_mismo_padre)
+{
+    AABB area(Vector2(), 64.0f, 64.0f);
+    QuadTree qt(area);
+    std::vector<Entidad *> entidades;
+    std::vector<Circulo *> cuerpos;
+
+    for (float i = 0; i < 5.0f; i++)
+    {
+        Circulo *c = new Circulo(Vector2(), 5.0f);
+        Entidad *e = new Entidad(c);
+        qt.insertar(e);
+        entidades.emplace_back(e);
+        cuerpos.emplace_back(c);
+    }
+
+    Node *padre = entidades[0]->m_padres[0];
+    for (Entidad *e : entidades)
+        ASSERT_EQ(e->m_padres[0], padre);
+
+    for (Circulo *c : cuerpos)
+        delete c;
+}
+
 TEST(QuadtreeTest, Insertando_y_eliminando_una_entidad_en_rango_devuelve_true)
 {
     AABB area(Vector2(), 64.0f, 64.0f);
@@ -169,18 +193,6 @@ TEST(QuadtreeTest, Insertando_y_eliminando_5_entidades_y_no_tiene_padres)
 
     for (Circulo *c : cuerpos)
         delete c;
-}
-
-TEST(QuadtreeTest, Muesto_una_entidad_y_la_actualizo_y_devuelve_true)
-{
-    AABB area(Vector2(), 64.0f, 64.0f);
-    QuadTree qt(area);
-    Circulo circ(Vector2(), 5.0f);
-    Entidad ent(&circ);
-
-    qt.insertar(&ent);
-    circ.m_pos = Vector2(20.0f, 20.0f);
-    ASSERT_TRUE(qt.actualizar(&ent));
 }
 
 TEST(QuadtreeTest, Muesto_una_entidad_y_la_actualizo_y_busco_en_la_zona_nueva)

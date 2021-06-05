@@ -63,14 +63,13 @@ Padres nuevos_y_viejos(Entidad *entidad, Node *raiz)
     return {viejos, nuevos};
 }
 
-bool QuadTree::actualizar(Entidad *entidad)
+void QuadTree::actualizar(Entidad *entidad)
 {
     Padres padres = nuevos_y_viejos(entidad, m_raiz);
     for (Node *node : padres.viejos)
         node->eliminar(entidad);
     for (Node *node : padres.nuevos)
         node->insertar(entidad);
-    return true;
 }
 
 bool QuadTree::eliminar(Entidad *entidad)
@@ -107,7 +106,7 @@ bool Node::insertar(Entidad *entidad)
     if (!m_area.colisiona(entidad->m_cuerpo).colisiono)
         return false;
 
-    if (m_cant_entidades < cap_entidades)
+    if (m_cant_entidades < cap_entidades || !es_divisible())
     {
         m_entidades.emplace_back(entidad);
         entidad->m_padres.emplace_back(this);
@@ -121,11 +120,6 @@ bool Node::insertar(Entidad *entidad)
     }
     m_cant_entidades++;
     return true;
-}
-
-bool Node::actualizar(Entidad *entidad)
-{
-    return eliminar(entidad) || insertar(entidad);
 }
 
 bool Node::eliminar(Entidad *entidad)
@@ -183,8 +177,10 @@ void Node::nodos_padre(Entidad *entidad, std::vector<Node *> &padres)
             subdivision->nodos_padre(entidad, padres);
 }
 
-void Node::subdividir()
+std::vector<Node *> Node::crear_subdivisiones()
 {
+    std::vector<Node *> subdivisiones;
+
     float nuevo_ancho = m_area.m_ancho / 2;
     float nuevo_alto = m_area.m_alto / 2;
 
@@ -194,8 +190,15 @@ void Node::subdividir()
         float nuevo_y = m_area.m_pos.x + nuevo_alto * (1 - 2 * ((i / 2) % 2));
 
         Node *subdivision = new Node(Vector2(nuevo_x, nuevo_y), nuevo_ancho, nuevo_alto);
-        m_subdivisiones.emplace_back(subdivision);
+        subdivisiones.emplace_back(subdivision);
     }
+
+    return subdivisiones;
+}
+
+void Node::subdividir()
+{
+    m_subdivisiones = crear_subdivisiones();
 
     for (Entidad *entidad : m_entidades)
     {
@@ -229,7 +232,22 @@ void Node::juntar()
 
 bool Node::es_divisible()
 {
-    return true;
+    if (m_entidades.size() < cap_entidades - 1)
+        return true;
+
+    if (m_entidades.size() >= cap_entidades)
+        return false;
+
+    m_divisible = false;
+    for (Node *subdivision : crear_subdivisiones()) 
+    {
+        for (Entidad *entidad : m_entidades)
+            if (!subdivision->m_area.colisiona(entidad->m_cuerpo).colisiono)
+                m_divisible = true;
+        delete subdivision;
+    }    
+        
+    return m_divisible;
 }
 
 Entidad::Entidad(CuerpoRigido *cuerpo)

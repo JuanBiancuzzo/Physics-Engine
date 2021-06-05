@@ -53,6 +53,8 @@ private:
     void subdividir();
     void juntar();
     bool es_divisible();
+
+    std::vector<Node *> crear_subdivisiones();
 };
 
 class Entidad
