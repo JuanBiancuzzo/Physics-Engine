@@ -1,5 +1,7 @@
 #include "quadtree.h"
 
+using namespace qt;
+
 QuadTree::QuadTree(Vector2 posicion, float ancho, float alto)
     : m_area(AABB(posicion, ancho, alto))
 {
@@ -85,12 +87,12 @@ std::vector<Entidad *> QuadTree::buscar(CuerpoRigido *frontera)
 }
 
 Node::Node(Vector2 posicion, float ancho, float alto)
-    : m_area(AABB(posicion, ancho, alto)), m_cant_entidades(0), m_divisible(true)
+    : m_area(AABB(posicion, ancho, alto)), m_cant_entidades(0)
 {
 }
 
 Node::Node(AABB &aabb)
-    : m_area(aabb), m_cant_entidades(0), m_divisible(true)
+    : m_area(aabb), m_cant_entidades(0)
 {
 }
 
@@ -113,8 +115,7 @@ bool Node::insertar(Entidad *entidad)
     }
     else
     {
-        if (m_subdivisiones.empty())
-            subdividir();
+        subdividir();
         for (Node *subdivision : m_subdivisiones)
             subdivision->insertar(entidad);
     }
@@ -198,6 +199,9 @@ std::vector<Node *> Node::crear_subdivisiones()
 
 void Node::subdividir()
 {
+    if (!m_subdivisiones.empty())
+        return;
+
     m_subdivisiones = crear_subdivisiones();
 
     for (Entidad *entidad : m_entidades)
@@ -238,16 +242,16 @@ bool Node::es_divisible()
     if (m_entidades.size() >= cap_entidades)
         return false;
 
-    m_divisible = false;
-    for (Node *subdivision : crear_subdivisiones()) 
+    bool divisible = false;
+    for (Node *subdivision : crear_subdivisiones())
     {
         for (Entidad *entidad : m_entidades)
             if (!subdivision->m_area.colisiona(entidad->m_cuerpo).colisiono)
-                m_divisible = true;
+                divisible = true;
         delete subdivision;
-    }    
-        
-    return m_divisible;
+    }
+
+    return divisible;
 }
 
 Entidad::Entidad(CuerpoRigido *cuerpo)

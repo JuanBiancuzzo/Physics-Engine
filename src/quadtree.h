@@ -6,63 +6,67 @@
 #include <vector>
 #include <array>
 
-class Node;
-class Entidad;
-
-class QuadTree
+namespace qt
 {
-private:
-    AABB m_area;
-    Node *m_raiz;
 
-public:
-    QuadTree(Vector2 posicion, float ancho, float alto);
-    QuadTree(AABB &aabb);
-    ~QuadTree();
+    class Node;
+    class Entidad;
 
-    bool insertar(Entidad *entidad);
-    void actualizar(Entidad *entidad);
-    bool eliminar(Entidad *entidad);
-    std::vector<Entidad *> buscar(CuerpoRigido *frontera);
-};
+    class QuadTree
+    {
+    private:
+        AABB m_area;
+        Node *m_raiz;
 
-class Node
-{
-private:
-    static const int cap_subdivisiones = 4;
-    static const int cap_entidades = 4;
+    public:
+        QuadTree(Vector2 posicion, float ancho, float alto);
+        QuadTree(AABB &aabb);
+        ~QuadTree();
 
-    AABB m_area;
-    std::vector<Node *> m_subdivisiones;
-    std::vector<Entidad *> m_entidades;
-    int m_cant_entidades;
-    bool m_divisible;
+        bool insertar(Entidad *entidad);
+        void actualizar(Entidad *entidad);
+        bool eliminar(Entidad *entidad);
+        std::vector<Entidad *> buscar(CuerpoRigido *frontera);
+    };
 
-public:
-    Node(Vector2 posicion, float ancho, float alto);
-    Node(AABB &aabb);
-    ~Node();
+    class Node
+    {
+    private:
+        static const int cap_subdivisiones = 4;
+        static const int cap_entidades = 4;
 
-    bool insertar(Entidad *entidad);
-    bool eliminar(Entidad *entidad);
-    void buscar(CuerpoRigido *frontera, std::vector<Entidad *> &output);
+        AABB m_area;
+        std::vector<Node *> m_subdivisiones;
+        std::vector<Entidad *> m_entidades;
+        int m_cant_entidades;
 
-    void nodos_padre(Entidad *entidad, std::vector<Node *> &padres);
+    public:
+        Node(Vector2 posicion, float ancho, float alto);
+        Node(AABB &aabb);
+        ~Node();
 
-private:
-    void subdividir();
-    void juntar();
-    bool es_divisible();
+        bool insertar(Entidad *entidad);
+        bool eliminar(Entidad *entidad);
+        void buscar(CuerpoRigido *frontera, std::vector<Entidad *> &output);
 
-    std::vector<Node *> crear_subdivisiones();
-};
+        void nodos_padre(Entidad *entidad, std::vector<Node *> &padres);
 
-class Entidad
-{
-public:
-    CuerpoRigido *m_cuerpo;
-    std::vector<Node *> m_padres;
+    private:
+        void subdividir();
+        void juntar();
+        bool es_divisible();
 
-public:
-    Entidad(CuerpoRigido *cuerpo);
-};
+        std::vector<Node *> crear_subdivisiones();
+    };
+
+    class Entidad
+    {
+    public:
+        CuerpoRigido *m_cuerpo;
+        std::vector<Node *> m_padres;
+
+    public:
+        Entidad(CuerpoRigido *cuerpo);
+    };
+
+}
