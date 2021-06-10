@@ -11,6 +11,7 @@ set(SOURCE_CUERPOS "${PROJECT_SOURCE_DIR}/src/cuerpos")
 add_library(Core
   ${SOURCE}/motorDeFisicas.cpp
   ${SOURCE}/quadtree.cpp
+  ${SOURCE}/grafo.cpp
   ${SOURCE}/vector.cpp
   ${SOURCE_CUERPOS}/colisiones.cpp
   ${SOURCE_CUERPOS}/linea.cpp
