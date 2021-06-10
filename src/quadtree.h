@@ -4,7 +4,6 @@
 #include "cuerpos/colisiones.h"
 
 #include <vector>
-#include <array>
 
 namespace qt
 {
