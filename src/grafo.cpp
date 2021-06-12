@@ -69,9 +69,7 @@ void Node::ordenar()
 
     for (std::pair<Node *, Interaccion *> ref : m_aristas)
     {
-        if (ref.first->m_orden == otro)
-            continue;
-        if (ref.second->valido())
+        if (ref.first->m_orden != otro && ref.second->valido())
         {
             ref.first->m_orden = otro;
             ref.first->ordenar();
