@@ -82,7 +82,7 @@ bool hay_en_lista(std::vector<T> &lista, T elemento)
     return false;
 }
 
-TEST(GrafoTest, Tres_nodes_y_hay_dos_padres)
+TEST(GrafoTest, Primer_y_tercer_node_tienen_vinculo_con_el_segundo_y_el_primero_y_tercero_son_primeros)
 {
     grafo::Node node1;
     grafo::Node node2;
@@ -103,5 +103,6 @@ TEST(GrafoTest, Tres_nodes_y_hay_dos_padres)
     ASSERT_EQ(primeros.size(), 2);
 
     ASSERT_TRUE(hay_en_lista<grafo::Node *>(primeros, &node1));
+    ASSERT_FALSE(hay_en_lista<grafo::Node *>(primeros, &node2));
     ASSERT_TRUE(hay_en_lista<grafo::Node *>(primeros, &node3));
 }

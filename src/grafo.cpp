@@ -42,11 +42,11 @@ std::vector<Node *> Grafo::primeros()
 void Grafo::ordenar()
 {
     for (Node *node : m_nodes)
-        node->ordenar(m_nodes.size());
+        node->ordenar();
 }
 
 Node::Node()
-    : m_orden(-1)
+    : m_orden(invalido)
 {
 }
 
@@ -57,22 +57,24 @@ bool Node::agregar_arista(Node *referencia, Interaccion *interaccion)
 
 bool Node::es_primero()
 {
-    return (m_orden == 0);
+    return (m_orden == primero);
 }
 
-void Node::ordenar(int limite)
+void Node::ordenar()
 {
-    if (m_orden < 0)
-        m_orden = 0;
+    if (m_orden == otro)
+        return;
+    if (m_orden == invalido)
+        m_orden = primero;
 
     for (std::pair<Node *, Interaccion *> ref : m_aristas)
     {
-        if (m_orden + 1 >= limite)
+        if (ref.first->m_orden == otro)
             continue;
-        if (m_orden >= ref.first->m_orden && ref.second->valido())
+        if (ref.second->valido())
         {
-            ref.first->m_orden = m_orden + 1;
-            ref.first->ordenar(limite);
+            ref.first->m_orden = otro;
+            ref.first->ordenar();
         }
     }
 }

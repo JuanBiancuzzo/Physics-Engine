@@ -5,6 +5,9 @@
 
 namespace grafo
 {
+    enum estado {
+        invalido, primero, otro
+    };
 
     class Node;
     class Interaccion;
@@ -33,7 +36,7 @@ namespace grafo
         Node();
         bool agregar_arista(Node *referencia, Interaccion *interaccion);
         bool es_primero();
-        void ordenar(int limite);
+        void ordenar();
     };
 
     class Interaccion
