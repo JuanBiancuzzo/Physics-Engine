@@ -49,12 +49,10 @@ void Grafo::expandir_interaccion(std::vector<Node *> &inicio)
 void Grafo::ordenar()
 {
     for (Node *node : m_nodes)
-        node->ordenar(m_nodes.size());
-}
+        node->m_orden = invalido;
 
-Node::Node()
-    : m_orden(invalido)
-{
+    for (Node *node : m_nodes)
+        node->ordenar(m_nodes.size());
 }
 
 bool Node::agregar_arista(Node *referencia, Interaccion *interaccion)

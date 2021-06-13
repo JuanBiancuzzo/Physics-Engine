@@ -35,8 +35,6 @@ namespace grafo
         std::vector<std::pair<Node *, Interaccion *>> m_aristas;
 
     public:
-        Node();
-
         bool agregar_arista(Node *referencia, Interaccion *interaccion);
         bool es_primero();
         void ordenar(int limite);
