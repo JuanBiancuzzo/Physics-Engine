@@ -12,6 +12,7 @@ add_library(Core
   ${SOURCE}/motorDeFisicas.cpp
   ${SOURCE}/quadtree.cpp
   ${SOURCE}/grafo.cpp
+  ${SOURCE}/sistema.cpp
   ${SOURCE}/vector.cpp
   ${SOURCE_CUERPOS}/colisiones.cpp
   ${SOURCE_CUERPOS}/linea.cpp
