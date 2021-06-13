@@ -20,13 +20,8 @@ bool Grafo::agregar_node(Node *node)
 void Grafo::agregar_arista(Node *node, Node *referencia, Interaccion *interaccion)
 {
     for (Node *n : m_nodes)
-    {
         if (n == node)
-        {
-            agregar_node(referencia);
             node->agregar_arista(referencia, interaccion);
-        }
-    }
 }
 
 std::vector<Node *> Grafo::primeros()
@@ -39,10 +34,22 @@ std::vector<Node *> Grafo::primeros()
     return lista;
 }
 
+void Grafo::expandir_interaccion(std::vector<Node *> &inicio)
+{
+    for (int i = 0; i < inicio.size(); i++)
+    {
+        for (std::pair<Node *, Interaccion *> ref : inicio[i]->m_aristas)
+        {
+            ref.second->expandir(inicio[i], ref.first);
+            insertar_sin_repetir<Node *>(inicio, ref.first);
+        }
+    }
+}
+
 void Grafo::ordenar()
 {
     for (Node *node : m_nodes)
-        node->ordenar();
+        node->ordenar(m_nodes.size());
 }
 
 Node::Node()
@@ -60,19 +67,19 @@ bool Node::es_primero()
     return (m_orden == primero);
 }
 
-void Node::ordenar()
+void Node::ordenar(int limite)
 {
-    if (m_orden == otro)
-        return;
-    if (m_orden == invalido)
+    if (m_orden < 0)
         m_orden = primero;
 
     for (std::pair<Node *, Interaccion *> ref : m_aristas)
     {
-        if (ref.first->m_orden != otro && ref.second->valido())
+        if (m_orden + 1 >= limite)
+            continue;
+        if (m_orden >= ref.first->m_orden && ref.second->valido(this))
         {
-            ref.first->m_orden = otro;
-            ref.first->ordenar();
+            ref.first->m_orden = m_orden + 1;
+            ref.first->ordenar(limite);
         }
     }
 }
