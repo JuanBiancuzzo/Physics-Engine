@@ -40,6 +40,7 @@ target_sources(tests PRIVATE
     ${TEST}/quadtree_test.cpp
     ${TEST}/cuerpos_test.cpp
     ${TEST}/grafo_test.cpp
+    ${TEST}/sistema_test.cpp
 )
 set_target_properties(tests PROPERTIES COMPILE_FLAGS "${cxx_strict}")
 target_link_libraries(tests gtest gtest_main Core)

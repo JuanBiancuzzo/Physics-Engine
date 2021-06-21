@@ -67,7 +67,7 @@ bool Node::es_primero()
 
 void Node::ordenar(int limite)
 {
-    if (m_orden < 0)
+    if (m_orden < primero)
         m_orden = primero;
 
     for (std::pair<Node *, Interaccion *> ref : m_aristas)
