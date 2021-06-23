@@ -1,5 +1,7 @@
 #include "grafo.h"
 
+#include <iostream>
+
 using namespace grafo;
 
 template <typename T>
@@ -12,9 +14,17 @@ bool insertar_sin_repetir(std::vector<T> &lista, T elemento)
     return true;
 }
 
+Grafo::Grafo()
+    : m_limite(0)
+{
+}
+
 bool Grafo::agregar_node(Node *node)
 {
-    return insertar_sin_repetir<Node *>(m_nodes, node);
+    bool resultado = insertar_sin_repetir<Node *>(m_nodes, node);
+    if (resultado)
+        m_limite++;
+    return resultado;
 }
 
 void Grafo::agregar_arista(Node *node, Node *referencia, Interaccion *interaccion)
@@ -36,12 +46,19 @@ std::vector<Node *> Grafo::primeros()
 
 void Grafo::expandir_interaccion(std::vector<Node *> &inicio)
 {
+    for (Node *node : m_nodes)
+        node->m_limite = 0;
+
     for (int i = 0; i < inicio.size(); i++)
     {
         for (std::pair<Node *, Interaccion *> ref : inicio[i]->m_aristas)
         {
-            ref.second->expandir(inicio[i], ref.first);
-            insertar_sin_repetir<Node *>(inicio, ref.first);
+            if (ref.second->valido(inicio[i]) && ref.first->m_limite < m_limite)
+            {
+                ref.second->expandir(inicio[i], ref.first);
+                inicio.emplace_back(ref.first);
+                ref.first->m_limite++;
+            }
         }
     }
 }

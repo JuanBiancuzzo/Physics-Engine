@@ -17,8 +17,11 @@ namespace grafo
     {
     private:
         std::vector<Node *> m_nodes;
+        int m_limite;
 
     public:
+        Grafo();
+
         bool agregar_node(Node *node);
         void agregar_arista(Node *node, Node *referencia, Interaccion *interaccion);
         std::vector<Node *> primeros();
@@ -33,10 +36,12 @@ namespace grafo
     public:
         int m_orden;
         std::vector<std::pair<Node *, Interaccion *>> m_aristas;
+        int m_limite;
 
     public:
         bool agregar_arista(Node *referencia, Interaccion *interaccion);
         bool es_primero();
+        void inicializar();
         void ordenar(int limite);
     };
 

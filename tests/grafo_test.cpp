@@ -168,7 +168,7 @@ TEST(GrafoTest, Expandir_numeros_en_un_ciclo_de_tres_nodo)
     std::vector<grafo::Node *> primeros = grafo.primeros();
     grafo.expandir_interaccion(primeros);
 
-    ASSERT_EQ(node1.numero, 1);
-    ASSERT_EQ(node2.numero, 1);
-    ASSERT_EQ(node3.numero, 1);
+    ASSERT_EQ(node1.numero, 3);
+    ASSERT_EQ(node2.numero, 3);
+    ASSERT_EQ(node3.numero, 3);
 }
