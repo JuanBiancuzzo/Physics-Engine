@@ -3,32 +3,87 @@
 
 using namespace sistema;
 
+class Body : public Particula
+{
+public:
+    Vector2 m_pos;
+
+public:
+    Body(Vector2 posicion, Vector2 velocidad, Vector2 fuerza, float masa)
+        : m_pos(posicion), Particula(masa, velocidad, fuerza)
+    {
+    }
+
+    Body(Vector2 posicion, bool es_estatico)
+        : m_pos(posicion), Particula(es_estatico)
+    {
+    }
+
+    Vector2 direccion_normal(Body *body)
+    {
+        return (body->m_pos - m_pos).normal();
+    }
+};
+
 // test donde hay un piso, y dos particulas una encima de la otra
 TEST(SistemaTest, Dos_particulas_y_el_piso_sin_velocidad_ninguna_sus_fuerzas_finales_son_cero)
 {
-    std::vector<Particula *> particulas;
-    Vector2 fuerza_particula_1(.0f, -10.0f), fuerza_particula_2(.0f, -20.0f), nulo;
-    particulas.emplace_back(new Particula(fuerza_particula_1, nulo));
-    particulas.emplace_back(new Particula(fuerza_particula_2, nulo));
-    particulas.emplace_back(new Particula(true));
-    Vector2 dir_abajo(.0f, -1.0f);
-    Vector2 dir_arriba(.0f, 1.0f);
-    Interaccion hacia_abajo(dir_abajo);
-    Interaccion hacia_arriba(dir_arriba);
+    Sistema sistema(1.0f);
+    Body *particula1 = new Body(Vector2(.0f, 10.0f), Vector2(), Vector2(.0f, -10.0f), 1.0f);
+    Body *particula2 = new Body(Vector2(.0f, 5.0f), Vector2(), Vector2(.0f, -20.0f), 2.0f);
+    Body *piso = new Body(Vector2(), true);
 
-    Sistema sistema(particulas);
-    sistema.agreagar_interaccion(particulas[0], particulas[1], &hacia_abajo);
-    sistema.agreagar_interaccion(particulas[1], particulas[2], &hacia_abajo);
-    sistema.agreagar_interaccion(particulas[2], particulas[1], &hacia_arriba);
-    sistema.agreagar_interaccion(particulas[1], particulas[0], &hacia_arriba);
+    sistema.agregar_particula(particula1);
+    sistema.agregar_particula(particula2);
+    sistema.agregar_particula(piso);
+
+    sistema.agregar_interaccion(particula1, particula2, particula1->direccion_normal(particula2));
+    sistema.agregar_interaccion(particula2, piso, particula2->direccion_normal(piso));
+    sistema.agregar_interaccion(piso, particula2, piso->direccion_normal(particula2));
+    sistema.agregar_interaccion(particula2, particula1, particula2->direccion_normal(particula1));
+
+    std::cout << "Antes" << std::endl;
+    std::cout << particula1->fuerza_final().x << ", " << particula1->fuerza_final().y << std::endl;
+    std::cout << particula2->fuerza_final().x << ", " << particula2->fuerza_final().y << std::endl;
 
     sistema.expandir_fuerzas();
 
-    ASSERT_EQ(particulas[0]->m_fuerza, Vector2());
-    ASSERT_EQ(particulas[1]->m_fuerza, Vector2());
+    std::cout << "Despues" << std::endl;
+    std::cout << particula1->fuerza_final().x << ", " << particula1->fuerza_final().y << std::endl;
+    std::cout << particula2->fuerza_final().x << ", " << particula2->fuerza_final().y << std::endl;
 
-    for (Particula *particula : particulas)
-        delete particula;
+    ASSERT_EQ(particula1->fuerza_final(), Vector2());
+    ASSERT_EQ(particula2->fuerza_final(), Vector2());
+
+    delete particula1;
+    delete particula2;
+    delete piso;
+}
+
+TEST(SistemaTest, Dos_particulas_y_el_piso_el_primero_con_velocidad_sus_fuerzas_finales_son_cero)
+{
+    Sistema sistema(1.0f);
+    Body *particula1 = new Body(Vector2(.0f, 10.0f), Vector2(.0f, -10.0f), Vector2(.0f, -10.0f), 1.0f);
+    Body *particula2 = new Body(Vector2(.0f, 5.0f), Vector2(.0f, .0f), Vector2(.0f, -20.0f), 2.0f);
+    Body *piso = new Body(Vector2(), true);
+
+    sistema.agregar_particula(particula1);
+    sistema.agregar_particula(particula2);
+    sistema.agregar_particula(piso);
+
+    sistema.agregar_interaccion(particula1, particula2, particula1->direccion_normal(particula2));
+    sistema.agregar_interaccion(particula2, piso, particula2->direccion_normal(piso));
+    sistema.agregar_interaccion(piso, particula2, piso->direccion_normal(particula2));
+    sistema.agregar_interaccion(particula2, particula1, particula2->direccion_normal(particula1));
+
+    sistema.expandir_fuerzas();
+
+    ASSERT_EQ(particula1->fuerza_final(), Vector2(.0f, 20.0f));
+    ASSERT_EQ(particula2->fuerza_final(), Vector2());
+
+    delete particula1;
+    delete particula2;
+    delete piso;
 }
 
 // test donde hay dos particulas cayendose, a la misma velocidad por lo que no deberia haber un choque -> a determinar
@@ -38,3 +93,23 @@ TEST(SistemaTest, Dos_particulas_y_el_piso_sin_velocidad_ninguna_sus_fuerzas_fin
 // test donde hay dos particulas cayendose, la de arriba con mayor velocidad produciendose un choque
 
 // test donde hay una bala y un cuerpo sin fuerza inicial volando, y terminan intercambiando velocidades
+TEST(SistemaTest, Una_bala_con_velocidad_y_un_bloque_sin_velcodad_chocan_e_intercambian_velocidades)
+{
+    Sistema sistema(1.0f);
+    Body *particula1 = new Body(Vector2(-5.0f, .0f), Vector2(10.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
+    Body *particula2 = new Body(Vector2(5.0f, .0f), Vector2(.0f, .0f), Vector2(.0f, -20.0f), 2.0f);
+
+    sistema.agregar_particula(particula1);
+    sistema.agregar_particula(particula2);
+
+    sistema.agregar_interaccion(particula1, particula2, particula1->direccion_normal(particula2));
+    sistema.agregar_interaccion(particula2, particula1, particula2->direccion_normal(particula1));
+
+    sistema.expandir_fuerzas();
+
+    ASSERT_EQ(particula1->fuerza_final(), Vector2(.0f, -10.0f));
+    ASSERT_EQ(particula2->fuerza_final(), Vector2(10.0f, -20.0f));
+
+    delete particula1;
+    delete particula2;
+}

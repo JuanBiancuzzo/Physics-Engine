@@ -15,23 +15,30 @@ namespace sistema
     {
     private:
         grafo::Grafo m_grafo;
+        std::vector<Interaccion *> m_interacciones;
+        float m_dt;
 
     public:
-        Sistema(std::vector<Particula *> &particulas);
+        Sistema(float dt);
+        ~Sistema();
 
-        void agreagar_interaccion(Particula *particula, Particula *referencia, Interaccion *interaccion);
+        void agregar_particula(Particula *particula);
+        void agregar_interaccion(Particula *particula, Particula *referencia, Vector2 direccion);
         void expandir_fuerzas();
     };
 
     class Particula : public grafo::Node
     {
     public:
-        Vector2 m_fuerza, m_fuerza_velocidad;
+        float m_masa;
+        Vector2 m_velocidad, m_fuerza;
         bool m_estatico;
 
     public:
-        Particula(Vector2 &fuerza_inicial, Vector2 &fuerza_velocidad);
+        Particula(float masa, Vector2 &velocidad, Vector2 &fuerza);
         Particula(bool es_estatico);
+
+        Vector2 fuerza_final();
     };
 
     class Interaccion : public grafo::Interaccion
