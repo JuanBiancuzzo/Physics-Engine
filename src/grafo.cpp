@@ -53,7 +53,7 @@ void Grafo::expandir_interaccion(std::vector<Node *> &inicio)
     {
         for (std::pair<Node *, Interaccion *> ref : inicio[i]->m_aristas)
         {
-            if (ref.second->valido(inicio[i]) && ref.first->m_limite < m_limite)
+            if (ref.second->valido(inicio[i], ref.first) && ref.first->m_limite < m_limite)
             {
                 ref.second->expandir(inicio[i], ref.first);
                 inicio.emplace_back(ref.first);
@@ -91,7 +91,7 @@ void Node::ordenar(int limite)
     {
         if (m_orden + 1 >= limite)
             continue;
-        if (m_orden >= ref.first->m_orden && ref.second->valido(this))
+        if (m_orden >= ref.first->m_orden && ref.second->valido(this, ref.first))
         {
             ref.first->m_orden = m_orden + 1;
             ref.first->ordenar(limite);

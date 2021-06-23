@@ -13,7 +13,7 @@ public:
 class Interaccion : public grafo::Interaccion
 {
 public:
-    bool valido(grafo::Node *node) { return true; }
+    bool valido(grafo::Node *node, grafo::Node *referencia) { return true; }
     void expandir(grafo::Node *node, grafo::Node *referencia)
     {
         expandir(static_cast<Node *>(node), static_cast<Node *>(referencia));

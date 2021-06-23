@@ -48,7 +48,7 @@ namespace grafo
     class Interaccion
     {
     public:
-        virtual bool valido(Node *node) = 0;
+        virtual bool valido(Node *node, Node *referencia) = 0;
         virtual void expandir(Node *node, Node *referencia) = 0;
     };
 }
