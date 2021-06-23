@@ -63,19 +63,16 @@ void Interaccion::expandir(grafo::Node *node, grafo::Node *referencia)
 {
     Particula *particula = static_cast<Particula *>(node);
     Particula *p_referencia = static_cast<Particula *>(referencia);
+    Vector2 fuerza;
 
     if (!particula->m_estatico)
+        fuerza += particula->m_fuerza.proyeccion(m_direccion);
+    if (particula->sum_vel(p_referencia) * m_direccion > 0)
+        fuerza += ((particula->sum_vel(p_referencia) * m_dt) / particula->m_masa).proyeccion(m_direccion);
+
+    if (fuerza * m_direccion > 0)
     {
-        Vector2 fuerza = particula->m_fuerza.proyeccion(m_direccion);
-        Vector2 fuerza_v = ((particula->sum_vel(p_referencia) * m_dt) / particula->m_masa).proyeccion(m_direccion);
-
-        if (fuerza_v * m_direccion > 0)
-            fuerza += fuerza_v;
-
-        if (fuerza * m_direccion > 0)
-        {
-            p_referencia->m_fuerza += (!p_referencia->m_estatico) ? fuerza : fuerza * -1.0f;
-            particula->m_fuerza -= fuerza;
-        }
+        p_referencia->m_fuerza += (!p_referencia->m_estatico) ? fuerza : fuerza * -1.0f;
+        particula->m_fuerza -= fuerza;
     }
 }

@@ -76,16 +76,13 @@ TEST(SistemaTest, Dos_particulas_y_el_piso_el_primero_con_velocidad_sus_fuerzas_
     sistema.agregar_interaccion(particula2, particula1, particula2->direccion_normal(particula1));
 
     std::cout << "Antes" << std::endl;
-    std::cout << particula1->m_fuerza.x << ", " << particula1->m_fuerza.y << std::endl;
-    std::cout << particula2->m_fuerza.x << ", " << particula2->m_fuerza.y << std::endl;
+    std::cout << particula1->m_velocidad.x << ", " << particula1->m_velocidad.y << std::endl;
 
     sistema.expandir_fuerzas();
+    particula1->actualizar(dt);
 
     std::cout << "Despues" << std::endl;
-    std::cout << particula1->m_fuerza.x << ", " << particula1->m_fuerza.y << std::endl;
-    std::cout << particula2->m_fuerza.x << ", " << particula2->m_fuerza.y << std::endl;
-
-    particula1->actualizar(dt);
+    std::cout << particula1->m_velocidad.x << ", " << particula1->m_velocidad.y << std::endl;
 
     ASSERT_EQ(particula1->m_velocidad, Vector2(.0f, 10.0f));
     ASSERT_EQ(particula2->m_fuerza, Vector2());
