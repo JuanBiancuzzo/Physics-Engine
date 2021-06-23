@@ -19,6 +19,11 @@ public:
     {
     }
 
+    void actualizar(float dt)
+    {
+        m_velocidad += (m_fuerza * dt) / m_masa;
+    }
+
     Vector2 direccion_normal(Body *body)
     {
         return (body->m_pos - m_pos).normal();
@@ -28,6 +33,7 @@ public:
 // test donde hay un piso, y dos particulas una encima de la otra
 TEST(SistemaTest, Dos_particulas_y_el_piso_sin_velocidad_ninguna_sus_fuerzas_finales_son_cero)
 {
+    float dt = 1.0f;
     Sistema sistema(1.0f);
     Body *particula1 = new Body(Vector2(.0f, 10.0f), Vector2(), Vector2(.0f, -10.0f), 1.0f);
     Body *particula2 = new Body(Vector2(.0f, 5.0f), Vector2(), Vector2(.0f, -20.0f), 2.0f);
@@ -42,18 +48,10 @@ TEST(SistemaTest, Dos_particulas_y_el_piso_sin_velocidad_ninguna_sus_fuerzas_fin
     sistema.agregar_interaccion(piso, particula2, piso->direccion_normal(particula2));
     sistema.agregar_interaccion(particula2, particula1, particula2->direccion_normal(particula1));
 
-    std::cout << "Antes" << std::endl;
-    std::cout << particula1->fuerza_final().x << ", " << particula1->fuerza_final().y << std::endl;
-    std::cout << particula2->fuerza_final().x << ", " << particula2->fuerza_final().y << std::endl;
-
     sistema.expandir_fuerzas();
 
-    std::cout << "Despues" << std::endl;
-    std::cout << particula1->fuerza_final().x << ", " << particula1->fuerza_final().y << std::endl;
-    std::cout << particula2->fuerza_final().x << ", " << particula2->fuerza_final().y << std::endl;
-
-    ASSERT_EQ(particula1->fuerza_final(), Vector2());
-    ASSERT_EQ(particula2->fuerza_final(), Vector2());
+    ASSERT_EQ(particula1->m_fuerza, Vector2());
+    ASSERT_EQ(particula2->m_fuerza, Vector2());
 
     delete particula1;
     delete particula2;
@@ -62,9 +60,10 @@ TEST(SistemaTest, Dos_particulas_y_el_piso_sin_velocidad_ninguna_sus_fuerzas_fin
 
 TEST(SistemaTest, Dos_particulas_y_el_piso_el_primero_con_velocidad_sus_fuerzas_finales_son_cero)
 {
-    Sistema sistema(1.0f);
+    float dt = 1.0f;
+    Sistema sistema(dt);
     Body *particula1 = new Body(Vector2(.0f, 10.0f), Vector2(.0f, -10.0f), Vector2(.0f, -10.0f), 1.0f);
-    Body *particula2 = new Body(Vector2(.0f, 5.0f), Vector2(.0f, .0f), Vector2(.0f, -20.0f), 2.0f);
+    Body *particula2 = new Body(Vector2(.0f, 5.0f), Vector2(), Vector2(.0f, -20.0f), 2.0f);
     Body *piso = new Body(Vector2(), true);
 
     sistema.agregar_particula(particula1);
@@ -76,10 +75,20 @@ TEST(SistemaTest, Dos_particulas_y_el_piso_el_primero_con_velocidad_sus_fuerzas_
     sistema.agregar_interaccion(piso, particula2, piso->direccion_normal(particula2));
     sistema.agregar_interaccion(particula2, particula1, particula2->direccion_normal(particula1));
 
+    std::cout << "Antes" << std::endl;
+    std::cout << particula1->m_fuerza.x << ", " << particula1->m_fuerza.y << std::endl;
+    std::cout << particula2->m_fuerza.x << ", " << particula2->m_fuerza.y << std::endl;
+
     sistema.expandir_fuerzas();
 
-    ASSERT_EQ(particula1->fuerza_final(), Vector2(.0f, 20.0f));
-    ASSERT_EQ(particula2->fuerza_final(), Vector2());
+    std::cout << "Despues" << std::endl;
+    std::cout << particula1->m_fuerza.x << ", " << particula1->m_fuerza.y << std::endl;
+    std::cout << particula2->m_fuerza.x << ", " << particula2->m_fuerza.y << std::endl;
+
+    particula1->actualizar(dt);
+
+    ASSERT_EQ(particula1->m_velocidad, Vector2(.0f, 10.0f));
+    ASSERT_EQ(particula2->m_fuerza, Vector2());
 
     delete particula1;
     delete particula2;
@@ -95,7 +104,8 @@ TEST(SistemaTest, Dos_particulas_y_el_piso_el_primero_con_velocidad_sus_fuerzas_
 // test donde hay una bala y un cuerpo sin fuerza inicial volando, y terminan intercambiando velocidades
 TEST(SistemaTest, Una_bala_con_velocidad_y_un_bloque_sin_velcodad_chocan_e_intercambian_velocidades)
 {
-    Sistema sistema(1.0f);
+    float dt = 1.0f;
+    Sistema sistema(dt);
     Body *particula1 = new Body(Vector2(-5.0f, .0f), Vector2(10.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
     Body *particula2 = new Body(Vector2(5.0f, .0f), Vector2(.0f, .0f), Vector2(.0f, -20.0f), 2.0f);
 
@@ -106,9 +116,12 @@ TEST(SistemaTest, Una_bala_con_velocidad_y_un_bloque_sin_velcodad_chocan_e_inter
     sistema.agregar_interaccion(particula2, particula1, particula2->direccion_normal(particula1));
 
     sistema.expandir_fuerzas();
+    
+    particula1->actualizar(dt);
+    particula2->actualizar(dt);
 
-    ASSERT_EQ(particula1->fuerza_final(), Vector2(.0f, -10.0f));
-    ASSERT_EQ(particula2->fuerza_final(), Vector2(10.0f, -20.0f));
+    ASSERT_EQ(particula1->m_velocidad, Vector2(0.0f, -10.0f));
+    ASSERT_EQ(particula2->m_velocidad, Vector2(5.0f, -10.0f));
 
     delete particula1;
     delete particula2;
