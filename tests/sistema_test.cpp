@@ -118,7 +118,7 @@ TEST(SistemaTest, Una_bala_con_velocidad_y_un_bloque_sin_velcodad_chocan_e_inter
     particula2->actualizar(dt);
 
     ASSERT_EQ(particula1->m_velocidad, Vector2(0.0f, -10.0f));
-    ASSERT_EQ(particula2->m_velocidad, Vector2(5.0f, -10.0f));
+    ASSERT_EQ(particula2->m_velocidad, Vector2(10.0f, -10.0f));
 
     delete particula1;
     delete particula2;

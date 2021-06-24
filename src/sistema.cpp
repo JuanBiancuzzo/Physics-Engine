@@ -32,7 +32,7 @@ void Sistema::expandir_fuerzas()
 }
 
 Particula::Particula(float masa, Vector2 &velocidad, Vector2 &fuerza)
-    : m_masa(masa), m_velocidad(velocidad), m_fuerza(fuerza), m_estatico(false)
+    : m_masa(masa), m_velocidad(velocidad), m_fuerza(fuerza), m_fuerza_inicial(fuerza), m_estatico(false)
 {
 }
 
@@ -56,23 +56,25 @@ bool Interaccion::valido(grafo::Node *node, grafo::Node *referencia)
     Particula *particula = static_cast<Particula *>(node);
     Particula *p_referencia = static_cast<Particula *>(referencia);
 
-    return ((particula->m_fuerza) * m_direccion > 0) || (particula->sum_vel(p_referencia) * m_direccion > 0);
+    return ((particula->m_fuerza) * m_direccion > 0 || particula->m_velocidad * m_direccion > 0);
 }
 
 void Interaccion::expandir(grafo::Node *node, grafo::Node *referencia)
 {
     Particula *particula = static_cast<Particula *>(node);
     Particula *p_referencia = static_cast<Particula *>(referencia);
-    Vector2 fuerza;
+    Vector2 velocidad_de_choque = particula->m_velocidad - p_referencia->m_velocidad;
+    Vector2 fuerza, impulso;
 
-    if (!particula->m_estatico)
+    if (!particula->m_estatico && particula->m_fuerza * m_direccion > 0)
+        // if (particula->m_fuerza * m_direccion > 0)
         fuerza += particula->m_fuerza.proyeccion(m_direccion);
-    if (particula->sum_vel(p_referencia) * m_direccion > 0)
-        fuerza += ((particula->sum_vel(p_referencia) * m_dt) / particula->m_masa).proyeccion(m_direccion);
+    if (velocidad_de_choque * m_direccion > 0)
+        impulso += (velocidad_de_choque / m_dt).proyeccion(m_direccion);
 
-    if (fuerza * m_direccion > 0)
-    {
-        p_referencia->m_fuerza += (!p_referencia->m_estatico) ? fuerza : fuerza * -1.0f;
-        particula->m_fuerza -= fuerza;
-    }
+    // p_referencia->m_fuerza += (impulso * p_referencia->m_masa) * (!p_referencia->m_estatico ? 1.0f : -1.0f);
+    p_referencia->m_fuerza += (fuerza + impulso * p_referencia->m_masa) * (!p_referencia->m_estatico ? 1.0f : -1.0f);
+    // p_referencia->m_fuerza += (fuerza + impulso * p_referencia->m_masa - p_referencia->m_fuerza_inicial) * (!p_referencia->m_estatico ? 1.0f : -1.0f);
+    particula->m_fuerza -= (fuerza + impulso * particula->m_masa);
+    // particula->m_fuerza -= (fuerza + impulso * particula->m_masa) - particula->m_fuerza_inicial.proyeccion(m_direccion);
 }

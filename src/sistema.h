@@ -30,7 +30,7 @@ namespace sistema
     class Particula : public grafo::Node
     {
     public:
-        Vector2 m_velocidad, m_fuerza;
+        Vector2 m_velocidad, m_fuerza, m_fuerza_inicial;
         float m_masa;
         bool m_estatico;
 
