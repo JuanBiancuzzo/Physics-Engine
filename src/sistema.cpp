@@ -23,15 +23,9 @@ void Sistema::agregar_interaccion(Particula *particula, Particula *referencia, V
     particula->agregar_interaccion(referencia, direccion);
 }
 
-std::vector<Particula *> Sistema::primeras_particulas()
-{
-    std::vector<Particula *> primeros;
-    return primeros;
-}
-
 void Sistema::expandir_fuerzas()
 {
-    for (Particula *particula : primeras_particulas())
+    for (Particula *particula : m_particulas)
         particula->expandir();
 }
 

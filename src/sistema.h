@@ -18,7 +18,6 @@ namespace sistema
         Sistema(std::vector<Particula *> &particulas);
 
         void agregar_interaccion(Particula *particula, Particula *referencia, Vector2 &direccion);
-        std::vector<Particula *> primeras_particulas();
         void expandir_fuerzas();
     };
 
