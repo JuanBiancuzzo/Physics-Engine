@@ -49,13 +49,24 @@ void Particula::agregar_interaccion(Particula *referencia, Vector2 &direccion)
 void Particula::expandir()
 {
     Vector2 resultante;
-    while (resultante != (resultante * .0f))
+    do
     {
         resultante *= .0f;
         for (Interaccion *interaccion : m_interacciones)
             resultante += interaccion->expandir(m_fuerza);
         m_fuerza += resultante;
-    }
+    } while (resultante != (resultante * .0f));
+}
+
+Particula_estatica::Particula_estatica(Vector2 &fuerza)
+    : Particula(fuerza)
+{
+    m_fuerza *= .0f;
+}
+
+void Particula_estatica::expandir()
+{
+    m_fuerza *= .0f;
 }
 
 Interaccion::Interaccion(Particula *particula, Vector2 &direccion)

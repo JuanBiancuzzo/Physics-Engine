@@ -35,6 +35,14 @@ namespace sistema
         void expandir();
     };
 
+    class Particula_estatica : public Particula
+    {
+    public:
+        Particula_estatica(Vector2 &fuerza);
+
+        void expandir();
+    };
+
     class Interaccion
     {
     private:
