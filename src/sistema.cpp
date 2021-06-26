@@ -56,7 +56,6 @@ void Particula::expandir()
     Vector2 resultante;
     do
     {
-        Vector2 cant_movimiento = m_velocidad * m_masa;
         resultante *= .0f;
 
         for (Interaccion *interaccion : m_interacciones)
