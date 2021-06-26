@@ -34,5 +34,5 @@ struct Vector2
     Vector2 proyeccion(const Vector2 &otro) const;
     Vector2 normal() const;
 
-    void imprimir() const;
+    bool nulo() const;
 };

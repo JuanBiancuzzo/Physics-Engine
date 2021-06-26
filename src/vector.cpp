@@ -92,3 +92,8 @@ Vector2 Vector2::normal() const
         return *this;
     return (*this / this->modulo());
 }
+
+bool Vector2::nulo() const
+{
+    return (*this == *this * .0f);
+}
