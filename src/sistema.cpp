@@ -29,7 +29,7 @@ void Sistema::expandir_fuerzas()
         particula->expandir();
 }
 
-Particula::Particula(Vector2 &fuerza)
+Particula::Particula(Vector2 fuerza)
     : m_fuerza(fuerza)
 {
 }
@@ -58,10 +58,9 @@ void Particula::expandir()
     } while (resultante != (resultante * .0f));
 }
 
-Particula_estatica::Particula_estatica(Vector2 &fuerza)
-    : Particula(fuerza)
+Particula_estatica::Particula_estatica()
+    : Particula(Vector2())
 {
-    m_fuerza *= .0f;
 }
 
 void Particula_estatica::expandir()

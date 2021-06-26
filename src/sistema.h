@@ -28,7 +28,7 @@ namespace sistema
         std::vector<Interaccion *> m_interacciones;
 
     public:
-        Particula(Vector2 &fuerza);
+        Particula(Vector2 fuerza);
         ~Particula();
 
         void agregar_interaccion(Particula *referencia, Vector2 &direccion);
@@ -38,7 +38,7 @@ namespace sistema
     class Particula_estatica : public Particula
     {
     public:
-        Particula_estatica(Vector2 &fuerza);
+        Particula_estatica();
 
         void expandir();
     };

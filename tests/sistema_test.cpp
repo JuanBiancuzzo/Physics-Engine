@@ -7,10 +7,9 @@ using namespace sistema;
 TEST(SistemaTest, Dos_particulas_y_el_piso_sin_velocidad_ninguna_sus_fuerzas_finales_son_cero)
 {
     std::vector<Particula *> particulas;
-    Vector2 fuerza1(.0f, -10.0f), fuerza2(.0f, -20.0f), fuerza_piso;
-    Particula *particula1 = new Particula(fuerza1);
-    Particula *particula2 = new Particula(fuerza2);
-    Particula_estatica *piso = new Particula_estatica(fuerza_piso);
+    Particula *particula1 = new Particula(Vector2(.0f, -10.0f));
+    Particula *particula2 = new Particula(Vector2(.0f, -20.0f));
+    Particula_estatica *piso = new Particula_estatica();
 
     particulas.emplace_back(particula1);
     particulas.emplace_back(particula2);
