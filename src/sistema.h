@@ -24,11 +24,13 @@ namespace sistema
     class Particula
     {
     public:
-        Vector2 m_fuerza;
+        Vector2 m_velocidad, m_fuerza;
+        float m_masa;
         std::vector<Interaccion *> m_interacciones;
 
     public:
-        Particula(Vector2 fuerza);
+        Particula(float masa, Vector2 velocidad, Vector2 fuerza);
+        Particula(float masa);
         ~Particula();
 
         void agregar_interaccion(Particula *referencia, Vector2 &direccion);
@@ -54,5 +56,4 @@ namespace sistema
 
         Vector2 expandir(Vector2 &fuerza);
     };
-
 }

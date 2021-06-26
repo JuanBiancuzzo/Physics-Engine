@@ -29,8 +29,13 @@ void Sistema::expandir_fuerzas()
         particula->expandir();
 }
 
-Particula::Particula(Vector2 fuerza)
-    : m_fuerza(fuerza)
+Particula::Particula(float masa, Vector2 velocidad, Vector2 fuerza)
+    : m_velocidad(velocidad), m_fuerza(fuerza), m_masa(masa)
+{
+}
+
+Particula::Particula(float masa)
+    : m_masa(masa)
 {
 }
 
@@ -51,21 +56,24 @@ void Particula::expandir()
     Vector2 resultante;
     do
     {
+        Vector2 cant_movimiento = m_velocidad * m_masa;
         resultante *= .0f;
+
         for (Interaccion *interaccion : m_interacciones)
             resultante += interaccion->expandir(m_fuerza);
+
         m_fuerza += resultante;
-    } while (resultante != (resultante * .0f));
+        m_velocidad += (m_fuerza / m_masa) * m_dt;
+    } while (!resultante.nulo());
 }
 
 Particula_estatica::Particula_estatica()
-    : Particula(Vector2())
+    : Particula(std::numeric_limits<float>::infinity())
 {
 }
 
 void Particula_estatica::expandir()
 {
-    m_fuerza *= .0f;
 }
 
 Interaccion::Interaccion(Particula *particula, Vector2 &direccion)
@@ -75,11 +83,17 @@ Interaccion::Interaccion(Particula *particula, Vector2 &direccion)
 
 Vector2 Interaccion::expandir(Vector2 &fuerza)
 {
-    Vector2 proyeccion = fuerza.proyeccion(m_direccion);
-    if (proyeccion * m_direccion <= 0)
-        return Vector2();
+    Vector2 fuerza_resultante = fuerza.proyeccion(m_direccion);
 
-    m_particula->m_fuerza += proyeccion;
-    m_particula->expandir();
-    return (proyeccion * -1.0f);
+    Vector2 resultante;
+    if (fuerza_resultante * m_direccion > 0)
+        resultante += fuerza_resultante;
+
+    if (!resultante.nulo())
+    {
+        m_particula->m_fuerza += resultante;
+        m_particula->expandir();
+    }
+
+    return (resultante * -1.0f);
 }
