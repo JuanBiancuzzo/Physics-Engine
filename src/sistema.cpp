@@ -63,7 +63,6 @@ void Particula::expandir()
             resultante += interaccion->expandir(m_fuerza);
 
         m_fuerza += resultante;
-        m_velocidad += (m_fuerza / m_masa) * m_dt;
     } while (!resultante.nulo());
 }
 
