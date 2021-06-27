@@ -9,13 +9,14 @@ TEST(SistemaTest, Dos_particulas_y_el_piso_sin_velocidad_ninguna_sus_fuerzas_fin
     std::vector<Particula *> particulas;
     Particula *particula1 = new Particula(1.0f, Vector2(), Vector2(.0f, -10.0f));
     Particula *particula2 = new Particula(2.0f, Vector2(), Vector2(.0f, -20.0f));
-    Particula_estatica *piso = new Particula_estatica();
+    Particula *piso = new Particula();
 
     particulas.emplace_back(particula1);
     particulas.emplace_back(particula2);
     particulas.emplace_back(piso);
 
-    Sistema sistema(particulas);
+    float dt = 1.0f;
+    Sistema sistema(particulas, dt);
 
     Vector2 dir_abajo(.0f, -1.0f), dir_arriba(.0f, 1.0f);
     sistema.agregar_interaccion(particula1, particula2, dir_abajo);
@@ -29,18 +30,19 @@ TEST(SistemaTest, Dos_particulas_y_el_piso_sin_velocidad_ninguna_sus_fuerzas_fin
     ASSERT_EQ(particula2->m_fuerza, Vector2());
 }
 
-TEST(SistemaTest, Dos_particulas_y_el_piso_el_primero_con_velocidad_sus_fuerzas_finales_son_cero)
+TEST(SistemaTest, Dos_particulas_y_el_piso_el_primero_con_velocidad_y_rebota_con_su_velocidad_invertida)
 {
     std::vector<Particula *> particulas;
     Particula *particula1 = new Particula(1.0f, Vector2(.0f, -10.0f), Vector2(.0f, -10.0f));
     Particula *particula2 = new Particula(2.0f, Vector2(), Vector2(.0f, -20.0f));
-    Particula_estatica *piso = new Particula_estatica();
+    Particula *piso = new Particula();
 
     particulas.emplace_back(particula1);
     particulas.emplace_back(particula2);
     particulas.emplace_back(piso);
 
-    Sistema sistema(particulas);
+    float dt = 1.0f;
+    Sistema sistema(particulas, dt);
 
     Vector2 dir_abajo(.0f, -1.0f), dir_arriba(.0f, 1.0f);
     sistema.agregar_interaccion(particula1, particula2, dir_abajo);
@@ -66,14 +68,15 @@ TEST(SistemaTest, Dos_particulas_sobre_el_piso_una_tiene_velocidad_y_terminan_in
 {
     std::vector<Particula *> particulas;
     Particula *particula1 = new Particula(1.0f, Vector2(10.0f, .0f), Vector2(.0f, -10.0f));
-    Particula *particula2 = new Particula(2.0f, Vector2(), Vector2(.0f, -20.0f));
-    Particula_estatica *piso = new Particula_estatica();
+    Particula *particula2 = new Particula(1.0f, Vector2(), Vector2(.0f, -20.0f));
+    Particula *piso = new Particula();
 
     particulas.emplace_back(particula1);
     particulas.emplace_back(particula2);
     particulas.emplace_back(piso);
 
-    Sistema sistema(particulas);
+    float dt = 1.0f;
+    Sistema sistema(particulas, dt);
 
     Vector2 dir_abajo(.0f, -1.0f), dir_arriba(.0f, 1.0f), dir_derecha(1.0f, .0f), dir_izquierda(-1.0f, .0f);
     sistema.agregar_interaccion(particula1, piso, dir_abajo);
@@ -87,6 +90,7 @@ TEST(SistemaTest, Dos_particulas_sobre_el_piso_una_tiene_velocidad_y_terminan_in
 
     ASSERT_EQ(particula1->m_velocidad, Vector2());
     ASSERT_EQ(particula1->m_fuerza, Vector2());
+
     ASSERT_EQ(particula2->m_velocidad, Vector2(10.0f, .0f));
     ASSERT_EQ(particula2->m_fuerza, Vector2());
 }
@@ -96,13 +100,14 @@ TEST(SistemaTest, Dos_particulas_sobre_el_piso_una_tienen_velocidades_y_hay_un_c
     std::vector<Particula *> particulas;
     Particula *particula1 = new Particula(1.0f, Vector2(30.0f, .0f), Vector2(.0f, -10.0f));
     Particula *particula2 = new Particula(2.0f, Vector2(-30.0f, .0f), Vector2(.0f, -20.0f));
-    Particula_estatica *piso = new Particula_estatica();
+    Particula *piso = new Particula();
 
     particulas.emplace_back(particula1);
     particulas.emplace_back(particula2);
     particulas.emplace_back(piso);
 
-    Sistema sistema(particulas);
+    float dt = 1.0f;
+    Sistema sistema(particulas, dt);
 
     Vector2 dir_abajo(.0f, -1.0f), dir_arriba(.0f, 1.0f), dir_derecha(1.0f, .0f), dir_izquierda(-1.0f, .0f);
     sistema.agregar_interaccion(particula1, piso, dir_abajo);
