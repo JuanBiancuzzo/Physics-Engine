@@ -104,7 +104,7 @@ TEST(SistemaTest, Una_bala_con_velocidad_y_un_bloque_sin_velcodad_chocan_e_inter
     float dt = 1.0f;
     Sistema sistema(dt);
     Body *particula1 = new Body(Vector2(-5.0f, .0f), Vector2(10.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
-    Body *particula2 = new Body(Vector2(5.0f, .0f), Vector2(.0f, .0f), Vector2(.0f, -20.0f), 2.0f);
+    Body *particula2 = new Body(Vector2(5.0f, .0f), Vector2(.0f, .0f), Vector2(.0f, -20.0f), 1.0f);
 
     sistema.agregar_particula(particula1);
     sistema.agregar_particula(particula2);
@@ -113,7 +113,7 @@ TEST(SistemaTest, Una_bala_con_velocidad_y_un_bloque_sin_velcodad_chocan_e_inter
     sistema.agregar_interaccion(particula2, particula1, particula2->direccion_normal(particula1));
 
     sistema.expandir_fuerzas();
-    
+
     particula1->actualizar(dt);
     particula2->actualizar(dt);
 

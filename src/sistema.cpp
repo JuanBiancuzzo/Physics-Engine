@@ -59,22 +59,25 @@ bool Interaccion::valido(grafo::Node *node, grafo::Node *referencia)
     return ((particula->m_fuerza) * m_direccion > 0 || particula->m_velocidad * m_direccion > 0);
 }
 
+Vector2 fuerza_de_choque(Particula *particula, Particula *referencia, float dt)
+{
+    Vector2 velocidad_de_choque = particula->m_velocidad - referencia->m_velocidad;
+    return (velocidad_de_choque * particula->m_masa * particula->m_masa) / ((particula->m_masa + referencia->m_masa) * dt);
+}
+
 void Interaccion::expandir(grafo::Node *node, grafo::Node *referencia)
 {
     Particula *particula = static_cast<Particula *>(node);
     Particula *p_referencia = static_cast<Particula *>(referencia);
+
     Vector2 velocidad_de_choque = particula->m_velocidad - p_referencia->m_velocidad;
-    Vector2 fuerza, impulso;
+    Vector2 fuerza;
 
     if (!particula->m_estatico && particula->m_fuerza * m_direccion > 0)
-        // if (particula->m_fuerza * m_direccion > 0)
         fuerza += particula->m_fuerza.proyeccion(m_direccion);
     if (velocidad_de_choque * m_direccion > 0)
-        impulso += (velocidad_de_choque / m_dt).proyeccion(m_direccion);
+        fuerza += fuerza_de_choque(particula, p_referencia, m_dt);
 
-    // p_referencia->m_fuerza += (impulso * p_referencia->m_masa) * (!p_referencia->m_estatico ? 1.0f : -1.0f);
-    p_referencia->m_fuerza += (fuerza + impulso * p_referencia->m_masa) * (!p_referencia->m_estatico ? 1.0f : -1.0f);
-    // p_referencia->m_fuerza += (fuerza + impulso * p_referencia->m_masa - p_referencia->m_fuerza_inicial) * (!p_referencia->m_estatico ? 1.0f : -1.0f);
-    particula->m_fuerza -= (fuerza + impulso * particula->m_masa);
-    // particula->m_fuerza -= (fuerza + impulso * particula->m_masa) - particula->m_fuerza_inicial.proyeccion(m_direccion);
+    p_referencia->m_fuerza += fuerza * (!p_referencia->m_estatico ? 1.0f : -1.0f);
+    particula->m_fuerza -= fuerza;
 }
