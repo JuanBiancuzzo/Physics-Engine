@@ -68,7 +68,7 @@ TEST(SistemaTest, Dos_particulas_sobre_el_piso_una_tiene_velocidad_y_terminan_in
 {
     std::vector<Particula *> particulas;
     Particula *particula1 = new Particula(1.0f, Vector2(10.0f, .0f), Vector2(.0f, -10.0f));
-    Particula *particula2 = new Particula(1.0f, Vector2(), Vector2(.0f, -20.0f));
+    Particula *particula2 = new Particula(1.0f, Vector2(), Vector2(.0f, -10.0f));
     Particula *piso = new Particula();
 
     particulas.emplace_back(particula1);
@@ -117,15 +117,7 @@ TEST(SistemaTest, Dos_particulas_sobre_el_piso_una_tienen_velocidades_y_hay_un_c
     sistema.agregar_interaccion(particula1, particula2, dir_derecha);
     sistema.agregar_interaccion(particula2, particula1, dir_izquierda);
 
-    std::cout << "Antes" << std::endl;
-    for (Particula *particula : particulas)
-        std::cout << particula->m_velocidad.x << ", " << particula->m_velocidad.y << std::endl;
-
     sistema.expandir_fuerzas();
-
-    std::cout << "Despues" << std::endl;
-    for (Particula *particula : particulas)
-        std::cout << particula->m_velocidad.x << ", " << particula->m_velocidad.y << std::endl;
 
     ASSERT_EQ(particula1->m_velocidad, Vector2(-50.0f, .0f));
     ASSERT_EQ(particula1->m_fuerza, Vector2());
