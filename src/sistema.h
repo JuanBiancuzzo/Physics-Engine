@@ -52,6 +52,6 @@ namespace sistema
         Interaccion(Particula *particula, Vector2 &direccion, float dt);
 
         Vector2 expandir(Particula *particula);
-        // void actualizar(Particula *particula, Vector2 &fuerza);
+        void actualizar(Particula *particula, Vector2 &fuerza);
     };
 }

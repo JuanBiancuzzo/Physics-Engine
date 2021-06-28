@@ -112,12 +112,17 @@ Vector2 Interaccion::expandir(Particula *particula)
     if (resultante.nulo())
         return Vector2();
 
-    m_particula->m_fuerza += resultante;
-    particula->m_fuerza -= resultante;
+    actualizar(particula, resultante);
+    m_particula->expandir();
+
+    return (resultante * -1.0f);
+}
+
+void Interaccion::actualizar(Particula *particula, Vector2 &fuerza)
+{
+    m_particula->m_fuerza += fuerza;
+    particula->m_fuerza -= fuerza;
 
     m_particula->actualizar(m_direccion, m_dt);
     particula->actualizar(m_direccion, m_dt);
-
-    m_particula->expandir();
-    return (resultante * -1.0f);
 }
