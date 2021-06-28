@@ -36,9 +36,9 @@ namespace sistema
         ~Particula();
 
         void agregar_interaccion(Particula *referencia, Vector2 &direccion, float dt);
-        void expandir(float dt);
+        void expandir();
 
-        void actualizar(float dt);
+        void actualizar(Vector2 direccion, float dt);
     };
 
     class Interaccion
@@ -52,5 +52,6 @@ namespace sistema
         Interaccion(Particula *particula, Vector2 &direccion, float dt);
 
         Vector2 expandir(Particula *particula);
+        // void actualizar(Particula *particula, Vector2 &fuerza);
     };
 }
