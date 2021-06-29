@@ -51,6 +51,6 @@ namespace sistema
     public:
         Interaccion(Particula *particula, Vector2 &direccion, float dt);
 
-        Vector2 expandir(Particula *particula);
+        bool expandir(Particula *particula);
     };
 }

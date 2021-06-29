@@ -57,15 +57,15 @@ void Particula::expandir()
     if (m_estatica)
         return;
 
-    Vector2 resultante;
+    bool resultado;
     do
     {
-        resultante *= .0f;
+        resultado = false;
 
         for (Interaccion *interaccion : m_interacciones)
-            resultante += interaccion->expandir(this);
+            resultado = resultado || interaccion->expandir(this);
 
-    } while (!resultante.nulo());
+    } while (resultado);
 }
 
 void Particula::actualizar(Vector2 direccion, float dt)
@@ -107,7 +107,7 @@ void actualizar_velocidades(Particula *particula, Particula *referencia, Vector2
         referencia->m_velocidad += (fuerza * dt) / referencia->m_masa;
 }
 
-Vector2 Interaccion::expandir(Particula *particula)
+bool Interaccion::expandir(Particula *particula)
 {
     Vector2 fuerza_resultante = particula->m_fuerza.proyeccion(m_direccion);
     Vector2 fuerza_choque = fuerza_de_choque(particula, m_particula, m_direccion, m_dt);
@@ -133,8 +133,8 @@ Vector2 Interaccion::expandir(Particula *particula)
             m_particula->actualizar(m_direccion, m_dt);
             particula->actualizar(m_direccion, m_dt);
         }
-        return (fuerza_resultante * hay_resultante + fuerza_choque * hay_choque) * -1.0f;
+        return hay_resultante || hay_choque;
     }
 
-    return Vector2();
+    return false;
 }
