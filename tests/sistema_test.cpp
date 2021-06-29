@@ -63,8 +63,8 @@ TEST(SistemaTest, Dos_particulas_y_el_piso_el_primero_con_velocidad_y_rebota_con
     for (Particula *particula : particulas)
         std::cout << particula->m_velocidad.x << ", " << particula->m_velocidad.y << std::endl;
 
-    ASSERT_EQ(particula1->m_velocidad, Vector2(.0f, 10.0f));
-    ASSERT_EQ(particula2->m_velocidad, Vector2());
+    ASSERT_EQ(particula1->m_velocidad, Vector2(.0f, 7.77f));
+    ASSERT_EQ(particula2->m_velocidad, Vector2(.0f, 4.44f));
 
     for (Particula *p : particulas)
         delete p;
@@ -157,20 +157,63 @@ TEST(SistemaTest, Particula_estando_en_una_esquina_y_una_velocidad_horizontal_re
     sistema.agregar_interaccion(particula, pared, dir_derecha);
     sistema.agregar_interaccion(pared, particula, dir_izquierda);
 
-    std::cout << "Antes" << std::endl;
-    for (Particula *particula : particulas)
-        std::cout << particula->m_velocidad.x << ", " << particula->m_velocidad.y << std::endl;
-
     sistema.expandir_fuerzas();
-
-    std::cout << "Despues" << std::endl;
-    for (Particula *particula : particulas)
-        std::cout << particula->m_velocidad.x << ", " << particula->m_velocidad.y << std::endl;
 
     ASSERT_EQ(particula->m_velocidad, Vector2(-10.0f, .0f));
 
     for (Particula *p : particulas)
         delete p;
+}
+
+TEST(SistemaTest, Particula_choca_contra_el_piso_con_una_velocidad_y_rebota_terminando_con_la_velocidad_opuesta)
+{
+    std::vector<Particula *> particulas;
+    Particula *particula = new Particula(1.0f, Vector2(.0f, -10.0f), Vector2(.0f, -10.0f));
+    Particula *piso = new Particula();
+
+    particulas.emplace_back(particula);
+    particulas.emplace_back(piso);
+
+    float dt = 1.0f;
+    Sistema sistema(particulas, dt);
+
+    Vector2 dir_abajo(.0f, -1.0f), dir_arriba(.0f, 1.0f);
+    sistema.agregar_interaccion(particula, piso, dir_abajo);
+    sistema.agregar_interaccion(piso, particula, dir_arriba);
+
+    sistema.expandir_fuerzas();
+
+    ASSERT_EQ(particula->m_velocidad, Vector2(.0f, 10.0f));
+
+    for (Particula *p : particulas)
+        delete p;
+}
+
+TEST(SistemaTest, Dos_particulas_con_velocidades_en_la_misma_direccion_pero_hay_choque)
+{
+    std::vector<Particula *> particulas;
+    Particula *particula1 = new Particula(1.0f, Vector2(.0f, 10.0f / 3.0f), Vector2(.0f, .0f));
+    Particula *particula2 = new Particula(2.0f, Vector2(.0f, 20.0f / 3.0f), Vector2(.0f, .0f));
+
+    particulas.emplace_back(particula1);
+    particulas.emplace_back(particula2);
+
+    float dt = 1.0f;
+    Sistema sistema(particulas, dt);
+
+    Vector2 dir_abajo(.0f, -1.0f), dir_arriba(.0f, 1.0f);
+    sistema.agregar_interaccion(particula2, particula1, dir_arriba);
+    sistema.agregar_interaccion(particula1, particula2, dir_abajo);
+
+    sistema.expandir_fuerzas();
+
+    ASSERT_EQ(particula1->m_velocidad, Vector2(.0f, 7.77f));
+    ASSERT_EQ(particula2->m_velocidad, Vector2(.0f, 4.44f));
+
+    for (Particula *p : particulas)
+        delete p;
+
+
 }
 
 TEST(SistemaTest, Simular_el_pendulo_de_newton_con_todas_las_particulas_de_la_misma_masa)
@@ -224,7 +267,7 @@ TEST(SistemaTest, Simular_el_pendulo_de_newton_con_todas_las_particulas_de_la_mi
     for (Particula *p : particulas)
         delete p;
 }
-
+ 
 // test donde hay dos particulas cayendose, a la misma velocidad por lo que no deberia haber un choque -> a determinar
 
 // test donde hay dos particulas cayendose, la de abajo con una mayor velocidad por lo que no deberia haber un choque -> a determinar

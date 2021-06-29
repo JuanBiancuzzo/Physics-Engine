@@ -93,7 +93,16 @@ Vector2 fuerza_de_choque(Particula *particula, Particula *referencia, Vector2 &d
     Vector2 velocidad_de_choque = particula->m_velocidad.proyeccion(direccion) - referencia->m_velocidad.proyeccion(direccion);
     float promedio_de_masas = (masa1 + masa2) / 2;
 
-    return ((velocidad_de_choque * masa1 * masa2) / (promedio_de_masas * dt));
+    return ((velocidad_de_choque * masa1 * masa2) / (promedio_de_masas * dt)) * (referencia->m_estatica ? 2.0f : 1.0f);
+}
+
+void actualizar_velocidades(Particula *particula, Particula *referencia, Vector2 &fuerza, float dt)
+{
+    if (!particula->m_estatica)
+        particula->m_velocidad -= (fuerza * dt) / particula->m_masa;
+
+    if (!referencia->m_estatica)
+        referencia->m_velocidad += (fuerza * dt) / referencia->m_masa;
 }
 
 Vector2 Interaccion::expandir(Particula *particula)
@@ -101,21 +110,20 @@ Vector2 Interaccion::expandir(Particula *particula)
     Vector2 fuerza_resultante = particula->m_fuerza.proyeccion(m_direccion);
     Vector2 fuerza_choque = fuerza_de_choque(particula, m_particula, m_direccion, m_dt);
 
-    Vector2 resultante;
+    if (fuerza_choque * m_direccion > 0)
+        actualizar_velocidades(particula, m_particula, fuerza_choque, m_dt);
 
     if (fuerza_resultante * m_direccion > 0)
-        resultante += fuerza_resultante;
+    {
+        m_particula->expandir();
+        actualizar(particula, fuerza_resultante);
+        return (fuerza_resultante + fuerza_choque) * -1.0f;
+    }
 
     if (fuerza_choque * m_direccion > 0)
-        resultante += fuerza_choque;
+        return (fuerza_choque * -1.0f);
 
-    if (resultante.nulo())
-        return Vector2();
-
-    actualizar(particula, resultante);
-    m_particula->expandir();
-
-    return (resultante * -1.0f);
+    return Vector2();
 }
 
 void Interaccion::actualizar(Particula *particula, Vector2 &fuerza)
