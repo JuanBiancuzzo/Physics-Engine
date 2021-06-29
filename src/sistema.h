@@ -26,7 +26,7 @@ namespace sistema
     {
     public:
         Vector2 m_velocidad, m_fuerza;
-        float m_masa;
+        float m_masa, m_coeficiente;
         bool m_estatica;
         std::vector<Interaccion *> m_interacciones;
 
@@ -52,6 +52,5 @@ namespace sistema
         Interaccion(Particula *particula, Vector2 &direccion, float dt);
 
         Vector2 expandir(Particula *particula);
-        void actualizar(Particula *particula, Vector2 &fuerza);
     };
 }
