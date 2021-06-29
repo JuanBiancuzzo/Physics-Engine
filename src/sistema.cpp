@@ -28,6 +28,8 @@ void Sistema::expandir_fuerzas()
 {
     for (Particula *particula : m_particulas)
         particula->expandir();
+    for (Particula *particula : m_particulas)
+        particula->actualizar(m_dt);
 }
 
 Particula::Particula(float masa, Vector2 velocidad, Vector2 fuerza)
@@ -75,6 +77,13 @@ void Particula::actualizar(Vector2 direccion, float dt)
     if (!m_estatica)
         m_velocidad += (fuerza * dt) / m_masa;
     m_fuerza -= fuerza;
+}
+
+void Particula::actualizar(float dt)
+{
+    if (!m_estatica)
+        m_velocidad += (m_fuerza * dt) / m_masa;
+    m_fuerza *= .0f;
 }
 
 Interaccion::Interaccion(Particula *particula, Vector2 &direccion, float dt)

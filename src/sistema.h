@@ -39,6 +39,7 @@ namespace sistema
         void expandir();
 
         void actualizar(Vector2 direccion, float dt);
+        void actualizar(float dt);
     };
 
     class Interaccion
