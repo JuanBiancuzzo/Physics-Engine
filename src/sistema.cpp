@@ -70,15 +70,6 @@ void Particula::expandir()
     } while (resultado);
 }
 
-void Particula::actualizar(Vector2 direccion, float dt)
-{
-    Vector2 fuerza = m_fuerza.proyeccion(direccion);
-
-    if (!m_estatica)
-        m_velocidad += (fuerza * dt) / m_masa;
-    m_fuerza -= fuerza;
-}
-
 void Particula::actualizar(float dt)
 {
     if (!m_estatica)
@@ -136,12 +127,6 @@ bool Interaccion::expandir(Particula *particula)
         }
 
         m_particula->expandir();
-
-        if (hay_resultante)
-        {
-            m_particula->actualizar(m_direccion, m_dt);
-            particula->actualizar(m_direccion, m_dt);
-        }
         return hay_resultante || hay_choque;
     }
 

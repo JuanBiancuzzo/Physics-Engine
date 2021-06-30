@@ -38,7 +38,6 @@ namespace sistema
         void agregar_interaccion(Particula *referencia, Vector2 &direccion, float dt);
         void expandir();
 
-        void actualizar(Vector2 direccion, float dt);
         void actualizar(float dt);
     };
 
