@@ -127,7 +127,7 @@ bool Interaccion::expandir(Particula *particula)
         }
 
         m_particula->expandir();
-        return hay_resultante || hay_choque;
+        return true;
     }
 
     return false;
