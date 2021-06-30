@@ -251,3 +251,72 @@ TEST(SistemaTest, Simular_el_pendulo_de_newton_con_todas_las_particulas_de_la_mi
     for (Particula *p : particulas)
         delete p;
 }
+
+class Particula_pos : public Particula
+{
+private:
+    Vector2 m_posicion;
+
+public:
+    Particula_pos(float masa, Vector2 posicion, Vector2 velocidad, Vector2 fuerza)
+        : m_posicion(posicion), Particula(masa, velocidad, fuerza)
+    {
+    }
+
+    Vector2 posicion_relativa(Particula_pos *particula)
+    {
+        return (m_posicion - particula->m_posicion);
+    }
+};
+
+void velocidades(std::vector<Particula *> particulas)
+{
+    std::cout << "Velocidades" << std::endl;
+    for (Particula *particula : particulas)
+        std::cout << "Particula: x = " << particula->m_velocidad.x << ", y = " << particula->m_velocidad.y << std::endl;
+}
+
+TEST(SistemaTest, Tres_particulas_con_las_fuerzas_de_peso_y_se_mantienen_en_posicion)
+{
+    std::vector<Particula *> particulas;
+    Particula_pos *particula1 = new Particula_pos(1.0f, Vector2(-0.2f, -0.8f), Vector2(.0f, .0f), Vector2(.0f, -10.0f));
+    Particula_pos *particula2 = new Particula_pos(1.0f, Vector2(.0f, .4f), Vector2(.0f, .0f), Vector2(.0f, -10.0f));
+    Particula_pos *particula3 = new Particula_pos(1.0f, Vector2(.2f, -0.8f), Vector2(.0f, .0f), Vector2(.0f, -10.0f));
+    Particula *piso = new Particula();
+
+    particulas.emplace_back(particula1);
+    particulas.emplace_back(particula2);
+    particulas.emplace_back(particula3);
+    particulas.emplace_back(piso);
+
+    float dt = 1.0f;
+    Sistema sistema(particulas, dt);
+
+    Vector2 dir_abajo(.0f, -1.0f), dir_arriba(.0f, 1.0f);
+    Vector2 dir_1_2 = particula1->posicion_relativa(particula2), dir_2_1 = particula2->posicion_relativa(particula1);
+    Vector2 dir_1_3 = particula1->posicion_relativa(particula3), dir_3_1 = particula3->posicion_relativa(particula1);
+    Vector2 dir_2_3 = particula2->posicion_relativa(particula3), dir_3_2 = particula3->posicion_relativa(particula2);
+    sistema.agregar_interaccion(particula2, particula1, dir_2_1);
+    sistema.agregar_interaccion(particula1, particula2, dir_1_2);
+    sistema.agregar_interaccion(particula2, particula3, dir_2_3);
+    sistema.agregar_interaccion(particula3, particula2, dir_3_2);
+    sistema.agregar_interaccion(particula1, particula3, dir_1_3);
+    sistema.agregar_interaccion(particula3, particula1, dir_3_1);
+
+    sistema.agregar_interaccion(particula1, piso, dir_abajo);
+    sistema.agregar_interaccion(particula3, piso, dir_abajo);
+    sistema.agregar_interaccion(piso, particula1, dir_arriba);
+    sistema.agregar_interaccion(piso, particula3, dir_arriba);
+
+    sistema.expandir_fuerzas();
+
+    velocidades(particulas);
+
+    ASSERT_NEAR(particula1->m_velocidad.y, .0f, .01f);
+    ASSERT_NEAR(particula2->m_velocidad.x, .0f, .01f);
+    ASSERT_NEAR(particula3->m_velocidad.y, .0f, .01f);
+    ASSERT_NEAR(particula1->m_velocidad.x, -1.0f * particula3->m_velocidad.x, .01f);
+
+    for (Particula *p : particulas)
+        delete p;
+}
