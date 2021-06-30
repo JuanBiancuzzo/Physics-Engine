@@ -3,8 +3,6 @@
 #include <vector>
 
 #include "vector.h"
-#include "cuerpos/cuerpoRigido.h"
-#include "grafo.h"
 
 namespace sistema
 {
@@ -14,43 +12,45 @@ namespace sistema
     class Sistema
     {
     private:
-        grafo::Grafo m_grafo;
-        std::vector<Interaccion *> m_interacciones;
+        std::vector<Particula *> m_particulas;
         float m_dt;
 
     public:
-        Sistema(float dt);
-        ~Sistema();
+        Sistema(std::vector<Particula *> &particulas, float dt);
 
-        void agregar_particula(Particula *particula);
-        void agregar_interaccion(Particula *particula, Particula *referencia, Vector2 direccion);
+        void agregar_interaccion(Particula *particula, Particula *referencia, Vector2 &direccion);
         void expandir_fuerzas();
     };
 
-    class Particula : public grafo::Node
+    class Particula
     {
     public:
-        Vector2 m_velocidad, m_fuerza, m_fuerza_inicial;
-        float m_masa;
-        bool m_estatico;
+        Vector2 m_velocidad, m_fuerza;
+        float m_masa, m_coeficiente;
+        bool m_estatica;
+        std::vector<Interaccion *> m_interacciones;
 
     public:
-        Particula(float masa, Vector2 &velocidad, Vector2 &fuerza);
-        Particula(bool es_estatico);
+        Particula(float masa, Vector2 velocidad, Vector2 fuerza);
+        Particula(); // estatica
+        ~Particula();
 
-        Vector2 sum_vel(Particula *particula);
+        void agregar_interaccion(Particula *referencia, Vector2 &direccion, float dt);
+        void expandir();
+
+        void actualizar(float dt);
     };
 
-    class Interaccion : public grafo::Interaccion
+    class Interaccion
     {
     private:
+        Particula *m_particula;
         Vector2 m_direccion;
         float m_dt;
 
     public:
-        Interaccion(Vector2 &direccion, float dt);
+        Interaccion(Particula *particula, Vector2 &direccion, float dt);
 
-        bool valido(grafo::Node *node, grafo::Node *referencia);
-        void expandir(grafo::Node *node, grafo::Node *referencia);
+        bool expandir(Particula *particula);
     };
 }

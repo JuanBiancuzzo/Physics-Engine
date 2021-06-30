@@ -11,7 +11,6 @@ set(SOURCE_CUERPOS "${PROJECT_SOURCE_DIR}/src/cuerpos")
 add_library(Core
   ${SOURCE}/motorDeFisicas.cpp
   ${SOURCE}/quadtree.cpp
-  ${SOURCE}/grafo.cpp
   ${SOURCE}/sistema.cpp
   ${SOURCE}/vector.cpp
   ${SOURCE_CUERPOS}/colisiones.cpp
@@ -39,7 +38,6 @@ target_sources(tests PRIVATE
     ${TEST}/vector_test.cpp
     ${TEST}/quadtree_test.cpp
     ${TEST}/cuerpos_test.cpp
-    ${TEST}/grafo_test.cpp
     ${TEST}/sistema_test.cpp
 )
 set_target_properties(tests PROPERTIES COMPILE_FLAGS "${cxx_strict}")
