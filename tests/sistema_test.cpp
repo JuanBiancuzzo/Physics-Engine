@@ -292,7 +292,6 @@ TEST(SistemaTest, Tres_particulas_con_las_fuerzas_de_peso_posicionadas_en_forma_
     float dt = 1.0f;
     Sistema sistema(particulas, dt);
 
-    Vector2 dir_abajo(.0f, -1.0f), dir_arriba(.0f, 1.0f);
     Vector2 dir_1_2 = particula1->posicion_relativa(particula2), dir_2_1 = particula2->posicion_relativa(particula1);
     Vector2 dir_1_3 = particula1->posicion_relativa(particula3), dir_3_1 = particula3->posicion_relativa(particula1);
     Vector2 dir_2_3 = particula2->posicion_relativa(particula3), dir_3_2 = particula3->posicion_relativa(particula2);
@@ -303,6 +302,7 @@ TEST(SistemaTest, Tres_particulas_con_las_fuerzas_de_peso_posicionadas_en_forma_
     sistema.agregar_interaccion(particula1, particula3, dir_1_3);
     sistema.agregar_interaccion(particula3, particula1, dir_3_1);
 
+    Vector2 dir_abajo(.0f, -1.0f), dir_arriba(.0f, 1.0f);
     sistema.agregar_interaccion(particula1, piso, dir_abajo);
     sistema.agregar_interaccion(particula3, piso, dir_abajo);
     sistema.agregar_interaccion(piso, particula1, dir_arriba);
@@ -310,11 +310,8 @@ TEST(SistemaTest, Tres_particulas_con_las_fuerzas_de_peso_posicionadas_en_forma_
 
     sistema.expandir_fuerzas();
 
-    velocidades(particulas);
-
     ASSERT_NEAR(particula1->m_velocidad.y, .0f, .01f);
     ASSERT_NEAR(particula2->m_velocidad.x, .0f, .01f);
-    ASSERT_TRUE(particula2->m_velocidad.y < .0f);
     ASSERT_NEAR(particula3->m_velocidad.y, .0f, .01f);
     ASSERT_NEAR(particula1->m_velocidad.x, -1.0f * particula3->m_velocidad.x, .01f);
 
