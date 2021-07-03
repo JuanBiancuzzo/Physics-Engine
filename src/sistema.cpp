@@ -110,14 +110,13 @@ Vector2 fuerza_de_choque(Particula *particula, Vector2 &velocidad, Particula *re
     return fuerza * (referencia->m_estatica ? 1.0f + particula->m_coeficiente : 1.0f);
 }
 
-
 bool Interaccion::expandir(Particula *particula, Vector2 &fuerza, Vector2 &velocidad)
 {
     Vector2 fuerza_resultante = fuerza.proyeccion(m_direccion);
     Vector2 fuerza_choque = fuerza_de_choque(particula, velocidad, m_particula, m_direccion);
 
     bool hay_resultante = fuerza_resultante * m_direccion > 0;
-    bool hay_choque = fuerza_choque * m_direccion > 0;
+    bool hay_choque = fuerza_choque * m_direccion > 0 && velocidad * m_direccion > 0;
 
     if (hay_choque)
     {
