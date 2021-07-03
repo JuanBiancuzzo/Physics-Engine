@@ -7,9 +7,26 @@ Para esto primero estoy aprendiendo C++, con el objetivo de hacer un falling san
 La idea de usar particulas me parecio mas divertido porque me da situaciones como deteccion de colisiones y como optimizar para muchas particulas, el uso de la fisica newtoniana y como manejar su errar en una simulacion discontinua
 
 ### Idea de progreso
-Ahora ya cree unas librerias (no los hice muy bien las librerias pero por ahora es suficiente para avanzar) de vectores en dos dimensiones, las particulas y los quadtrees
+Creo que el motor de fisicas va a estar dividio en estos sistemas vinculados
+#### Cuerpos rigidos
+Son las representaciones geometricas de cuerpos que van a interactuar en el motor de fisicas, estas van a ser
+ * Circulo
+ * Linea
+ * Rectangulo de tipo AABB
+ * Rectangulo 
+ * Capsula 
 
-Ahora la idea es crear un sistema de fisicas para las particulas, creo que va a ser una extension de la particula 
+Voy a empezar con el circulo, linea y un rectangulo de tipo AABB, y despues voy a agregar el resto, y si veo la necesidad de alguno mas, entonces se actualizara la lista de elementos
+#### Subdivision del espacio
+Voy a usar un quadtree, principalmente porque me parece divertido, y porque voy a querer que el motor de fisicas sea capaz de admitir zonas muy densas de particulas y zonas con casi ninguna particula, y creo que un quadtree es la mejor estructura para ese trabajo
+
+Para ser mas especifico, voy a crear un archivo quadtree.cpp, en el que estara la clase QuadTree como tambien Node y Entidad, donde QuadTree es la interfaz con el usuario, Node la estructura real del quadtree, y la Entidad lo minimo para poder tener una particula guardada en el quadtree
+
+#### Deteccion de colisiones
+La deteccion de colisiones va a estar dada en combinacion entre el cuerpo rigido y el quadtree, donde el quadtree me va a dar todas las posibles colisiones, y el cuerpo rigido va a dar todas las colisiones validas y que se tienen que resolver
+
+#### Resolucion de colisiones
+La resolucion de colisiones todavia no lo tengo muy bien pensado pero la idea que tengo actualmente es de usar un grafo para representar las colisiones, y de ahi poder hacer una resolucion mas eficiente y mas realista, pero como dije no lo tengo muy bien pensado y todavia no se si es posible
 
 ### Explicacion de todo el codigo
 Voy a estar explicando todo el codigo que escribo, y se puede interpresar como una forma de documentacion, pero realmente es mas una explicacion, todo esto lo pueden ver [aca](explicaciones.md)

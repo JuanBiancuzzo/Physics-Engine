@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+const float delta = 0.01f;
+
 struct Vector2
 {
     float x, y;
@@ -12,7 +14,7 @@ struct Vector2
 
     Vector2 operator+(const Vector2 &otro) const;
     Vector2 operator-(const Vector2 &otro) const;
-    float operator*(const Vector2 &otro) const; // producto interno
+    float operator*(const Vector2 &otro) const; // producto escalar
     Vector2 operator*(float alpha) const;
     Vector2 operator/(float alpha) const;
 
@@ -32,5 +34,5 @@ struct Vector2
     Vector2 proyeccion(const Vector2 &otro) const;
     Vector2 normal() const;
 
-    void imprimir() const;
+    bool nulo() const;
 };

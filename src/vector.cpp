@@ -55,7 +55,10 @@ void Vector2::operator/=(float alpha)
 
 bool Vector2::operator==(const Vector2 &otro) const
 {
-    return !(this->x != otro.x || this->y != otro.y);
+    bool en_x = (this->x - delta < otro.x and otro.x < this->x + delta);
+    bool en_y = (this->y - delta < otro.y and otro.y < this->y + delta);
+
+    return en_x && en_y;
 }
 
 float Vector2::modulo() const
@@ -85,5 +88,12 @@ Vector2 Vector2::proyeccion(const Vector2 &otro) const
 
 Vector2 Vector2::normal() const
 {
+    if (this->modulo() == 0.0f)
+        return *this;
     return (*this / this->modulo());
+}
+
+bool Vector2::nulo() const
+{
+    return (*this == *this * .0f);
 }

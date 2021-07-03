@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include "../src/motorDeFisicas.h"
+
 int main()
 {
 
