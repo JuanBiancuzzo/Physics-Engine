@@ -39,7 +39,7 @@ namespace sistema
         void expandir();
 
         void actualizar(float dt);
-        void actualizar_velocidad(Vector2 fuerza_choque);
+        void velocidad_por_choque(Vector2 fuerza_choque);
         void aplicar_fuerza(Vector2 fuerza);
     };
 
