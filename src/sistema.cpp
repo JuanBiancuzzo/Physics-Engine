@@ -51,30 +51,39 @@ Particula::~Particula()
 void Particula::agregar_interaccion(Particula *referencia, Vector2 &direccion, float dt)
 {
     Interaccion *interaccion = new Interaccion(referencia, direccion, dt);
-    insertar_sin_repetir<Interaccion *>(m_interacciones, interaccion);
+    m_interacciones.emplace_back(interaccion);
 }
 
 void Particula::expandir()
 {
-    if (m_estatica)
-        return;
-
     bool resultado;
     do
     {
         resultado = false;
 
+        Vector2 fuerza = m_fuerza;
         for (Interaccion *interaccion : m_interacciones)
-            resultado = resultado || interaccion->expandir(this);
+            resultado |= interaccion->expandir(this, fuerza);
 
     } while (resultado);
 }
 
 void Particula::actualizar(float dt)
 {
-    if (!m_estatica)
-        m_velocidad += (m_fuerza * dt) / m_masa;
+    actualizar_velocidad(m_fuerza, dt);
     m_fuerza *= .0f;
+}
+
+void Particula::actualizar_velocidad(Vector2 fuerza, float dt)
+{
+    if (!m_estatica)
+        m_velocidad += (fuerza * dt) / m_masa;
+}
+
+void Particula::aplicar_fuerza(Vector2 fuerza)
+{
+    if (!m_estatica)
+        m_fuerza += fuerza;
 }
 
 Interaccion::Interaccion(Particula *particula, Vector2 &direccion, float dt)
@@ -98,37 +107,28 @@ Vector2 fuerza_de_choque(Particula *particula, Particula *referencia, Vector2 &d
     return fuerza * (referencia->m_estatica ? 1.0f + particula->m_coeficiente : 1.0f);
 }
 
-void actualizar_velocidades(Particula *particula, Particula *referencia, Vector2 &fuerza, float dt)
+bool Interaccion::expandir(Particula *particula, Vector2 &fuerza)
 {
-    if (!particula->m_estatica)
-        particula->m_velocidad -= (fuerza * dt) / particula->m_masa;
-
-    if (!referencia->m_estatica)
-        referencia->m_velocidad += (fuerza * dt) / referencia->m_masa;
-}
-
-bool Interaccion::expandir(Particula *particula)
-{
-    Vector2 fuerza_resultante = particula->m_fuerza.proyeccion(m_direccion);
+    Vector2 fuerza_resultante = fuerza.proyeccion(m_direccion);
     Vector2 fuerza_choque = fuerza_de_choque(particula, m_particula, m_direccion, m_dt);
 
     bool hay_resultante = fuerza_resultante * m_direccion > 0;
     bool hay_choque = fuerza_choque * m_direccion > 0;
 
     if (hay_choque)
-        actualizar_velocidades(particula, m_particula, fuerza_choque, m_dt);
-
-    if (hay_resultante || hay_choque)
     {
-        if (hay_resultante)
-        {
-            m_particula->m_fuerza += fuerza_resultante;
-            particula->m_fuerza -= fuerza_resultante;
-        }
-
-        m_particula->expandir();
-        return true;
+        m_particula->actualizar_velocidad(fuerza_choque, m_dt);
+        particula->actualizar_velocidad(fuerza_choque * -1.0f, m_dt);
     }
 
-    return false;
+    if (hay_resultante)
+    {
+        m_particula->aplicar_fuerza(fuerza_resultante);
+        particula->aplicar_fuerza(fuerza_resultante * -1.0f);
+    }
+
+    if ((hay_resultante || hay_choque) && !m_particula->m_estatica)
+        m_particula->expandir();
+
+    return hay_resultante || hay_choque;
 }
