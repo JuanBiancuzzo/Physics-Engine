@@ -4,7 +4,6 @@ project(GameOfLifeMeetsPhysics)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp -o3")
-
 set(SOURCE "${PROJECT_SOURCE_DIR}/src")
 set(SOURCE_CUERPOS "${PROJECT_SOURCE_DIR}/src/cuerpos")
 
