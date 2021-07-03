@@ -39,7 +39,7 @@ namespace sistema
         void expandir();
 
         void actualizar(float dt);
-        void actualizar_velocidad(Vector2 fuerza, float dt);
+        void actualizar_velocidad(Vector2 fuerza_choque);
         void aplicar_fuerza(Vector2 fuerza);
     };
 
@@ -53,6 +53,6 @@ namespace sistema
     public:
         Interaccion(Particula *particula, Vector2 &direccion, float dt);
 
-        bool expandir(Particula *particula, Vector2 &fuerza);
+        bool expandir(Particula *particula, Vector2 &fuerza, Vector2 &velocidad);
     };
 }
