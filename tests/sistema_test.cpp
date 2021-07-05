@@ -345,8 +345,6 @@ TEST(SistemaTest, Tres_particulas_sin_fuerzas_posicionadas_en_una_piramide_donde
 
     sistema.expandir_fuerzas();
 
-    velocidades(particulas);
-
     EXPECT_NEAR(particula2->m_velocidad.x, .0f, .01f);
     EXPECT_NEAR(particula1->m_velocidad.x, -1.0f * particula3->m_velocidad.x, .01f);
     EXPECT_NEAR(particula1->m_velocidad.y, particula3->m_velocidad.y, .01f);
@@ -355,7 +353,8 @@ TEST(SistemaTest, Tres_particulas_sin_fuerzas_posicionadas_en_una_piramide_donde
         delete p;
 }
 
-/*
+/* Tenemos un problema, donde la velocidad, como depende de las dos particulas involucradas, puede que mas de una particula la afecte, y por 
+lo tanto alterar su reaccion
 TEST(SistemaTest, Tres_particulas_sin_fuerzas_posicionadas_en_una_piramide_donde_la_de_mas_arriba_tiene_velocidad_se_mueven_hace_chochar_contra_el_piso)
 {
     std::vector<Particula *> particulas;
