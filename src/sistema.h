@@ -64,12 +64,6 @@ namespace sistema
         Interaccion(Particula *particula, Vector2 &direccion, float dt);
 
         bool expandir(Particula *particula);
-        // bool expandir(Particula *particula, Vector2 &fuerza, Vector2 &velocidad);
     };
 
-    // el problema principal que hay, es en los choques con velocidad, ya que se depende que
-    // las velocidades de ambos cuerpos se mantenga igual para todas iguales
-
-    // idea, que todas las particulas tengan una forma de guardar su estado y despues cuando
-    // todas se hayan influenciado entre si, recien ahi actualizarlas
 }
