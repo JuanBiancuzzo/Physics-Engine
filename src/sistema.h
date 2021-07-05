@@ -20,6 +20,7 @@ namespace sistema
 
         void agregar_interaccion(Particula *particula, Particula *referencia, Vector2 &direccion);
         void expandir_fuerzas();
+        void actualizar_particulas();
     };
 
     class Particula
@@ -30,13 +31,22 @@ namespace sistema
         bool m_estatica;
         std::vector<Interaccion *> m_interacciones;
 
+    private:
+        Vector2 m_velocidad_guardada, m_fuerza_guardada;
+        std::vector<Particula *> m_interactuando;
+
     public:
         Particula(float masa, Vector2 velocidad, Vector2 fuerza);
         Particula(); // estatica
         ~Particula();
 
         void agregar_interaccion(Particula *referencia, Vector2 &direccion, float dt);
-        void expandir();
+        bool expandir();
+
+        void actualizarse();
+
+        bool interactuaste(Particula *particula);
+        void interactuas(Particula *particula);
 
         void actualizar(float dt);
         void velocidad_por_choque(Vector2 fuerza_choque);
@@ -53,6 +63,7 @@ namespace sistema
     public:
         Interaccion(Particula *particula, Vector2 &direccion, float dt);
 
-        bool expandir(Particula *particula, Vector2 &fuerza, Vector2 &velocidad);
+        bool expandir(Particula *particula);
     };
+
 }

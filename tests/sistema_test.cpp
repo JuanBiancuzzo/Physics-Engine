@@ -3,6 +3,13 @@
 
 using namespace sistema;
 
+void velocidades(std::vector<Particula *> particulas)
+{
+    std::cout << "Velocidades" << std::endl;
+    for (Particula *particula : particulas)
+        std::cout << "Particula: x = " << particula->m_velocidad.x << ", y = " << particula->m_velocidad.y << std::endl;
+}
+
 TEST(SistemaTest, Dos_particulas_y_el_piso_sin_velocidad_ninguna_sus_fuerzas_finales_son_cero)
 {
     std::vector<Particula *> particulas;
@@ -269,13 +276,6 @@ public:
     }
 };
 
-void velocidades(std::vector<Particula *> particulas)
-{
-    std::cout << "Velocidades" << std::endl;
-    for (Particula *particula : particulas)
-        std::cout << "Particula: x = " << particula->m_velocidad.x << ", y = " << particula->m_velocidad.y << std::endl;
-}
-
 TEST(SistemaTest, Tres_particulas_con_las_fuerzas_de_peso_posicionadas_en_forma_de_piramide_las_de_abajo_se_mueven_para_los_costados)
 {
     std::vector<Particula *> particulas;
@@ -345,8 +345,6 @@ TEST(SistemaTest, Tres_particulas_sin_fuerzas_posicionadas_en_una_piramide_donde
 
     sistema.expandir_fuerzas();
 
-    velocidades(particulas);
-
     EXPECT_NEAR(particula2->m_velocidad.x, .0f, .01f);
     EXPECT_NEAR(particula1->m_velocidad.x, -1.0f * particula3->m_velocidad.x, .01f);
     EXPECT_NEAR(particula1->m_velocidad.y, particula3->m_velocidad.y, .01f);
@@ -355,7 +353,6 @@ TEST(SistemaTest, Tres_particulas_sin_fuerzas_posicionadas_en_una_piramide_donde
         delete p;
 }
 
-/*
 TEST(SistemaTest, Tres_particulas_sin_fuerzas_posicionadas_en_una_piramide_donde_la_de_mas_arriba_tiene_velocidad_se_mueven_hace_chochar_contra_el_piso)
 {
     std::vector<Particula *> particulas;
@@ -390,8 +387,6 @@ TEST(SistemaTest, Tres_particulas_sin_fuerzas_posicionadas_en_una_piramide_donde
 
     sistema.expandir_fuerzas();
 
-    velocidades(particulas);
-
     EXPECT_NEAR(particula2->m_velocidad.x, .0f, .01f);
     EXPECT_NEAR(particula1->m_velocidad.x, -1.0f * particula3->m_velocidad.x, .01f);
     EXPECT_NEAR(particula1->m_velocidad.y, particula3->m_velocidad.y, .01f);
@@ -399,4 +394,3 @@ TEST(SistemaTest, Tres_particulas_sin_fuerzas_posicionadas_en_una_piramide_donde
     for (Particula *p : particulas)
         delete p;
 }
-*/
