@@ -26,8 +26,14 @@ void Sistema::agregar_interaccion(Particula *particula, Particula *referencia, V
 
 void Sistema::expandir_fuerzas()
 {
-    for (Particula *particula : m_particulas)
-        particula->expandir();
+    bool terminado = false;
+    while (!terminado)
+    {
+        terminado = true;
+        for (Particula *particula : m_particulas)
+            terminado &= particula->expandir();
+    }
+
     for (Particula *particula : m_particulas)
         particula->actualizar(m_dt);
 }
@@ -54,20 +60,20 @@ void Particula::agregar_interaccion(Particula *referencia, Vector2 &direccion, f
     m_interacciones.emplace_back(interaccion);
 }
 
-void Particula::expandir()
+bool Particula::expandir()
 {
-    bool resultado;
-    do
-    {
-        resultado = false;
+    if (m_fuerza.nulo() && m_velocidad.nulo())
+        return true;
 
-        Vector2 fuerza = m_fuerza;
-        Vector2 velocidad = m_velocidad;
+    bool hay_interaccion = false;
 
-        for (Interaccion *interaccion : m_interacciones)
-            resultado |= interaccion->expandir(this, fuerza, velocidad);
+    Vector2 fuerza = m_fuerza;
+    Vector2 velocidad = m_velocidad;
 
-    } while (resultado);
+    for (Interaccion *interaccion : m_interacciones)
+        hay_interaccion |= interaccion->expandir(this, fuerza, velocidad);
+
+    return !hay_interaccion;
 }
 
 void Particula::actualizar(float dt)
@@ -129,9 +135,6 @@ bool Interaccion::expandir(Particula *particula, Vector2 &fuerza, Vector2 &veloc
         m_particula->aplicar_fuerza(fuerza_resultante);
         particula->aplicar_fuerza(fuerza_resultante * -1.0f);
     }
-
-    if ((hay_resultante || hay_choque) && !m_particula->m_estatica)
-        m_particula->expandir();
 
     return hay_resultante || hay_choque;
 }

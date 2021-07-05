@@ -36,7 +36,7 @@ namespace sistema
         ~Particula();
 
         void agregar_interaccion(Particula *referencia, Vector2 &direccion, float dt);
-        void expandir();
+        bool expandir();
 
         void actualizar(float dt);
         void velocidad_por_choque(Vector2 fuerza_choque);
