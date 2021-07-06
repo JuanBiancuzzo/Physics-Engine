@@ -4,9 +4,9 @@ En esta seccion voy a normal los objetos creados, cual son los metodos que tiene
 
 ## Vista general
 
-* [Vectores](##Vectores)
-* [QuadTree](##QuadTree)
-* [Sistema-De-Particulas](##Sistema-de-particulas)
+* [Vectores](#Vectores)
+* [QuadTree](#QuadTree)
+* [Sistema De Particulas](#Sistema-de-particulas)
 
 ## Vectores
 
@@ -30,11 +30,11 @@ respuesta *= alpha;
 Tambien esta implementado el operador de igualdad, donde se tiene un rango de desfase de .01f
 
 Tenemos los metodos:
-* [modulo](###Modulo)
-* [distancia](###Distancia)
-* [proyeccion](###Proyeccion)
-* [normal](###Normal)
-* [nulo](###Nulo)
+* [Modulo](#Modulo)
+* [Distancia](#Distancia)
+* [Proyeccion](#Proyeccion)
+* [Normal](#Normal)
+* [Nulo](#Nulo)
 
 ### Modulo
 El modulo, tambien su version cuadrada, es la definicion matematica de modulo, donde es la raiz cuadrada de los componente al cuadrado.
