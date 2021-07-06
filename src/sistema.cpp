@@ -27,7 +27,7 @@ void Sistema::agregar_interaccion(Particula *particula, Particula *referencia, V
 void Sistema::expandir_fuerzas()
 {
     bool terminado = false;
-    while (!terminado)
+    for (int i = 0; i < 10 && !terminado; i++)
     {
         terminado = true;
         for (Particula *particula : m_particulas)
@@ -46,8 +46,8 @@ void Sistema::actualizar_particulas()
         particula->actualizar(m_dt);
 }
 
-Particula::Particula(float masa, Vector2 velocidad, Vector2 fuerza)
-    : m_velocidad(velocidad), m_fuerza(fuerza), m_masa(masa), m_coeficiente(1.0f), m_estatica(false),
+Particula::Particula(float masa, Vector2 velocidad, Vector2 fuerza, float coeficiente)
+    : m_velocidad(velocidad), m_fuerza(fuerza), m_masa(masa), m_coeficiente(coeficiente), m_estatica(false),
       m_velocidad_guardada(velocidad), m_fuerza_guardada(fuerza)
 {
 }
@@ -129,17 +129,19 @@ Interaccion::Interaccion(Particula *particula, Vector2 &direccion, float dt)
 Vector2 fuerza_de_choque(Particula *particula, Particula *referencia, Vector2 &direccion)
 {
     float masa1 = particula->m_masa;
-    float masa2 = referencia->m_masa;
+    float masa2 = (referencia->m_estatica) ? masa1 : referencia->m_masa;
 
-    if (referencia->m_estatica)
-        masa2 = masa1;
+    float coeficiente1 = particula->m_coeficiente;
+    float coeficiente2 = (referencia->m_estatica) ? coeficiente1 : referencia->m_coeficiente;
+
+    float coeficiente = (coeficiente1 + coeficiente2) / 4.0f + .5f;
 
     Vector2 velocidad_de_choque = particula->m_velocidad.proyeccion(direccion) - referencia->m_velocidad.proyeccion(direccion);
     float promedio_de_masas = (masa1 + masa2) / 2.0f;
 
     Vector2 fuerza = (velocidad_de_choque * masa1 * masa2) / (promedio_de_masas);
 
-    return fuerza * (referencia->m_estatica ? 1.0f + particula->m_coeficiente : 1.0f);
+    return fuerza * coeficiente * (referencia->m_estatica ? 2.0f : 1.0f);
 }
 
 bool Interaccion::expandir(Particula *particula)

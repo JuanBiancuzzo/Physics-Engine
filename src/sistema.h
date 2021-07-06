@@ -36,7 +36,7 @@ namespace sistema
         std::vector<Particula *> m_interactuando;
 
     public:
-        Particula(float masa, Vector2 velocidad, Vector2 fuerza);
+        Particula(float masa, Vector2 velocidad, Vector2 fuerza, float coeficiente);
         Particula(); // estatica
         ~Particula();
 
