@@ -61,11 +61,11 @@ namespace qt
     class Entidad
     {
     public:
-        CuerpoRigido *m_cuerpo;
         std::vector<Node *> m_padres;
 
     public:
-        Entidad(CuerpoRigido *cuerpo);
-    };
+        Entidad();
 
+        virtual bool colisiona(CuerpoRigido *area) = 0;
+    };
 }
