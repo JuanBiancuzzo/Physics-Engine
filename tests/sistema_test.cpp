@@ -544,3 +544,53 @@ TEST(SistemaTest, Dos_particulas_de_la_misma_masa_tiene_un_choque_plastico)
     for (Particula *p : particulas)
         delete p;
 }
+
+TEST(SistemaTest, Dos_particulas_de_la_misma_masa_tiene_un_choque_inelastico_de_50_porciento_en_dos_dimensiones)
+{
+    std::vector<Particula *> particulas;
+    Particula_pos *particula1 = new Particula_pos(1.0f, Vector2(-.21f, -.12), Vector2(1.0f, .0f), Vector2(.0f, .0f), .5f);
+    Particula_pos *particula2 = new Particula_pos(1.0f, Vector2(.0f, .2f), Vector2(.0f, -1.0f), Vector2(.0f, .0f), .5f);
+
+    particulas.emplace_back(particula1);
+    particulas.emplace_back(particula2);
+
+    float dt = 1.0f;
+    Sistema sistema(particulas, dt);
+
+    Vector2 dir_1_2 = particula1->posicion_relativa(particula2), dir_2_1 = particula2->posicion_relativa(particula1);
+    sistema.agregar_interaccion(particula2, particula1, dir_2_1);
+    sistema.agregar_interaccion(particula1, particula2, dir_1_2);
+
+    sistema.expandir_fuerzas();
+
+    ASSERT_EQ(particula1->m_velocidad, Vector2(.43f, -.86f));
+    ASSERT_EQ(particula2->m_velocidad, Vector2(.57f, -.13f));
+
+    for (Particula *p : particulas)
+        delete p;
+}
+
+TEST(SistemaTest, Dos_particulas_de_la_misma_masa_tiene_un_choque_inelastico_de_5_porciento_en_dos_dimensiones)
+{
+    std::vector<Particula *> particulas;
+    Particula_pos *particula1 = new Particula_pos(1.0f, Vector2(-.21f, -.12), Vector2(1.0f, .0f), Vector2(.0f, .0f), .05f);
+    Particula_pos *particula2 = new Particula_pos(1.0f, Vector2(.0f, .2f), Vector2(.0f, -1.0f), Vector2(.0f, .0f), .05f);
+
+    particulas.emplace_back(particula1);
+    particulas.emplace_back(particula2);
+
+    float dt = 1.0f;
+    Sistema sistema(particulas, dt);
+
+    Vector2 dir_1_2 = particula1->posicion_relativa(particula2), dir_2_1 = particula2->posicion_relativa(particula1);
+    sistema.agregar_interaccion(particula2, particula1, dir_2_1);
+    sistema.agregar_interaccion(particula1, particula2, dir_1_2);
+
+    sistema.expandir_fuerzas();
+
+    ASSERT_EQ(particula1->m_velocidad, Vector2(.6f, -.6f));
+    ASSERT_EQ(particula2->m_velocidad, Vector2(.4f, -.39f));
+
+    for (Particula *p : particulas)
+        delete p;
+}
