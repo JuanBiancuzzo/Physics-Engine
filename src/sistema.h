@@ -20,6 +20,8 @@ namespace sistema
 
         void agregar_interaccion(Particula *particula, Particula *referencia, Vector2 &direccion);
         void expandir_fuerzas();
+
+    private:
         void actualizar_particulas();
     };
 
