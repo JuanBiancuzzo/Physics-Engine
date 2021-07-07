@@ -126,3 +126,59 @@ std::vector<Entidad *> entidades = qt.buscar(region_de_busqueda);
 
 ## Sistema de particulas
 
+La idea general de un sistema de particulas es resolver las colisiones, donde las particulas del sistema tienen fuerzas aplicadas, y velocidades previas, y al resolverla se actualiza sus velocidades
+
+Primero su constructor y es
+```c++ 
+std::vector<Particula *> particulas;
+float dt = .001f;
+
+float masa = 1.0f, coeficiente = .75f; 
+Vector2 velocidad(-2.0f, 10.0f), fuerza(.0f, -10.0f);
+particulas.emplace_back(new Particula(masa, velocidad, fuerza, coeficiente));
+
+Sistema sistema(particulas, dt);
+```
+
+Sus metodos son:
+* [Agregar interaccion](#Agregar-interaccion)
+* [Expandir fuerzas](#Expandir-fuerzas)
+
+### Agregar interaccion
+Para agregar una interaccion es la forma de establecer una linea de colision
+``` c++ 
+Vector2 dir(.0f, 1.0f);
+
+sistema.agregar_interaccion(particula1, particula2, dir);
+```
+
+Lo mejor es hacer una interaccion de la particula 1 a particula 2 en una direccion y una interaccion de particula 2 a particula 1 en la direccion opuesta
+
+### Expandir fuerzas
+Expandir las fuerzas y las velocidades, en todas las particulas del sistema en las interacciones establecidas 
+
+```c++ 
+sistema.expandir_fuerzas();
+```
+
+### Caso de ejemplo
+
+En este ejemplo se crea una particula con una velocidad y una fuerza, una particula que representaria el piso, y esta es una particula estatica, entonces no es necesaria especificar nada
+
+```c++
+std::vector<Particula *> particulas;
+particulas.emplace_back(new Particula(2.0f, Vector2(.0f, -10.0f), Vector2(.0f, -10.0f), 1.0f));
+particulas.emplace_back(new Particula()); // es una particula estatica
+
+float dt = 1.0f;
+Sistema sistema(particulas, dt);
+
+Vector2 dir_abajo(.0f, -1.0f), dir_arriba(.0f, 1.0f);
+sistema.agregar_interaccion(particulas[0], particulas[1], dir_abajo);
+sistema.agregar_interaccion(particulas[1], particulas[0], dir_arriba);
+
+sistema.expandir_fuerzas();
+
+```
+
+En este caso, la particula va a recibir una fuerza cancelando su fuerza, y terminara con una velocidad en la direccion y de 10.0f, ya que su coeficiente de restitucion es 1.0f
