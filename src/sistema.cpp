@@ -24,7 +24,7 @@ void Sistema::agregar_interaccion(Particula *particula, Particula *referencia, V
     particula->agregar_interaccion(referencia, direccion, m_dt);
 }
 
-void Sistema::expandir_fuerzas()
+void Sistema::expandir_interacciones()
 {
     bool terminado = false;
     for (int i = 0; i < 10 && !terminado; i++)
@@ -34,14 +34,9 @@ void Sistema::expandir_fuerzas()
             terminado &= particula->expandir();
 
         for (Particula *particula : m_particulas)
-            particula->actualizarse();
+            particula->actualizar_propiedades();
     }
 
-    actualizar_particulas();
-}
-
-void Sistema::actualizar_particulas()
-{
     for (Particula *particula : m_particulas)
         particula->actualizar(m_dt);
 }
@@ -53,7 +48,7 @@ Particula::Particula(float masa, Vector2 velocidad, Vector2 fuerza, float coefic
 }
 
 Particula::Particula()
-    : m_masa(.0f), m_estatica(true)
+    : m_estatica(true)
 {
 }
 
@@ -65,6 +60,10 @@ Particula::~Particula()
 
 void Particula::agregar_interaccion(Particula *referencia, Vector2 &direccion, float dt)
 {
+    for (Interaccion *interaccion : m_interacciones)
+        if (interaccion->m_particula == referencia)
+            return;
+
     Interaccion *interaccion = new Interaccion(referencia, direccion, dt);
     m_interacciones.emplace_back(interaccion);
 }
@@ -82,24 +81,17 @@ bool Particula::expandir()
     return !hay_interaccion;
 }
 
-void Particula::actualizarse()
+void Particula::agregar_al_historial(Particula *particula)
 {
-    m_velocidad = m_velocidad_guardada;
-    m_fuerza = m_fuerza_guardada;
-    m_interactuando.clear();
+    m_historial.emplace_back(particula);
 }
 
-bool Particula::interactuaste(Particula *particula)
+bool Particula::visitaste(Particula *particula)
 {
-    for (Particula *interaccion : m_interactuando)
-        if (interaccion == particula)
+    for (Particula *p : m_historial)
+        if (p == particula)
             return true;
     return false;
-}
-
-void Particula::interactuas(Particula *particula)
-{
-    m_interactuando.emplace_back(particula);
 }
 
 void Particula::actualizar(float dt)
@@ -107,6 +99,13 @@ void Particula::actualizar(float dt)
     if (!m_estatica)
         m_velocidad += (m_fuerza * dt) / m_masa;
     m_fuerza *= .0f;
+}
+
+void Particula::actualizar_propiedades()
+{
+    m_velocidad = m_velocidad_guardada;
+    m_fuerza = m_fuerza_guardada;
+    m_historial.clear();
 }
 
 void Particula::velocidad_por_choque(Vector2 fuerza_choque)
@@ -146,7 +145,7 @@ Vector2 fuerza_de_choque(Particula *particula, Particula *referencia, Vector2 &d
 
 bool Interaccion::expandir(Particula *particula)
 {
-    if (m_particula->interactuaste(particula))
+    if (m_particula->visitaste(particula))
         return false;
 
     Vector2 fuerza_resultante = particula->m_fuerza.proyeccion(m_direccion);
@@ -168,7 +167,7 @@ bool Interaccion::expandir(Particula *particula)
     }
 
     if (hay_resultante || hay_choque)
-        particula->interactuas(m_particula);
+        particula->agregar_al_historial(m_particula);
 
     return hay_resultante || hay_choque;
 }
