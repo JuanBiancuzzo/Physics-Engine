@@ -594,3 +594,31 @@ TEST(SistemaTest, Dos_particulas_de_la_misma_masa_tiene_un_choque_inelastico_de_
     for (Particula *p : particulas)
         delete p;
 }
+
+TEST(SistemaTest, Una_particula_choca_contra_la_esquina_y_el_choque_es_plastico_haciendo_que_su_velocidad_sea_cero)
+{
+    std::vector<Particula *> particulas;
+    Particula *particula = new Particula(1.0f, Vector2(10.0f, -10.0f), Vector2(.0f, -10.0f), .0f);
+    Particula *piso = new Particula();
+    Particula *pared = new Particula();
+
+    particulas.emplace_back(particula);
+    particulas.emplace_back(piso);
+    particulas.emplace_back(pared);
+
+    float dt = 1.0f;
+    Sistema sistema(particulas, dt);
+
+    Vector2 dir_arriba(.0f, 1.0f), dir_abajo(.0f, -1.0f), dir_derecha(1.0f, .0f), dir_izquierda(-1.0f, .0f);
+    sistema.agregar_interaccion(particula, pared, dir_derecha);
+    sistema.agregar_interaccion(pared, particula, dir_izquierda);
+    sistema.agregar_interaccion(particula, piso, dir_abajo);
+    sistema.agregar_interaccion(piso, particula, dir_arriba);
+
+    sistema.expandir_fuerzas();
+
+    ASSERT_EQ(particula->m_velocidad, Vector2());
+
+    for (Particula *p : particulas)
+        delete p;
+}
