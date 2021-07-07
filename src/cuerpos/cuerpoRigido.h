@@ -27,10 +27,10 @@ struct PuntoDeColision
 class CuerpoRigido
 {
 public:
-    Vector2 m_pos;
+    Vector2 m_posicion;
 
 public:
-    CuerpoRigido(Vector2 posicion) : m_pos(posicion) {}
+    CuerpoRigido(Vector2 posicion) : m_posicion(posicion) {}
 
     virtual PuntoDeColision colisiona(CuerpoRigido *cuerpo_rigido) = 0;
     virtual PuntoDeColision colisiona(Circulo *circulo) = 0;

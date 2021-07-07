@@ -186,8 +186,8 @@ std::vector<Node *> Node::crear_subdivisiones()
 
     for (int i = 0; i < cap_subdivisiones; i++)
     {
-        float nuevo_x = m_area.m_pos.x + nuevo_ancho * (1 - 2 * (i % 2));
-        float nuevo_y = m_area.m_pos.x + nuevo_alto * (1 - 2 * ((i / 2) % 2));
+        float nuevo_x = m_area.m_posicion.x + nuevo_ancho * (1 - 2 * (i % 2));
+        float nuevo_y = m_area.m_posicion.x + nuevo_alto * (1 - 2 * ((i / 2) % 2));
 
         Node *subdivision = new Node(Vector2(nuevo_x, nuevo_y), nuevo_ancho, nuevo_alto);
         subdivisiones.emplace_back(subdivision);

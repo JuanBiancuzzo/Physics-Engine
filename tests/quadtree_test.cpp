@@ -221,7 +221,7 @@ TEST(QuadtreeTest, Muesto_una_entidad_y_la_actualizo_y_busco_en_la_zona_nueva)
     Entidad ent(&circ);
 
     qt.insertar(&ent);
-    circ.m_pos = Vector2(20.0f, 20.0f);
+    circ.m_posicion = Vector2(20.0f, 20.0f);
     qt.actualizar(&ent);
 
     AABB area_busqueda(Vector2(20.0f, 20.0f), 10.0f, 10.0f);
@@ -246,7 +246,7 @@ TEST(QuadtreeTest, Varias_entidades_para_tener_una_subdivison_y_actualizo_una_pa
         cuerpos.emplace_back(c);
     }
 
-    cuerpos[0]->m_pos = Vector2(32.0f, 32.0f);
+    cuerpos[0]->m_posicion = Vector2(32.0f, 32.0f);
     qt.actualizar(entidades[0]);
 
     AABB area_busqueda(Vector2(32.0f, 32.0f), 20.0f, 20.0f);
