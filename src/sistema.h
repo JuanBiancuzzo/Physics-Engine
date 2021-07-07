@@ -19,8 +19,7 @@ namespace sistema
         Sistema(std::vector<Particula *> &particulas, float dt);
 
         void agregar_interaccion(Particula *particula, Particula *referencia, Vector2 &direccion);
-        void expandir_fuerzas();
-        void actualizar_particulas();
+        void expandir_interacciones();
     };
 
     class Particula
@@ -33,29 +32,29 @@ namespace sistema
 
     private:
         Vector2 m_velocidad_guardada, m_fuerza_guardada;
-        std::vector<Particula *> m_interactuando;
+        std::vector<Particula *> m_historial;
 
     public:
-        Particula(float masa, Vector2 velocidad, Vector2 fuerza);
+        Particula(float masa, Vector2 velocidad, Vector2 fuerza, float coeficiente);
         Particula(); // estatica
         ~Particula();
 
         void agregar_interaccion(Particula *referencia, Vector2 &direccion, float dt);
         bool expandir();
 
-        void actualizarse();
-
-        bool interactuaste(Particula *particula);
-        void interactuas(Particula *particula);
+        void agregar_al_historial(Particula *particula);
+        bool visitaste(Particula *particula);
 
         void actualizar(float dt);
+        void actualizar_propiedades();
+
         void velocidad_por_choque(Vector2 fuerza_choque);
         void aplicar_fuerza(Vector2 fuerza);
     };
 
     class Interaccion
     {
-    private:
+    public:
         Particula *m_particula;
         Vector2 m_direccion;
         float m_dt;

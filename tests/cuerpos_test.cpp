@@ -18,3 +18,13 @@ TEST(CuerposTest, Colision_entre_circulo_y_aabb_fuera_de_rango)
 
     ASSERT_FALSE(punto_de_colision.colisiono);
 }
+
+TEST(CuerposTest, Colision_entre_circulo_y_aabb_y_apenas_se_tocan_pero_no_es_valido)
+{
+    AABB rect(Vector2(), 10.0f, 10.0f);
+    Circulo circulo(Vector2(20.0f, .0f), 10.0f);
+    PuntoDeColision punto_de_colision = circulo.colisiona(&rect);
+
+    ASSERT_FALSE(punto_de_colision.colisiono);
+}
+

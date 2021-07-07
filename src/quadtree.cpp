@@ -59,8 +59,7 @@ Padres nuevos_y_viejos(Entidad *entidad, Node *raiz)
             viejos.emplace_back(node);
 
     for (Node *node : padres)
-        if (!hay_en_lista<Node *>(entidad->m_padres, node))
-            nuevos.emplace_back(node);
+        nuevos.emplace_back(node);
 
     return {viejos, nuevos};
 }
@@ -105,7 +104,7 @@ Node::~Node()
 
 bool Node::insertar(Entidad *entidad)
 {
-    if (!m_area.colisiona(entidad->m_cuerpo).colisiono)
+    if (!entidad->colisiona(&m_area))
         return false;
 
     if (m_cant_entidades < cap_entidades || !es_divisible())
@@ -125,7 +124,7 @@ bool Node::insertar(Entidad *entidad)
 
 bool Node::eliminar(Entidad *entidad)
 {
-    if (!m_area.colisiona(entidad->m_cuerpo).colisiono)
+    if (!entidad->colisiona(&m_area))
         return false;
 
     m_cant_entidades--;
@@ -162,13 +161,13 @@ void Node::buscar(CuerpoRigido *frontera, std::vector<Entidad *> &output)
             subdivision->buscar(frontera, output);
     else
         for (Entidad *entidad : m_entidades)
-            if (frontera->colisiona(entidad->m_cuerpo).colisiono)
+            if (entidad->colisiona(frontera))
                 agregar_entidad_sin_repetir(output, entidad);
 }
 
 void Node::nodos_padre(Entidad *entidad, std::vector<Node *> &padres)
 {
-    if (!m_area.colisiona(entidad->m_cuerpo).colisiono)
+    if (!entidad->colisiona(&m_area))
         return;
 
     if (m_subdivisiones.empty())
@@ -187,8 +186,8 @@ std::vector<Node *> Node::crear_subdivisiones()
 
     for (int i = 0; i < cap_subdivisiones; i++)
     {
-        float nuevo_x = m_area.m_pos.x + nuevo_ancho * (1 - 2 * (i % 2));
-        float nuevo_y = m_area.m_pos.x + nuevo_alto * (1 - 2 * ((i / 2) % 2));
+        float nuevo_x = m_area.m_posicion.x + nuevo_ancho * (1 - 2 * (i % 2));
+        float nuevo_y = m_area.m_posicion.x + nuevo_alto * (1 - 2 * ((i / 2) % 2));
 
         Node *subdivision = new Node(Vector2(nuevo_x, nuevo_y), nuevo_ancho, nuevo_alto);
         subdivisiones.emplace_back(subdivision);
@@ -246,7 +245,7 @@ bool Node::es_divisible()
     for (Node *subdivision : crear_subdivisiones())
     {
         for (Entidad *entidad : m_entidades)
-            if (!subdivision->m_area.colisiona(entidad->m_cuerpo).colisiono)
+            if (!entidad->colisiona(&subdivision->m_area))
                 divisible = true;
         delete subdivision;
     }
@@ -254,8 +253,7 @@ bool Node::es_divisible()
     return divisible;
 }
 
-Entidad::Entidad(CuerpoRigido *cuerpo)
-    : m_cuerpo(cuerpo)
+Entidad::Entidad()
 {
     m_padres.reserve(1);
 }

@@ -1,14 +1,17 @@
 # Game of Life meets physics
 
-La idea de este proyecto es principalmente para que aprenda a usar C++, posiblemente Opengl y en el mejor de los casos Vulkan
+La idea de este proyecto es principalmente crear un juego lo mas desde 0 que pueda. Tambien es una forma de aprender herramientas nuevas que nunca use como lo puede ser OpengGl o Vulkan
 
-Para esto primero estoy aprendiendo C++, con el objetivo de hacer un falling sand simulator, pero mi forma de cambiarlo es que no voy a tener una matriz donde esten los materiales sino que van a ser particulas y en el unico momento que se va a ver como si fuera una matriz es cuando se muestre por pantalla
+El juego consiste de falling sand simulator, pero con el twist que realmente es una simulacion de muchas particulas que despues se va a mostrar como si fuera una matriz. El motivo de esto es que a mi me gusta mucho los falling sand simulators pero me gustaria poder agregarle fisicas mas realistas, pero en el proceso de pensar como hacerlo note lo complicado que se hace estan en una matriz entonces descarte la idea de la matriz para el computo del motivimiento, resultando en lo que quiero hacer actualmente
 
-La idea de usar particulas me parecio mas divertido porque me da situaciones como deteccion de colisiones y como optimizar para muchas particulas, el uso de la fisica newtoniana y como manejar su errar en una simulacion discontinua
+## Idea de progreso
+El primer paso, y en el que estoy, es crear un motor de fisicas que pueda manejar muchas particulas interactuando entre si, y lo divide en lo siguiente
+* [Cuerpos rigidos](#Cuerpos-rigidos)
+* [Deteccion de colisiones](#Deteccion-de-colisiones)
+* [Resolucion de interseccion](#Resolucion-de-interseccion)
+* [Resolucion de colisiones](#Resolucion-de-colisiones)
 
-### Idea de progreso
-Creo que el motor de fisicas va a estar dividio en estos sistemas vinculados
-#### Cuerpos rigidos
+### Cuerpos rigidos
 Son las representaciones geometricas de cuerpos que van a interactuar en el motor de fisicas, estas van a ser
  * Circulo
  * Linea
@@ -17,19 +20,18 @@ Son las representaciones geometricas de cuerpos que van a interactuar en el moto
  * Capsula 
 
 Voy a empezar con el circulo, linea y un rectangulo de tipo AABB, y despues voy a agregar el resto, y si veo la necesidad de alguno mas, entonces se actualizara la lista de elementos
-#### Subdivision del espacio
-Voy a usar un quadtree, principalmente porque me parece divertido, y porque voy a querer que el motor de fisicas sea capaz de admitir zonas muy densas de particulas y zonas con casi ninguna particula, y creo que un quadtree es la mejor estructura para ese trabajo
 
-Para ser mas especifico, voy a crear un archivo quadtree.cpp, en el que estara la clase QuadTree como tambien Node y Entidad, donde QuadTree es la interfaz con el usuario, Node la estructura real del quadtree, y la Entidad lo minimo para poder tener una particula guardada en el quadtree
+### Deteccion de colisiones
+La deteccion de colisiones va a ser una combinacion entre los cuerpos rigidos, y un quadtree que uso para subdividir el espacio haciendo mas eficiente la busqueda de particulas. Usando el metodo de busqueda del quadtree para encontrar las colisiones de cada particula
 
-#### Deteccion de colisiones
-La deteccion de colisiones va a estar dada en combinacion entre el cuerpo rigido y el quadtree, donde el quadtree me va a dar todas las posibles colisiones, y el cuerpo rigido va a dar todas las colisiones validas y que se tienen que resolver
+### Resolucion de interseccion
+Esta seccion es la que voy a estar trabajando actualmente por lo que todavia no tengo un plan definido, pero va a estar en combinacion con la siguiente parte del motor de fisicas que es la resolucion de colisiones
 
-#### Resolucion de colisiones
-La resolucion de colisiones todavia no lo tengo muy bien pensado pero la idea que tengo actualmente es de usar un grafo para representar las colisiones, y de ahi poder hacer una resolucion mas eficiente y mas realista, pero como dije no lo tengo muy bien pensado y todavia no se si es posible
+### Resolucion de colisiones
+La resolucion de colisiones, a diferencia de el metodo mas tradicional, estoy usando grafos como forma en la que las particulas interactuen entre si. Por lo tanto, las particulas son los nodos y las aristas es la direccion que une a dos particulas, y de esta forma transmitir las fuerzas como tambien las velocidades
 
-### Explicacion de todo el codigo
-Voy a estar explicando todo el codigo que escribo, y se puede interpresar como una forma de documentacion, pero realmente es mas una explicacion, todo esto lo pueden ver [aca](explicaciones.md)
+## Documentacion 
+En la documentacion se puede esperar ver los metodos que se tienen que usar para usar correctamente los sistemas que cree para este motor de fisicas, en el caso que se quieran usar por separados, todo esto lo pueden ver [aca](documentation.md)
 
-### Documentacion 
-Por ahora no tengo nada escrito porque estuve haciendo la explicacion, pero cuando lo cambie va a estar [aca](#documentation.md)
+## Explicacion de todo el codigo
+En la explicacion se puede esperar ver el motivo por el cual uso ciertas estructuras, o la idea general del porque hago ciertas cosas, todo esto lo pueden ver [aca](explicaciones.md). Todavia no esta hecho, pero cuando lo este, este mensaje va a desaparecer
