@@ -80,5 +80,49 @@ bool res = vector.nulo(); // false
 
 ## QuadTree
 
+La idea general de un quadtree es la forma de guardar y retornar valores, repartidos por un espacio, y en este caso un espacio bidimensional. Entonces primero tenemos un constructor que esta dado por su posicion, un ancho y un alto, de esta forma
+
+```c++
+QuadTree qt(Vector2(), 64.0f, 128.0f);
+```
+
+Y sus metodos estan dados por:
+* [Insertar](#Insertar)
+* [Actualizar](#Actualizar)
+* [Eliminar](#Eliminar)
+* [Buscar](#Buscar)
+
+### Insertar
+Es la forma de agregar una entidad al quadtree, donde la clase entidad son los requisitos minimos para poder ser insertados. La forma es la siguiente
+```c++
+Entidad *entidad = new Entidad();
+
+bool logro_insertar = qt.insertar(entidad);
+```
+
+Va a devolver true si pudo insertarlo, es decir que si la entidad esta dentro de la region que pertenece el quadtree
+
+### Actualizar
+Cada vez que se mueva la entidad, esta se tiene que actualizar de la siguiente forma,
+```c++
+qt.actualizar(entidad);
+```
+
+Esto se va a encargar de mover lo necesario para despues encontrarlo
+
+### Eliminar
+Para poder sacarlo, podemos usar este metodo, y devuelve si pudo sacarlo. En el caso que no lo pudiera sacar, es forma de indicar que esa entidad no esta en el quadtree
+```c++
+qt.eliminar(entidad);
+```
+
+### Buscar
+Es un metodo para encontrar todas las entidades que insersecta la region que se pase
+```c++
+AABB *region_de_busqueda = new AABB(Vector(), 20.0f, 20.0f);
+
+std::vector<Entidad *> entidades = qt.buscar(region_de_busqueda);
+```
+
 ## Sistema de particulas
 
