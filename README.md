@@ -34,4 +34,4 @@ La resolucion de colisiones, a diferencia de el metodo mas tradicional, estoy us
 En la documentacion se puede esperar ver los metodos que se tienen que usar para usar correctamente los sistemas que cree para este motor de fisicas, en el caso que se quieran usar por separados, todo esto lo pueden ver [aca](documentation.md)
 
 ## Explicacion de todo el codigo
-En la explicacion se puede esperar ver el motivo por el cual uso ciertas estructuras, o la idea general del porque hago ciertas cosas, todo esto lo pueden ver [aca](explicaciones.md)
+En la explicacion se puede esperar ver el motivo por el cual uso ciertas estructuras, o la idea general del porque hago ciertas cosas, todo esto lo pueden ver [aca](explicaciones.md). Todavia no esta hecho, pero cuando lo este, este mensaje va a desaparecer
