@@ -4,10 +4,15 @@ La idea de este proyecto es principalmente para que aprenda a usar C++, posiblem
 
 Para esto primero estoy aprendiendo C++, con el objetivo de hacer un falling sand simulator, pero mi forma de cambiarlo es que no voy a tener una matriz donde esten los materiales sino que van a ser particulas y en el unico momento que se va a ver como si fuera una matriz es cuando se muestre por pantalla
 
-La idea de usar particulas me parecio mas divertido porque me da situaciones como deteccion de colisiones y como optimizar para muchas particulas, el uso de la fisica newtoniana y como manejar su errar en una simulacion discontinua
+La idea de usar particulas me parecio mas divertido porque me da situaciones como deteccion de colisiones y como optimizar para muchas particulas, el uso de la fisica newtoniana y como manejar su error en una simulacion discontinua
 
 ### Idea de progreso
 Creo que el motor de fisicas va a estar dividio en estos sistemas vinculados
+* [Cuerpos rigidos](#Cuerpos-rigidos)
+* [Sibdivision del espacio](#Subdivision-del-espacio)
+* [Deteccion de colisiones](#Deteccion-de-colisiones)
+* [Resolucion de colisiones](#Resolucion-de-colisiones)
+
 #### Cuerpos rigidos
 Son las representaciones geometricas de cuerpos que van a interactuar en el motor de fisicas, estas van a ser
  * Circulo
