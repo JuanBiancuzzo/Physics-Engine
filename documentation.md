@@ -6,7 +6,7 @@ En esta seccion voy a normal los objetos creados, cual son los metodos que tiene
 
 * [Vectores](#Vectores)
 * [QuadTree](#QuadTree)
-* [Sistema De Particulas](#Sistema-de-particulas)
+* [Sistema de particulas](#Sistema-de-particulas)
 
 ## Vectores
 
@@ -142,7 +142,7 @@ Sistema sistema(particulas, dt);
 
 Sus metodos son:
 * [Agregar interaccion](#Agregar-interaccion)
-* [Expandir fuerzas](#Expandir-fuerzas)
+* [Expandir interacciones](#Expandir-interacciones)
 
 ### Agregar interaccion
 Para agregar una interaccion es la forma de establecer una linea de colision
@@ -154,11 +154,11 @@ sistema.agregar_interaccion(particula1, particula2, dir);
 
 Lo mejor es hacer una interaccion de la particula 1 a particula 2 en una direccion y una interaccion de particula 2 a particula 1 en la direccion opuesta
 
-### Expandir fuerzas
+### Expandir interacciones
 Expandir las fuerzas y las velocidades, en todas las particulas del sistema en las interacciones establecidas 
 
 ```c++ 
-sistema.expandir_fuerzas();
+sistema.expandir_interacciones();
 ```
 
 ### Caso de ejemplo
@@ -177,7 +177,7 @@ Vector2 dir_abajo(.0f, -1.0f), dir_arriba(.0f, 1.0f);
 sistema.agregar_interaccion(particulas[0], particulas[1], dir_abajo);
 sistema.agregar_interaccion(particulas[1], particulas[0], dir_arriba);
 
-sistema.expandir_fuerzas();
+sistema.expandir_interacciones();
 
 ```
 

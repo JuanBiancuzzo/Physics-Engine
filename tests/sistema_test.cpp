@@ -30,7 +30,7 @@ TEST(SistemaTest, Dos_particulas_y_el_piso_sin_velocidad_ninguna_sus_fuerzas_fin
     sistema.agregar_interaccion(piso, particula2, dir_arriba);
     sistema.agregar_interaccion(particula2, particula1, dir_arriba);
 
-    sistema.expandir_fuerzas();
+    sistema.expandir_interacciones();
 
     ASSERT_EQ(particula1->m_velocidad, Vector2());
     ASSERT_EQ(particula2->m_velocidad, Vector2());
@@ -59,7 +59,7 @@ TEST(SistemaTest, Dos_particulas_y_el_piso_el_primero_con_velocidad_y_rebota_con
     sistema.agregar_interaccion(piso, particula2, dir_arriba);
     sistema.agregar_interaccion(particula2, particula1, dir_arriba);
 
-    sistema.expandir_fuerzas();
+    sistema.expandir_interacciones();
 
     ASSERT_EQ(particula1->m_velocidad, Vector2(.0f, 7.777f));
     ASSERT_EQ(particula2->m_velocidad, Vector2(.0f, 4.444f));
@@ -90,7 +90,7 @@ TEST(SistemaTest, Dos_particulas_sobre_el_piso_una_tiene_velocidad_y_terminan_in
     sistema.agregar_interaccion(particula1, particula2, dir_derecha);
     sistema.agregar_interaccion(particula2, particula1, dir_izquierda);
 
-    sistema.expandir_fuerzas();
+    sistema.expandir_interacciones();
 
     ASSERT_EQ(particula1->m_velocidad, Vector2());
     ASSERT_EQ(particula2->m_velocidad, Vector2(10.0f, .0f));
@@ -121,7 +121,7 @@ TEST(SistemaTest, Dos_particulas_sobre_el_piso_una_tienen_velocidades_y_hay_un_c
     sistema.agregar_interaccion(particula1, particula2, dir_derecha);
     sistema.agregar_interaccion(particula2, particula1, dir_izquierda);
 
-    sistema.expandir_fuerzas();
+    sistema.expandir_interacciones();
 
     ASSERT_EQ(particula1->m_velocidad, Vector2(-50.0f, .0f));
     ASSERT_EQ(particula2->m_velocidad, Vector2(10.0f, .0f));
@@ -150,7 +150,7 @@ TEST(SistemaTest, Particula_estando_en_una_esquina_y_una_velocidad_horizontal_re
     sistema.agregar_interaccion(particula, pared, dir_derecha);
     sistema.agregar_interaccion(pared, particula, dir_izquierda);
 
-    sistema.expandir_fuerzas();
+    sistema.expandir_interacciones();
 
     ASSERT_EQ(particula->m_velocidad, Vector2(-10.0f, .0f));
 
@@ -174,7 +174,7 @@ TEST(SistemaTest, Particula_choca_contra_el_piso_con_una_velocidad_y_rebota_term
     sistema.agregar_interaccion(particula, piso, dir_abajo);
     sistema.agregar_interaccion(piso, particula, dir_arriba);
 
-    sistema.expandir_fuerzas();
+    sistema.expandir_interacciones();
 
     ASSERT_EQ(particula->m_velocidad, Vector2(.0f, 10.0f));
 
@@ -198,7 +198,7 @@ TEST(SistemaTest, Dos_particulas_con_velocidades_en_la_misma_direccion_pero_hay_
     sistema.agregar_interaccion(particula2, particula1, dir_arriba);
     sistema.agregar_interaccion(particula1, particula2, dir_abajo);
 
-    sistema.expandir_fuerzas();
+    sistema.expandir_interacciones();
 
     ASSERT_EQ(particula1->m_velocidad, Vector2(.0f, 7.77f));
     ASSERT_EQ(particula2->m_velocidad, Vector2(.0f, 4.44f));
@@ -247,7 +247,7 @@ TEST(SistemaTest, Simular_el_pendulo_de_newton_con_todas_las_particulas_de_la_mi
     sistema.agregar_interaccion(particula4, particula5, dir_derecha);
     sistema.agregar_interaccion(particula5, particula4, dir_izquierda);
 
-    sistema.expandir_fuerzas();
+    sistema.expandir_interacciones();
 
     ASSERT_EQ(particula1->m_velocidad, Vector2(.0f, .0f));
     ASSERT_EQ(particula2->m_velocidad, Vector2(.0f, .0f));
@@ -308,7 +308,7 @@ TEST(SistemaTest, Tres_particulas_con_las_fuerzas_de_peso_posicionadas_en_forma_
     sistema.agregar_interaccion(piso, particula1, dir_arriba);
     sistema.agregar_interaccion(piso, particula3, dir_arriba);
 
-    sistema.expandir_fuerzas();
+    sistema.expandir_interacciones();
 
     ASSERT_NEAR(particula1->m_velocidad.y, .0f, .01f);
     ASSERT_NEAR(particula2->m_velocidad.x, .0f, .01f);
@@ -343,7 +343,7 @@ TEST(SistemaTest, Tres_particulas_sin_fuerzas_posicionadas_en_una_piramide_donde
     sistema.agregar_interaccion(particula1, particula3, dir_1_3);
     sistema.agregar_interaccion(particula3, particula1, dir_3_1);
 
-    sistema.expandir_fuerzas();
+    sistema.expandir_interacciones();
 
     EXPECT_NEAR(particula2->m_velocidad.x, .0f, .01f);
     EXPECT_NEAR(particula1->m_velocidad.x, -1.0f * particula3->m_velocidad.x, .01f);
@@ -385,7 +385,7 @@ TEST(SistemaTest, Tres_particulas_sin_fuerzas_posicionadas_en_una_piramide_donde
     sistema.agregar_interaccion(piso, particula1, dir_arriba);
     sistema.agregar_interaccion(piso, particula3, dir_arriba);
 
-    sistema.expandir_fuerzas();
+    sistema.expandir_interacciones();
 
     EXPECT_NEAR(particula2->m_velocidad.x, .0f, .01f);
     EXPECT_NEAR(particula1->m_velocidad.x, -1.0f * particula3->m_velocidad.x, .01f);
@@ -411,7 +411,7 @@ TEST(SistemaTest, Dos_particulas_tiene_un_choque_inelastico_de_50_porciento)
     sistema.agregar_interaccion(particula2, particula1, dir_2_1);
     sistema.agregar_interaccion(particula1, particula2, dir_1_2);
 
-    sistema.expandir_fuerzas();
+    sistema.expandir_interacciones();
 
     ASSERT_NEAR(particula1->m_velocidad.x, -.5f, .01f);
     ASSERT_NEAR(particula2->m_velocidad.x, .5f, .01f);
@@ -436,7 +436,7 @@ TEST(SistemaTest, Dos_particulas_tiene_un_choque_inelastico_de_25_porciento)
     sistema.agregar_interaccion(particula2, particula1, dir_2_1);
     sistema.agregar_interaccion(particula1, particula2, dir_1_2);
 
-    sistema.expandir_fuerzas();
+    sistema.expandir_interacciones();
 
     ASSERT_NEAR(particula1->m_velocidad.x, -.25f, .01f);
     ASSERT_NEAR(particula2->m_velocidad.x, .25f, .01f);
@@ -461,7 +461,7 @@ TEST(SistemaTest, Dos_particulas_con_masas_diferentes_tiene_un_choque_inelastico
     sistema.agregar_interaccion(particula2, particula1, dir_2_1);
     sistema.agregar_interaccion(particula1, particula2, dir_1_2);
 
-    sistema.expandir_fuerzas();
+    sistema.expandir_interacciones();
 
     ASSERT_NEAR(particula1->m_velocidad.x, -1.0f, .01f);
     ASSERT_NEAR(particula2->m_velocidad.x, .0f, .01f);
@@ -486,7 +486,7 @@ TEST(SistemaTest, Dos_particulas_con_masas_diferentes_tiene_un_choque_inelastico
     sistema.agregar_interaccion(particula2, particula1, dir_2_1);
     sistema.agregar_interaccion(particula1, particula2, dir_1_2);
 
-    sistema.expandir_fuerzas();
+    sistema.expandir_interacciones();
 
     ASSERT_NEAR(particula1->m_velocidad.x, -.73333f, .01f);
     ASSERT_NEAR(particula2->m_velocidad.x, -.13333f, .01f);
@@ -511,7 +511,7 @@ TEST(SistemaTest, Dos_particulas_con_masas_diferentes_tiene_un_choque_plastico)
     sistema.agregar_interaccion(particula2, particula1, dir_2_1);
     sistema.agregar_interaccion(particula1, particula2, dir_1_2);
 
-    sistema.expandir_fuerzas();
+    sistema.expandir_interacciones();
 
     ASSERT_NEAR(particula1->m_velocidad.x, -.33333f, .01f);
     ASSERT_NEAR(particula2->m_velocidad.x, -.33333f, .01f);
@@ -536,7 +536,7 @@ TEST(SistemaTest, Dos_particulas_de_la_misma_masa_tiene_un_choque_plastico)
     sistema.agregar_interaccion(particula2, particula1, dir_2_1);
     sistema.agregar_interaccion(particula1, particula2, dir_1_2);
 
-    sistema.expandir_fuerzas();
+    sistema.expandir_interacciones();
 
     ASSERT_NEAR(particula1->m_velocidad.x, .0f, .01f);
     ASSERT_NEAR(particula2->m_velocidad.x, .0f, .01f);
@@ -561,7 +561,7 @@ TEST(SistemaTest, Dos_particulas_de_la_misma_masa_tiene_un_choque_inelastico_de_
     sistema.agregar_interaccion(particula2, particula1, dir_2_1);
     sistema.agregar_interaccion(particula1, particula2, dir_1_2);
 
-    sistema.expandir_fuerzas();
+    sistema.expandir_interacciones();
 
     ASSERT_EQ(particula1->m_velocidad, Vector2(.43f, -.86f));
     ASSERT_EQ(particula2->m_velocidad, Vector2(.57f, -.13f));
@@ -586,7 +586,7 @@ TEST(SistemaTest, Dos_particulas_de_la_misma_masa_tiene_un_choque_inelastico_de_
     sistema.agregar_interaccion(particula2, particula1, dir_2_1);
     sistema.agregar_interaccion(particula1, particula2, dir_1_2);
 
-    sistema.expandir_fuerzas();
+    sistema.expandir_interacciones();
 
     ASSERT_EQ(particula1->m_velocidad, Vector2(.6f, -.6f));
     ASSERT_EQ(particula2->m_velocidad, Vector2(.4f, -.39f));
@@ -615,7 +615,7 @@ TEST(SistemaTest, Una_particula_choca_contra_la_esquina_y_el_choque_es_plastico_
     sistema.agregar_interaccion(particula, piso, dir_abajo);
     sistema.agregar_interaccion(piso, particula, dir_arriba);
 
-    sistema.expandir_fuerzas();
+    sistema.expandir_interacciones();
 
     ASSERT_EQ(particula->m_velocidad, Vector2());
 
