@@ -1,7 +1,7 @@
 #pragma once
 
 #include "vector.h"
-#include "cuerpos/colisiones.h"
+#include "cuerpos/gjk.h"
 
 #include <vector>
 

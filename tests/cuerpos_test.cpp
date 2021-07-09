@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../src/cuerpos/colisiones.h"
+#include "../src/cuerpos/gjk.h"
 
 TEST(CuerposTest, Colision_entre_circulo_y_aabb_en_rango)
 {
@@ -27,4 +27,3 @@ TEST(CuerposTest, Colision_entre_circulo_y_aabb_y_apenas_se_tocan_pero_no_es_val
 
     ASSERT_FALSE(punto_de_colision.colisiono);
 }
-
