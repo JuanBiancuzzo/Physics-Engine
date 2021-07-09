@@ -1,26 +1,13 @@
-#include "colisiones.h"
+#include "linea.h"
 
 Linea::Linea(Vector2 principio, Vector2 final)
     : CuerpoRigido(principio), m_final(final)
 {
 }
 
-PuntoDeColision Linea::colisiona(CuerpoRigido *cuerpo_rigido)
+Vector2 Linea::punto_soporte(Vector2 dir)
 {
-    return cuerpo_rigido->colisiona(this);
-}
-
-PuntoDeColision Linea::colisiona(Circulo *circulo)
-{
-    return colision::colision_circulo_linea(circulo, this).invertir();
-}
-
-PuntoDeColision Linea::colisiona(Linea *linea)
-{
-    return colision::colision_linea_linea(this, linea);
-}
-
-PuntoDeColision Linea::colisiona(AABB *aabb)
-{
-    return colision::colision_aabb_linea(aabb, this).invertir();
+    if (m_final * dir > m_posicion * dir)
+        return m_final;
+    return m_posicion;
 }
