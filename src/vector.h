@@ -33,6 +33,7 @@ struct Vector2
 
     Vector2 proyeccion(const Vector2 &otro) const;
     Vector2 normal() const;
+    Vector2 perp_en_dir(const Vector2 &otro, const Vector2 &dir) const;
 
     bool nulo() const;
 };

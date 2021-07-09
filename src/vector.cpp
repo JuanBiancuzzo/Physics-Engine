@@ -93,6 +93,14 @@ Vector2 Vector2::normal() const
     return (*this / this->modulo());
 }
 
+Vector2 Vector2::perp_en_dir(const Vector2 &otro, const Vector2 &dir) const
+{
+    Vector2 AB = otro - *this, AD = dir - *this;
+
+    float producto_vectorial = AB.x * AD.y - AB.y * AD.x;
+    return Vector2(-1.0f * AB.y * producto_vectorial, AB.x * producto_vectorial).normal();
+}
+
 bool Vector2::nulo() const
 {
     return (*this == *this * .0f);
