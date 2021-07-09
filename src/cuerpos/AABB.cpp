@@ -1,36 +1,21 @@
-#include "colisiones.h"
+#include "AABB.h"
 
 AABB::AABB(Vector2 posicion, float ancho, float alto)
     : CuerpoRigido(posicion), m_ancho(ancho), m_alto(alto)
 {
+    m_vertices.emplace_back(Vector2(posicion.x + ancho, posicion.y + alto));
+    m_vertices.emplace_back(Vector2(posicion.x - ancho, posicion.y + alto));
+    m_vertices.emplace_back(Vector2(posicion.x + ancho, posicion.y - alto));
+    m_vertices.emplace_back(Vector2(posicion.x - ancho, posicion.y - alto));
 }
 
-PuntoDeColision AABB::colisiona(CuerpoRigido *cuerpo_rigido)
+Vector2 AABB::punto_soporte(Vector2 dir)
 {
-    return cuerpo_rigido->colisiona(this);
-}
+    Vector2 punto_soporte = m_vertices[0];
 
-PuntoDeColision AABB::colisiona(Circulo *circulo)
-{
-    return colision::colision_circulo_aabb(circulo, this).invertir();
-}
+    for (Vector2 vertice : m_vertices)
+        if (vertice * dir > punto_soporte * dir)
+            punto_soporte = vertice;
 
-PuntoDeColision AABB::colisiona(Linea *linea)
-{
-    return colision::colision_aabb_linea(this, linea);
-}
-
-PuntoDeColision AABB::colisiona(AABB *aabb)
-{
-    return colision::colision_aabb_aabb(this, aabb);
-}
-
-Vector2 AABB::punto_borde(Vector2 &direccion)
-{
-    direccion.x += (direccion.x == .0f) ? .01f : .0f;
-    direccion.y += (direccion.y == .0f) ? .01f : .0f;
-
-    float relacion = direccion.x / direccion.y;
-    float valor = (relacion > 1 || relacion < -1) ? m_ancho / direccion.x : m_alto / direccion.y;
-    return (direccion * valor);
+    return punto_soporte;
 }

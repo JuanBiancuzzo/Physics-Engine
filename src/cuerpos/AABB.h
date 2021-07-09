@@ -1,19 +1,18 @@
 #pragma once
 
 #include "cuerpoRigido.h"
+#include <vector>
 
 class AABB : public CuerpoRigido
 {
 public:
     float m_ancho, m_alto;
 
+private:
+    std::vector<Vector2> m_vertices;
+
 public:
     AABB(Vector2 posicion, float ancho, float alto);
 
-    PuntoDeColision colisiona(CuerpoRigido *cuerpo_rigido);
-    PuntoDeColision colisiona(Circulo *circulo);
-    PuntoDeColision colisiona(Linea *linea);
-    PuntoDeColision colisiona(AABB *aabb);
-
-    Vector2 punto_borde(Vector2 &direccion);
+    Vector2 punto_soporte(Vector2 dir);
 };
