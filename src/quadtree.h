@@ -14,7 +14,6 @@ namespace qt
     class QuadTree
     {
     private:
-        // AABB m_area;
         Node *m_raiz;
 
     public:
