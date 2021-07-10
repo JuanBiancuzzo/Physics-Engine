@@ -29,58 +29,50 @@ Vector2 Gjk::soporte(Vector2 &dir)
 }
 
 Simplex::Simplex(Vector2 primer_vertice)
-    : A(primer_vertice)
 {
-    m_cantidad++;
+    agregar_vertice(primer_vertice);
 }
 
 void Simplex::agregar_vertice(Vector2 &vertice)
 {
-    C = B;
-    B = A;
-    A = vertice;
-    m_cantidad += (m_cantidad <= 2);
+    m_vertices.emplace_back(vertice);
 }
 
 bool Simplex::contiene_origen(Vector2 &dir)
 {
-    if (m_cantidad == 2)
+    if (m_vertices.size() == 2)
         return caso_linea(dir);
     return caso_triangulo(dir);
 }
 
 bool Simplex::caso_linea(Vector2 &dir) // agregar caso donde esta en el borde
 {
-    Vector2 origen = Vector2();
+    Vector2 B = m_vertices[0], A = m_vertices[1], O = Vector2();
 
-    Vector2 ABperp = A.perp_en_dir(B, origen);
+    Vector2 ABperp = A.perp_en_dir(B, O);
     dir = ABperp;
-
-    // if (-.1f < ABperp * (O - A) && ABperp * (O - A) < .1f)
-    //     return true;
-
     return false;
 }
 
 bool Simplex::caso_triangulo(Vector2 &dir)
 {
-    Vector2 origen = Vector2(), AO = A * -1.0f;
+    Vector2 C = m_vertices[0], B = m_vertices[1], A = m_vertices[2], O = Vector2(), AO = A * -1.0f;
 
-    Vector2 ABperp = A.perp_en_dir(B, origen);
+    Vector2 ABperp = A.perp_en_dir(B, O);
     if (ABperp * AO > 0)
     {
-        // eliminar C es no hacer nada
+        m_vertices.erase(m_vertices.begin());
         dir = ABperp;
         return false;
     }
 
-    Vector2 ACperp = A.perp_en_dir(C, origen);
+    Vector2 ACperp = A.perp_en_dir(C, O);
     if (ACperp * AO > 0)
     {
-        B = C; // eliminamos B
+        m_vertices.erase(m_vertices.begin() + 1);
         dir = ACperp;
         return false;
     }
 
     return true;
-}
+} 
