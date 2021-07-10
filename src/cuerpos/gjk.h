@@ -24,7 +24,8 @@ private:
 class Simplex
 {
 private:
-    std::vector<Vector2> m_vertices;
+    Vector2 A, B, C;
+    int m_cantidad;
 
 public:
     Simplex(Vector2 primer_vertice);
@@ -35,4 +36,6 @@ public:
 private:
     bool caso_linea(Vector2 &dir);
     bool caso_triangulo(Vector2 &dir);
+    void eliminarB();
+    void eliminarC();
 };
