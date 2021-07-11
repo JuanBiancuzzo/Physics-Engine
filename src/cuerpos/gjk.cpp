@@ -12,7 +12,7 @@ bool Gjk::colisionan()
     dir *= -1.0f; // vector direccion del punto hasta el origen
 
     Vector2 vertice = soporte(dir);
-    while (vertice * dir >= .0f)
+    while (vertice * dir > 0)
     {
         simplex.agregar_vertice(vertice);
         if (simplex.contiene_origen(dir))
@@ -25,54 +25,84 @@ bool Gjk::colisionan()
 
 Vector2 Gjk::soporte(Vector2 &dir)
 {
-    return (m_cuerpo1->punto_soporte(dir) - m_cuerpo2->punto_soporte(dir * -1.0f));
+    return m_cuerpo1->punto_soporte(dir) - m_cuerpo2->punto_soporte(dir * -1.0f);
 }
 
 Simplex::Simplex(Vector2 primer_vertice)
+    : m_vertices({primer_vertice, Vector2(), Vector2()}), m_cantidad(0)
 {
-    agregar_vertice(primer_vertice);
 }
 
 void Simplex::agregar_vertice(Vector2 &vertice)
 {
-    m_vertices.emplace_back(vertice);
+    m_vertices = {vertice, m_vertices[0], m_vertices[1]};
+    m_cantidad = std::min(m_cantidad + 1, 3u);
 }
 
-bool Simplex::contiene_origen(Vector2 &dir)
+bool Simplex::contiene_origen(Vector2 &direccion)
 {
-    if (m_vertices.size() == 2)
-        return caso_linea(dir);
-    return caso_triangulo(dir);
+    if (m_cantidad == 2)
+        return caso_linea(direccion);
+    return caso_triangulo(direccion);
 }
 
-bool Simplex::caso_linea(Vector2 &dir) // agregar caso donde esta en el borde
+Simplex &Simplex::operator=(std::initializer_list<Vector2> lista)
 {
-    Vector2 B = m_vertices[0], A = m_vertices[1], O = Vector2();
+    for (auto v = lista.begin(); v != lista.end(); v++)
+        m_vertices[std::distance(lista.begin(), v)] = *v;
 
-    Vector2 ABperp = A.perp_en_dir(B, O);
-    dir = ABperp;
+    m_cantidad = lista.size();
+    return *this;
+}
+
+bool en_rango(float valor, float valor_esperado)
+{
+    float dv = .1f;
+    return (valor_esperado - dv < valor && valor < valor_esperado + dv);
+}
+
+bool Simplex::caso_linea(Vector2 &direccion)
+{
+    Vector2 a = m_vertices[0];
+    Vector2 b = m_vertices[1];
+    Vector2 origen = Vector2();
+
+    Vector2 ab = b - a;
+    Vector2 ao = origen - a;
+
+    Vector2 ab_perp = a.perp_en_dir(b, origen);
+
+    if (en_rango(ab_perp * ao, .0f))
+        return true;
+
+    direccion = ab_perp;
     return false;
 }
 
-bool Simplex::caso_triangulo(Vector2 &dir)
+bool Simplex::caso_triangulo(Vector2 &direccion)
 {
-    Vector2 C = m_vertices[0], B = m_vertices[1], A = m_vertices[2], O = Vector2(), AO = A * -1.0f;
+    Vector2 a = m_vertices[0];
+    Vector2 b = m_vertices[1];
+    Vector2 c = m_vertices[2];
+    Vector2 origen = Vector2();
 
-    Vector2 ABperp = A.perp_en_dir(B, O);
-    if (ABperp * AO > 0)
+    Vector2 ab = b - a;
+    Vector2 ac = a - c;
+    Vector2 ao = origen - a;
+
+    Vector2 ab_perp = a.perp_en_dir(b, origen);
+    Vector2 ac_perp = a.perp_en_dir(c, origen);
+
+    if (ab_perp * ao > 0)
     {
-        m_vertices.erase(m_vertices.begin());
-        dir = ABperp;
-        return false;
+        *this = {a, b};
+        return caso_linea(direccion);
     }
 
-    Vector2 ACperp = A.perp_en_dir(C, O);
-    if (ACperp * AO > 0)
+    if (ac_perp * ao > 0)
     {
-        m_vertices.erase(m_vertices.begin() + 1);
-        dir = ACperp;
-        return false;
+        *this = {a, c};
+        return caso_linea(direccion);
     }
-
     return true;
-} 
+}

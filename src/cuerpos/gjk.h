@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <array>
 #include "cuerpoRigido.h"
 #include "AABB.h"
 #include "circulo.h"
@@ -24,13 +24,16 @@ private:
 class Simplex
 {
 private:
-    std::vector<Vector2> m_vertices;
+    std::array<Vector2, 3> m_vertices;
+    unsigned m_cantidad;
 
 public:
     Simplex(Vector2 primer_vertice);
 
     void agregar_vertice(Vector2 &vertice);
     bool contiene_origen(Vector2 &dir);
+
+    Simplex &operator=(std::initializer_list<Vector2> lista);
 
 private:
     bool caso_linea(Vector2 &dir);
