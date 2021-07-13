@@ -12,7 +12,7 @@ bool Gjk::colisionan()
     dir *= -1.0f; // vector direccion del punto hasta el origen
 
     Vector2 vertice = soporte(dir);
-    while (vertice * dir > 0)
+    while (vertice * dir >= .0f)
     {
         simplex.agregar_vertice(vertice);
         if (simplex.contiene_origen(dir))
