@@ -12,16 +12,14 @@ bool insertar_sin_repetir(std::vector<T> &lista, T elemento)
     return true;
 }
 
-Sistema::Sistema(std::vector<Particula *> &particulas, float dt)
-    : m_dt(dt)
+Sistema::Sistema(std::vector<Particula *> &particulas)
+    : m_particulas(particulas)
 {
-    for (Particula *particula : particulas)
-        insertar_sin_repetir<Particula *>(m_particulas, particula);
 }
 
 void Sistema::agregar_interaccion(Particula *particula, Particula *referencia, Vector2 &direccion)
 {
-    particula->agregar_interaccion(referencia, direccion, m_dt);
+    particula->agregar_interaccion(referencia, direccion);
 }
 
 void Sistema::expandir_interacciones()
@@ -34,11 +32,8 @@ void Sistema::expandir_interacciones()
             terminado &= particula->expandir();
 
         for (Particula *particula : m_particulas)
-            particula->actualizar_propiedades();
+            particula->actualizar();
     }
-
-    for (Particula *particula : m_particulas)
-        particula->actualizar(m_dt);
 }
 
 Particula::Particula(float masa, Vector2 velocidad, Vector2 fuerza, float coeficiente)
@@ -58,14 +53,13 @@ Particula::~Particula()
         delete interaccion;
 }
 
-void Particula::agregar_interaccion(Particula *referencia, Vector2 &direccion, float dt)
+void Particula::agregar_interaccion(Particula *referencia, Vector2 &direccion)
 {
     for (Interaccion *interaccion : m_interacciones)
         if (interaccion->m_particula == referencia)
             return;
 
-    Interaccion *interaccion = new Interaccion(referencia, direccion, dt);
-    m_interacciones.emplace_back(interaccion);
+    m_interacciones.emplace_back(new Interaccion(referencia, direccion));
 }
 
 bool Particula::expandir()
@@ -94,14 +88,7 @@ bool Particula::visitaste(Particula *particula)
     return false;
 }
 
-void Particula::actualizar(float dt)
-{
-    if (!m_estatica)
-        m_velocidad += (m_fuerza * dt) / m_masa;
-    m_fuerza *= .0f;
-}
-
-void Particula::actualizar_propiedades()
+void Particula::actualizar()
 {
     m_velocidad = m_velocidad_guardada;
     m_fuerza = m_fuerza_guardada;
@@ -120,8 +107,8 @@ void Particula::aplicar_fuerza(Vector2 fuerza)
         m_fuerza_guardada += fuerza;
 }
 
-Interaccion::Interaccion(Particula *particula, Vector2 &direccion, float dt)
-    : m_particula(particula), m_direccion(direccion), m_dt(dt)
+Interaccion::Interaccion(Particula *particula, Vector2 &direccion)
+    : m_particula(particula), m_direccion(direccion)
 {
 }
 
