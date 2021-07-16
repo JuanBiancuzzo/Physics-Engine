@@ -55,3 +55,14 @@ TEST(CuerposTest, Colision_entre_circulo_de_radio_nulo_y_aabb_y_apenas_se_tocan_
     ASSERT_TRUE(punto_de_colision_cr.colisiono);
     ASSERT_TRUE(punto_de_colision_rc.colisiono);
 }
+
+TEST(CuerposTest, Colision_entre_circulo_de_radio_nulo_y_aabb_y_estan_puestos_en_el_mismo_lugar)
+{
+    AABB rect(Vector2(), 10.0f, 10.0f);
+    Circulo circulo(Vector2(), .0f);
+    PuntoDeColision punto_de_colision_cr = circulo.colisiona(&rect);
+    PuntoDeColision punto_de_colision_rc = rect.colisiona(&circulo);
+
+    ASSERT_TRUE(punto_de_colision_cr.colisiono);
+    ASSERT_TRUE(punto_de_colision_rc.colisiono);
+}
