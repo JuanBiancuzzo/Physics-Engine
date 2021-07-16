@@ -11,6 +11,7 @@ add_library(Core
   ${SOURCE}/motorDeFisicas.cpp
   ${SOURCE}/quadtree.cpp
   ${SOURCE}/sistema.cpp
+  ${SOURCE}/colisionesContinuas.cpp
   ${SOURCE}/vector.cpp
   ${SOURCE_CUERPOS}/colisiones.cpp
   ${SOURCE_CUERPOS}/linea.cpp
@@ -38,6 +39,7 @@ target_sources(tests PRIVATE
     ${TEST}/quadtree_test.cpp
     ${TEST}/cuerpos_test.cpp
     ${TEST}/sistema_test.cpp
+    ${TEST}/colisionesContinuas_test.cpp
 )
 set_target_properties(tests PROPERTIES COMPILE_FLAGS "${cxx_strict}")
 target_link_libraries(tests gtest gtest_main Core)
