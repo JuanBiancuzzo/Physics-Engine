@@ -11,12 +11,6 @@ struct PuntoDeColision
     Vector2 normal;
     float distancia;
     bool colisiono;
-
-    PuntoDeColision invertir()
-    {
-        this->normal *= -1.0f;
-        return *this;
-    }
 };
 
 class CuerpoRigido
