@@ -3,6 +3,13 @@
 
 using namespace cc;
 
+void velocidades(std::vector<Particula *> particulas)
+{
+    std::cout << "Velocidades" << std::endl;
+    for (Particula *particula : particulas)
+        std::cout << "Particula: x = " << particula->m_velocidad.x << ", y = " << particula->m_velocidad.y << std::endl;
+}
+
 TEST(ColisionesContinuas, Dos_particulas_circulares_chocan_entre_frame_deberian_cambiar_de_camino)
 {
     Circulo circulo1(Vector2(.0f, 5.0f), 1.0f);
@@ -13,6 +20,8 @@ TEST(ColisionesContinuas, Dos_particulas_circulares_chocan_entre_frame_deberian_
 
     SistemaDeParticulas sp({&particula1, &particula2}, dt);
     sp.avanzar_frame();
+
+    velocidades({&particula1, &particula2});
 
     ASSERT_EQ(particula1.m_cuerpo->m_posicion, Vector2(.0f, 3.0f));
     ASSERT_EQ(particula1.m_velocidad, Vector2(.0f, 2.0f));
