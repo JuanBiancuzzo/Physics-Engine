@@ -11,8 +11,7 @@ add_library(Core
   ${SOURCE}/motorDeFisicas.cpp
   ${SOURCE}/quadtree.cpp
   ${SOURCE}/sistema.cpp
-  ${SOURCE}/vector2.cpp
-  ${SOURCE}/vector3.cpp
+  ${SOURCE}/vector.cpp
   ${SOURCE_CUERPOS}/cuerpoRigido.cpp
   ${SOURCE_CUERPOS}/gjk.cpp
   ${SOURCE_CUERPOS}/linea.cpp
@@ -38,7 +37,7 @@ set(TEST "${PROJECT_SOURCE_DIR}/tests")
 target_sources(tests PRIVATE 
     ${TEST}/vector_test.cpp
     ${TEST}/cuerpos_test.cpp
-    ${TEST}/quadtree_test.cpp
+    # ${TEST}/quadtree_test.cpp
     ${TEST}/sistema_test.cpp
 )
 set_target_properties(tests PROPERTIES COMPILE_FLAGS "${cxx_strict}")
