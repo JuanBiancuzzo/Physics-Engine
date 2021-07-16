@@ -3,13 +3,6 @@
 
 using namespace sistema;
 
-void velocidades(std::vector<Particula *> particulas)
-{
-    std::cout << "Velocidades" << std::endl;
-    for (Particula *particula : particulas)
-        std::cout << "Particula: x = " << particula->m_velocidad.x << ", y = " << particula->m_velocidad.y << std::endl;
-}
-
 class Particula_pos : public Particula
 {
 private:
