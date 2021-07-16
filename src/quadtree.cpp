@@ -3,15 +3,13 @@
 using namespace qt;
 
 QuadTree::QuadTree(Vector2 posicion, float ancho, float alto)
-    : m_area(AABB(posicion, ancho, alto))
+    : m_raiz(new Node(posicion, ancho, alto))
 {
-    m_raiz = new Node(posicion, ancho, alto);
 }
 
 QuadTree::QuadTree(AABB &aabb)
-    : m_area(aabb)
+    : m_raiz(new Node(aabb))
 {
-    m_raiz = new Node(aabb);
 }
 
 QuadTree::~QuadTree()

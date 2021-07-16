@@ -10,8 +10,5 @@ public:
 public:
     Circulo(Vector2 posicion, float radio);
 
-    PuntoDeColision colisiona(CuerpoRigido *cuerpo_rigido);
-    PuntoDeColision colisiona(Circulo *circulo);
-    PuntoDeColision colisiona(Linea *linea);
-    PuntoDeColision colisiona(AABB *aabb);
+    Vector2 punto_soporte(Vector2 dir);
 };

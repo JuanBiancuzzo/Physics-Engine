@@ -1,36 +1,35 @@
-#include "colisiones.h"
+#include "AABB.h"
 
 AABB::AABB(Vector2 posicion, float ancho, float alto)
     : CuerpoRigido(posicion), m_ancho(ancho), m_alto(alto)
 {
+    calcular_vertices();
 }
 
-PuntoDeColision AABB::colisiona(CuerpoRigido *cuerpo_rigido)
+void AABB::calcular_vertices()
 {
-    return cuerpo_rigido->colisiona(this);
+    m_vertices.emplace_back(Vector2(m_posicion.x + m_ancho, m_posicion.y + m_alto));
+    m_vertices.emplace_back(Vector2(m_posicion.x - m_ancho, m_posicion.y + m_alto));
+    m_vertices.emplace_back(Vector2(m_posicion.x + m_ancho, m_posicion.y - m_alto));
+    m_vertices.emplace_back(Vector2(m_posicion.x - m_ancho, m_posicion.y - m_alto));
 }
 
-PuntoDeColision AABB::colisiona(Circulo *circulo)
+Vector2 AABB::punto_soporte(Vector2 direccion)
 {
-    return colision::colision_circulo_aabb(circulo, this).invertir();
-}
+    calcular_vertices();
 
-PuntoDeColision AABB::colisiona(Linea *linea)
-{
-    return colision::colision_aabb_linea(this, linea);
-}
+    Vector2 punto_soporte;
+    float distanciaMaxima = std::numeric_limits<float>::min();
 
-PuntoDeColision AABB::colisiona(AABB *aabb)
-{
-    return colision::colision_aabb_aabb(this, aabb);
-}
+    for (Vector2 vertice : m_vertices)
+    {
+        float distancia = vertice * direccion;
+        if (distancia > distanciaMaxima)
+        {
+            distanciaMaxima = distancia;
+            punto_soporte = vertice;
+        }
+    }
 
-Vector2 AABB::punto_borde(Vector2 &direccion)
-{
-    direccion.x += (direccion.x == .0f) ? .01f : .0f;
-    direccion.y += (direccion.y == .0f) ? .01f : .0f;
-
-    float relacion = direccion.x / direccion.y;
-    float valor = (relacion > 1 || relacion < -1) ? m_ancho / direccion.x : m_alto / direccion.y;
-    return (direccion * valor);
+    return punto_soporte;
 }
