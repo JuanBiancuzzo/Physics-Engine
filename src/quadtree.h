@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vector2.h"
+#include "vector.h"
 #include "cuerpos/gjk.h"
 
 #include <vector>

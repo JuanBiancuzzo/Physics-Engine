@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../vector2.h"
+#include "../vector.h"
 
 class Circulo;
 class Linea;

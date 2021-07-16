@@ -5,7 +5,6 @@
 #include "AABB.h"
 #include "circulo.h"
 #include "linea.h"
-#include "../vector3.h"
 
 class Gjk
 {
