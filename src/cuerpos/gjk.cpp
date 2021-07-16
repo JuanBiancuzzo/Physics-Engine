@@ -8,23 +8,25 @@ Gjk::Gjk(CuerpoRigido *cuerpo1, CuerpoRigido *cuerpo2)
 bool Gjk::colisionan()
 {
     Vector2 direccion = (m_cuerpo2->m_posicion - m_cuerpo1->m_posicion).normal();
-    Simplex simplex(soporte(direccion));
-    direccion *= -1.0f; // vector direccion del punto hasta el origen
+    Vector2 punto_soporte = soporte(direccion);
+    Simplex simplex(punto_soporte);
+    direccion = punto_soporte * -1.0f; // vector direccion del punto hasta el origen
 
     while (true)
     {
-        Vector2 a = soporte(direccion);
-        if (a * direccion < 0)
+        punto_soporte = soporte(direccion);
+        if (punto_soporte * direccion < 0)
             return false;
-        simplex.agregar_vertice(a);
+        simplex.agregar_vertice(punto_soporte);
         if (simplex.contiene_origen(direccion))
             return true;
     }
 }
 
-Vector2 Gjk::soporte(Vector2 &dir)
+Vector2 Gjk::soporte(Vector2 &direccion)
 {
-    return m_cuerpo1->punto_soporte(dir) - m_cuerpo2->punto_soporte(dir * -1.0f);
+    Vector2 opuesta = direccion * -1.0f;
+    return m_cuerpo1->punto_soporte(direccion) - m_cuerpo2->punto_soporte(opuesta);
 }
 
 Simplex::Simplex(Vector2 primer_vertice)
@@ -40,15 +42,23 @@ void Simplex::agregar_vertice(Vector2 &vertice)
 
 bool Simplex::contiene_origen(Vector2 &direccion)
 {
-    if (m_cantidad == 2)
+    switch (m_cantidad)
+    {
+    case 2:
         return caso_linea(direccion);
-    return caso_triangulo(direccion);
+        break;
+    case 3:
+        return caso_triangulo(direccion);
+        break;
+    }
+    // nunca se tendria que llegar aca
+    return false;
 }
 
 Simplex &Simplex::operator=(std::initializer_list<Vector2> lista)
 {
-    for (auto v = lista.begin(); v != lista.end(); v++)
-        m_vertices[std::distance(lista.begin(), v)] = *v;
+    for (auto vertice = lista.begin(); vertice != lista.end(); vertice++)
+        m_vertices[std::distance(lista.begin(), vertice)] = *vertice;
 
     m_cantidad = lista.size();
     return *this;
@@ -86,20 +96,41 @@ bool Simplex::caso_triangulo(Vector2 &direccion)
     Vector3 ac = a - c;
     Vector3 ao = origen - a;
 
-    Vector3 ab_perp = (ac.vectorial(ab)).vectorial(ab);
+    Vector3 abc = ab.vectorial(ac);
 
-    if (ab_perp * ao > 0)
+    if (abc.vectorial(ac) * ao > 0)
     {
-        *this = {a.dos_dimensiones(), b.dos_dimensiones()};
-        return caso_linea(direccion);
+        if (ac * ao > 0)
+        {
+            *this = {a.dos_dimensiones(), c.dos_dimensiones()};
+            direccion = (ac.vectorial(ao).vectorial(ac)).dos_dimensiones();
+        }
+        else
+        {
+            *this = {a.dos_dimensiones(), b.dos_dimensiones()};
+            return caso_linea(direccion);
+        }
+    }
+    else
+    {
+        if (ab.vectorial(abc) * ao > 0)
+        {
+            *this = {a.dos_dimensiones(), b.dos_dimensiones()};
+            return caso_linea(direccion);
+        }
+        else
+        {
+            if (abc * ao > 0)
+            {
+                direccion = abc.dos_dimensiones();
+            }
+            else
+            {
+                *this = {a.dos_dimensiones(), b.dos_dimensiones(), c.dos_dimensiones()};
+                direccion = (abc * -1.0f).dos_dimensiones();
+            }
+        }
     }
 
-    Vector3 ac_perp = (ab.vectorial(ac)).vectorial(ac);
-
-    if (ac_perp * ao > 0)
-    {
-        *this = {a.dos_dimensiones(), c.dos_dimensiones()};
-        return caso_linea(direccion);
-    }
     return true;
 }
