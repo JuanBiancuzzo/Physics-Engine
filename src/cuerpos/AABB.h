@@ -14,5 +14,6 @@ private:
 public:
     AABB(Vector2 posicion, float ancho, float alto);
 
+    void calcular_vertices();
     Vector2 punto_soporte(Vector2 dir);
 };
