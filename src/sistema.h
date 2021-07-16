@@ -15,7 +15,7 @@ namespace sistema
         std::vector<Particula *> m_particulas;
 
     public:
-        Sistema(std::vector<Particula *> &particulas);
+        Sistema(std::vector<Particula *> particulas);
 
         void agregar_interaccion(Particula *particula, Particula *referencia, Vector2 &direccion);
         void expandir_interacciones();

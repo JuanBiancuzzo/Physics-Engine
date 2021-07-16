@@ -12,7 +12,7 @@ bool insertar_sin_repetir(std::vector<T> &lista, T elemento)
     return true;
 }
 
-Sistema::Sistema(std::vector<Particula *> &particulas)
+Sistema::Sistema(std::vector<Particula *> particulas)
     : m_particulas(particulas)
 {
 }
