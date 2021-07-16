@@ -9,7 +9,6 @@ struct Vector2
     float x, y;
 
     Vector2();
-
     Vector2(float x, float y);
 
     Vector2 operator+(const Vector2 &otro) const;
@@ -33,7 +32,6 @@ struct Vector2
 
     Vector2 proyeccion(const Vector2 &otro) const;
     Vector2 normal() const;
-    Vector2 perp_en_dir(const Vector2 &otro, const Vector2 &dir) const;
 
     bool nulo() const;
 };

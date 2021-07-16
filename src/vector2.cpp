@@ -1,10 +1,16 @@
-#include "vector.h"
+#include "vector2.h"
 
 #include <math.h>
 
-Vector2::Vector2() : x(.0f), y(.0f) {}
+Vector2::Vector2()
+    : x(.0f), y(.0f)
+{
+}
 
-Vector2::Vector2(float x, float y) : x(x), y(y) {}
+Vector2::Vector2(float x, float y)
+    : x(x), y(y)
+{
+}
 
 Vector2 Vector2::operator+(const Vector2 &otro) const
 {
@@ -78,7 +84,7 @@ float Vector2::distancia(const Vector2 &otro) const
 
 float Vector2::distancia_cuadrada(const Vector2 &otro) const
 {
-    return pow(x - otro.x, 2) + pow(y - otro.y, 2);
+    return (*this - otro).modulo_cuadrado();
 }
 
 Vector2 Vector2::proyeccion(const Vector2 &otro) const
@@ -91,14 +97,6 @@ Vector2 Vector2::normal() const
     if (this->modulo() == 0.0f)
         return *this;
     return (*this / this->modulo());
-}
-
-Vector2 Vector2::perp_en_dir(const Vector2 &otro, const Vector2 &dir) const
-{
-    Vector2 AB = otro - *this, AD = dir - *this;
-
-    float producto_vectorial = AB.x * AD.y - AB.y * AD.x;
-    return Vector2(-1.0f * AB.y * producto_vectorial, AB.x * producto_vectorial).normal();
 }
 
 bool Vector2::nulo() const
