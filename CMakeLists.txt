@@ -13,7 +13,8 @@ add_library(Core
   ${SOURCE}/sistema.cpp
   ${SOURCE}/colisionesContinuas.cpp
   ${SOURCE}/vector.cpp
-  ${SOURCE_CUERPOS}/colisiones.cpp
+  ${SOURCE_CUERPOS}/cuerpoRigido.cpp
+  ${SOURCE_CUERPOS}/gjk.cpp
   ${SOURCE_CUERPOS}/linea.cpp
   ${SOURCE_CUERPOS}/circulo.cpp
   ${SOURCE_CUERPOS}/AABB.cpp
@@ -36,10 +37,10 @@ set(TEST "${PROJECT_SOURCE_DIR}/tests")
 
 target_sources(tests PRIVATE 
     ${TEST}/vector_test.cpp
-    ${TEST}/quadtree_test.cpp
-    ${TEST}/cuerpos_test.cpp
     ${TEST}/sistema_test.cpp
     ${TEST}/colisionesContinuas_test.cpp
+    ${TEST}/cuerpos_test.cpp
+    ${TEST}/quadtree_test.cpp
 )
 set_target_properties(tests PROPERTIES COMPILE_FLAGS "${cxx_strict}")
 target_link_libraries(tests gtest gtest_main Core)
