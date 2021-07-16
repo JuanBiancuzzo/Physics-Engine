@@ -11,7 +11,8 @@ add_library(Core
   ${SOURCE}/motorDeFisicas.cpp
   ${SOURCE}/quadtree.cpp
   ${SOURCE}/sistema.cpp
-  ${SOURCE}/vector.cpp
+  ${SOURCE}/vector2.cpp
+  ${SOURCE}/vector3.cpp
   ${SOURCE_CUERPOS}/cuerpoRigido.cpp
   ${SOURCE_CUERPOS}/gjk.cpp
   ${SOURCE_CUERPOS}/linea.cpp
