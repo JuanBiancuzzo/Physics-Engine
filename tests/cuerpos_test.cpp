@@ -1,6 +1,8 @@
 #include "gtest/gtest.h"
 #include "../src/cuerpos/gjk.h"
 
+using namespace cr;
+
 TEST(CuerposTest, Colision_entre_circulo_y_aabb_en_rango)
 {
     AABB rect(Vector2(), 64.0f, 64.0f);
@@ -16,6 +18,17 @@ TEST(CuerposTest, Colision_entre_circulo_y_aabb_en_rango_y_estan_en_la_misma_pos
 {
     AABB rect(Vector2(), 64.0f, 64.0f);
     Circulo circulo(Vector2(), 1.0f);
+    PuntoDeColision punto_de_colision_cr = circulo.colisiona(&rect);
+    PuntoDeColision punto_de_colision_rc = rect.colisiona(&circulo);
+
+    ASSERT_TRUE(punto_de_colision_cr.colisiono);
+    ASSERT_TRUE(punto_de_colision_rc.colisiono);
+}
+
+TEST(CuerposTest, Colision_entre_circulo_y_aabb_en_rango_y_estan_en_la_misma_posicion_sin_ser_el_cero_cero)
+{
+    AABB rect(Vector2(45.0f, 34.0f), 64.0f, 64.0f);
+    Circulo circulo(Vector2(45.0f, 34.0f), 1.0f);
     PuntoDeColision punto_de_colision_cr = circulo.colisiona(&rect);
     PuntoDeColision punto_de_colision_rc = rect.colisiona(&circulo);
 
