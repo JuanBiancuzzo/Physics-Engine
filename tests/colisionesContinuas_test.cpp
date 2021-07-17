@@ -12,13 +12,14 @@ void velocidades(std::vector<Particula *> particulas)
 
 TEST(ColisionesContinuas, Dos_particulas_circulares_chocan_entre_frame_deberian_cambiar_de_camino)
 {
-    Circulo circulo1(Vector2(.0f, 5.0f), 1.0f);
+    cr::AABB area(Vector2(), 10.0f, 10.0f);
+    cr::Circulo circulo1(Vector2(.0f, 5.0f), 1.0f);
     Particula particula1(1.0f, &circulo1, Vector2(.0f, -6.0f), 1.0f);
-    Circulo circulo2(Vector2(5.0f, .0f), 1.0f);
+    cr::Circulo circulo2(Vector2(5.0f, .0f), 1.0f);
     Particula particula2(2.0f, &circulo2, Vector2(-10.0f, .0f), 1.0f);
     float dt = 1.0f;
 
-    SistemaDeParticulas sp({&particula1, &particula2}, dt);
+    SistemaDeParticulas sp(area, {&particula1, &particula2}, dt);
     sp.avanzar_frame();
 
     velocidades({&particula1, &particula2});

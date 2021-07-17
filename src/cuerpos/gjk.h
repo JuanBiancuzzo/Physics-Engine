@@ -9,11 +9,11 @@
 class Gjk
 {
 private:
-    CuerpoRigido *m_cuerpo1;
-    CuerpoRigido *m_cuerpo2;
+    cr::CuerpoRigido *m_cuerpo1;
+    cr::CuerpoRigido *m_cuerpo2;
 
 public:
-    Gjk(CuerpoRigido *cuerpo1, CuerpoRigido *cuerpo2);
+    Gjk(cr::CuerpoRigido *cuerpo1, cr::CuerpoRigido *cuerpo2);
 
     bool colisionan();
 

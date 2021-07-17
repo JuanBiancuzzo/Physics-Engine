@@ -18,13 +18,13 @@ namespace qt
 
     public:
         QuadTree(Vector2 posicion, float ancho, float alto);
-        QuadTree(AABB &aabb);
+        QuadTree(cr::AABB &aabb);
         ~QuadTree();
 
         bool insertar(Entidad *entidad);
         void actualizar(Entidad *entidad);
         bool eliminar(Entidad *entidad);
-        std::vector<Entidad *> buscar(CuerpoRigido *frontera);
+        std::vector<Entidad *> buscar(cr::CuerpoRigido *frontera);
     };
 
     class Node
@@ -33,19 +33,19 @@ namespace qt
         static const int cap_subdivisiones = 4;
         static const int cap_entidades = 4;
 
-        AABB m_area;
+        cr::AABB m_area;
         std::vector<Node *> m_subdivisiones;
         std::vector<Entidad *> m_entidades;
         int m_cant_entidades;
 
     public:
         Node(Vector2 posicion, float ancho, float alto);
-        Node(AABB &aabb);
+        Node(cr::AABB &aabb);
         ~Node();
 
         bool insertar(Entidad *entidad);
         bool eliminar(Entidad *entidad);
-        void buscar(CuerpoRigido *frontera, std::vector<Entidad *> &output);
+        void buscar(cr::CuerpoRigido *frontera, std::vector<Entidad *> &output);
 
         void nodos_padre(Entidad *entidad, std::vector<Node *> &padres);
 
@@ -65,6 +65,6 @@ namespace qt
     public:
         Entidad();
 
-        virtual bool colisiona(CuerpoRigido *area) = 0;
+        virtual bool colisiona(cr::CuerpoRigido *area) = 0;
     };
 }

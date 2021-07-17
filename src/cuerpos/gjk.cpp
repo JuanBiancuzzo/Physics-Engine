@@ -1,5 +1,7 @@
 #include "gjk.h"
 
+using namespace cr;
+
 Gjk::Gjk(CuerpoRigido *cuerpo1, CuerpoRigido *cuerpo2)
     : m_cuerpo1(cuerpo1), m_cuerpo2(cuerpo2)
 {

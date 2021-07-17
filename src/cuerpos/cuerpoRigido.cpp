@@ -1,6 +1,8 @@
 #include "cuerpoRigido.h"
 #include "gjk.h"
 
+using namespace cr;
+
 CuerpoRigido::CuerpoRigido(Vector2 posicion)
     : m_posicion(posicion)
 {

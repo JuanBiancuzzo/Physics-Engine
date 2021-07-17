@@ -7,7 +7,7 @@ QuadTree::QuadTree(Vector2 posicion, float ancho, float alto)
 {
 }
 
-QuadTree::QuadTree(AABB &aabb)
+QuadTree::QuadTree(cr::AABB &aabb)
     : m_raiz(new Node(aabb))
 {
 }
@@ -76,7 +76,7 @@ bool QuadTree::eliminar(Entidad *entidad)
     return m_raiz->eliminar(entidad);
 }
 
-std::vector<Entidad *> QuadTree::buscar(CuerpoRigido *frontera)
+std::vector<Entidad *> QuadTree::buscar(cr::CuerpoRigido *frontera)
 {
     std::vector<Entidad *> output;
     m_raiz->buscar(frontera, output);
@@ -84,11 +84,11 @@ std::vector<Entidad *> QuadTree::buscar(CuerpoRigido *frontera)
 }
 
 Node::Node(Vector2 posicion, float ancho, float alto)
-    : m_area(AABB(posicion, ancho, alto)), m_cant_entidades(0)
+    : m_area(cr::AABB(posicion, ancho, alto)), m_cant_entidades(0)
 {
 }
 
-Node::Node(AABB &aabb)
+Node::Node(cr::AABB &aabb)
     : m_area(aabb), m_cant_entidades(0)
 {
 }
@@ -149,7 +149,7 @@ void agregar_entidad_sin_repetir(std::vector<Entidad *> &lista, Entidad *entidad
     lista.emplace_back(entidad);
 }
 
-void Node::buscar(CuerpoRigido *frontera, std::vector<Entidad *> &output)
+void Node::buscar(cr::CuerpoRigido *frontera, std::vector<Entidad *> &output)
 {
     if (!m_area.colisiona(frontera).colisiono)
         return;

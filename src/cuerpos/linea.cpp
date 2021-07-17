@@ -1,5 +1,7 @@
 #include "linea.h"
 
+using namespace cr;
+
 Linea::Linea(Vector2 principio, Vector2 final)
     : CuerpoRigido(principio), m_final(final)
 {

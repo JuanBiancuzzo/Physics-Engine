@@ -1,5 +1,7 @@
 #include "circulo.h"
 
+using namespace cr;
+
 Circulo::Circulo(Vector2 posicion, float radio)
     : CuerpoRigido(posicion), m_radio(radio)
 {
