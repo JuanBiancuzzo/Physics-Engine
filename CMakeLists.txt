@@ -16,7 +16,6 @@ add_library(Core
   ${SOURCE_CUERPOS}/cuerpoRigido.cpp
   ${SOURCE_CUERPOS}/gjk.cpp
   ${SOURCE_CUERPOS}/poligono.cpp
-  ${SOURCE_CUERPOS}/linea.cpp
   ${SOURCE_CUERPOS}/circulo.cpp
   ${SOURCE_CUERPOS}/AABB.cpp
 )

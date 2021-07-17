@@ -4,7 +4,7 @@
 #include "cuerpoRigido.h"
 #include "AABB.h"
 #include "circulo.h"
-#include "linea.h"
+#include "poligono.h"
 
 class Gjk
 {
