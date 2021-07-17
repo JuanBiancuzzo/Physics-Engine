@@ -12,6 +12,12 @@ Vector2 calcular_centro(std::array<Vector2, cant_vertices> vertices)
 }
 
 template <int cant_vertices>
+Poligono<cant_vertices>::Poligono(Vector2 posicion, std::array<Vector2, cant_vertices> vertices)
+    : CuerpoRigido(posicion), m_vertices(vertices)
+{
+}
+
+template <int cant_vertices>
 Poligono<cant_vertices>::Poligono(std::array<Vector2, cant_vertices> vertices)
     : CuerpoRigido(calcular_centro<cant_vertices>(vertices)), m_vertices(vertices)
 {
