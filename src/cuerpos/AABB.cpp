@@ -10,10 +10,10 @@ AABB::AABB(Vector2 posicion, float ancho, float alto)
 
 void AABB::calcular_vertices()
 {
-    m_vertices.emplace_back(Vector2(m_posicion.x + m_ancho, m_posicion.y + m_alto));
-    m_vertices.emplace_back(Vector2(m_posicion.x - m_ancho, m_posicion.y + m_alto));
-    m_vertices.emplace_back(Vector2(m_posicion.x + m_ancho, m_posicion.y - m_alto));
-    m_vertices.emplace_back(Vector2(m_posicion.x - m_ancho, m_posicion.y - m_alto));
+    m_vertices[0] = Vector2(m_posicion.x + m_ancho, m_posicion.y + m_alto);
+    m_vertices[1] = Vector2(m_posicion.x - m_ancho, m_posicion.y + m_alto);
+    m_vertices[2] = Vector2(m_posicion.x + m_ancho, m_posicion.y - m_alto);
+    m_vertices[3] = Vector2(m_posicion.x - m_ancho, m_posicion.y - m_alto);
 }
 
 Vector2 AABB::punto_soporte(Vector2 direccion)
