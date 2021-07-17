@@ -99,6 +99,11 @@ Vector2 Vector2::normal() const
     return (*this / this->modulo());
 }
 
+Vector2 Vector2::perpendicular() const
+{
+    return Vector2(-1.0f * y, x);
+}
+
 bool Vector2::nulo() const
 {
     return (*this == *this * .0f);
