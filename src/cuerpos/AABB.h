@@ -19,5 +19,6 @@ namespace cr
 
         void calcular_vertices();
         Vector2 punto_soporte(Vector2 dir);
+        CuerpoRigido *copia(Vector2 posicion);
     };
 }

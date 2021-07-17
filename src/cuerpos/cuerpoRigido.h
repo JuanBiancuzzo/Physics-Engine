@@ -20,6 +20,7 @@ namespace cr
         CuerpoRigido(Vector2 posicion);
 
         virtual Vector2 punto_soporte(Vector2 dir) = 0;
+        virtual CuerpoRigido *copia(Vector2 posicion) = 0;
         PuntoDeColision colisiona(CuerpoRigido *cuerpo_rigido);
     };
 }

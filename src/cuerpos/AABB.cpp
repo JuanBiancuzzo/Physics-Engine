@@ -35,3 +35,8 @@ Vector2 AABB::punto_soporte(Vector2 direccion)
 
     return punto_soporte;
 }
+
+CuerpoRigido *AABB::copia(Vector2 posicion)
+{
+    return new AABB(m_posicion + posicion, m_ancho, m_alto);
+}

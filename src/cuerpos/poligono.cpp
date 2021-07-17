@@ -35,3 +35,12 @@ Vector2 Poligono<cant_vertices>::punto_soporte(Vector2 dir)
 
     return punto_soporte;
 }
+
+template <int cant_vertices>
+CuerpoRigido *Poligono<cant_vertices>::copia(Vector2 posicion)
+{
+    std::array<Vector2, cant_vertices> vertices;
+    for (int i = 0; i < cant_vertices; i++)
+        vertices[i] = m_vertices[i] + posicion;
+    return new Poligono<cant_vertices>(vertices);
+}
