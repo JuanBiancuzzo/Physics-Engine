@@ -11,6 +11,7 @@ namespace cc
 {
 
     class Particula;
+    class CuerpoExtendido;
     struct Linea;
 
     class SistemaDeParticulas
@@ -29,29 +30,42 @@ namespace cc
         void interaccion(Particula *particula1, Particula *particula2);
     };
 
-    class Particula : public sistema::Particula, public qt::Entidad
+    class Particula : public sistema::Particula
     {
     public:
         cr::CuerpoRigido *m_cuerpo;
         float m_dt;
+        CuerpoExtendido *m_cuerpo_extendido;
 
     public:
         Particula(float masa, cr::CuerpoRigido *cuerpo, Vector2 velocidad, float coeficiente);
+        ~Particula();
 
         void aplicar_fuerza(Vector2 fuerza);
         void actualizar(float dt);
-        bool colisiona(cr::CuerpoRigido *area);
         Vector2 diferencia_posicion(Particula *particula);
         std::array<Linea, 2> extremos_de_camino();
+        CuerpoExtendido *crear_cuerpo_extendido();
 
-    private:
+    private: 
         Vector2 posicion_futura();
     };
 
-    struct Colision 
+    struct Colision
     {
         Particula *particula1, *particula2;
         float tiempo_de_choque;
+    };
+
+    class CuerpoExtendido : public qt::Entidad
+    {
+    public:
+        cr::CuerpoRigido *m_inicio, *m_final;
+        // cr::Poligono<4> m_poligono; buscar una forma para agregarlo por ahora no tengo los vertices
+
+    public:
+        CuerpoExtendido(cr::CuerpoRigido *cuerpo_inicio, cr::CuerpoRigido *cuerpo_final);
+        bool colisiona(cr::CuerpoRigido *area);
     };
 
     struct Linea

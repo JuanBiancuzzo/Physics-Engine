@@ -6,7 +6,7 @@ SistemaDeParticulas::SistemaDeParticulas(cr::AABB &area, std::vector<Particula *
     : m_area(area), m_particulas(particulas), m_dt(dt)
 {
     for (Particula *particula : particulas)
-        m_area.insertar(particula);
+        m_area.insertar(particula->crear_cuerpo_extendido());
 }
 
 void SistemaDeParticulas::avanzar_frame()
@@ -43,8 +43,14 @@ void SistemaDeParticulas::interaccion(Particula *particula1, Particula *particul
 }
 
 Particula::Particula(float masa, cr::CuerpoRigido *cuerpo, Vector2 velocidad, float coeficiente)
-    : m_cuerpo(cuerpo), m_dt(1.0f), sistema::Particula(masa, velocidad, Vector2(), coeficiente)
+    : m_cuerpo(cuerpo), m_dt(1.0f), sistema::Particula(masa, velocidad, Vector2(), coeficiente), m_cuerpo_extendido(nullptr)
 {
+}
+
+Particula::~Particula()
+{
+    if (!m_cuerpo_extendido)
+        delete m_cuerpo_extendido;
 }
 
 void Particula::actualizar(float dt)
@@ -52,11 +58,6 @@ void Particula::actualizar(float dt)
     m_velocidad += m_fuerza * dt / m_masa;
     m_cuerpo->m_posicion += m_velocidad * dt;
     m_fuerza *= 0;
-}
-
-bool Particula::colisiona(cr::CuerpoRigido *area)
-{
-    return m_cuerpo->colisiona(area).colisiono;
 }
 
 Vector2 Particula::diferencia_posicion(Particula *particula)
@@ -87,6 +88,28 @@ Vector2 Particula::posicion_futura()
     Vector2 velocidad = m_velocidad + (m_fuerza * m_dt / m_masa);
     Vector2 posicion = m_cuerpo->m_posicion + velocidad * m_dt;
     return posicion;
+}
+
+CuerpoExtendido *Particula::crear_cuerpo_extendido()
+{
+    Vector2 posicion_final = posicion_futura();
+    cr::CuerpoRigido *cuerpo_futuro = m_cuerpo->copia(posicion_final);
+    m_cuerpo_extendido = new CuerpoExtendido(m_cuerpo, cuerpo_futuro);
+    return m_cuerpo_extendido;
+}
+
+CuerpoExtendido::CuerpoExtendido(cr::CuerpoRigido *cuerpo_inicio, cr::CuerpoRigido *cuerpo_final)
+    : m_inicio(cuerpo_inicio), m_final(cuerpo_final)
+{
+}
+
+bool CuerpoExtendido::colisiona(cr::CuerpoRigido *area)
+{
+    bool cuerpo_inicio = false, cuerpo_final = false;
+    cuerpo_inicio = m_inicio->colisiona(area).colisiono;
+    if (!cuerpo_inicio)
+        cuerpo_final = m_final->colisiona(area).colisiono;
+    return cuerpo_inicio || cuerpo_final;
 }
 
 float Linea::punto_contacto(Linea linea)
