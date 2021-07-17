@@ -12,25 +12,25 @@ SistemaDeParticulas::SistemaDeParticulas(cr::AABB &area, std::vector<Particula *
 
 void SistemaDeParticulas::avanzar_frame()
 {
-    std::array<Linea, 2> primeros = m_particulas[0]->extremos_de_camino();
-    std::array<Linea, 2> segundos = m_particulas[1]->extremos_de_camino();
+    Particula *particula1 = m_particulas[0];
+    Particula *particula2 = m_particulas[1];
 
-    float tiempo_choque = 1.0f;
-    for (Linea segundo : segundos)
-    {
-        float extremos = .0f;
-        for (Linea primero : primeros)
-            extremos += primero.punto_contacto(segundo);
-        tiempo_choque = std::min(tiempo_choque, extremos / 2);
-    }
+    std::array<Linea, 2> primeros = particula1->extremos_de_camino();
+    std::array<Linea, 2> segundos = particula2->extremos_de_camino();
 
-    for (Particula *particula : m_particulas)
-        particula->actualizar(tiempo_choque);
+    float tiempo_choque = .0f;
+    for (Linea primero : primeros)
+        for (Linea segundo : segundos) 
+            tiempo_choque += primero.punto_contacto(segundo);
+    tiempo_choque /= 4;
 
-    interaccion(m_particulas[0], m_particulas[1]);
+    particula1->actualizar(tiempo_choque);
+    particula2->actualizar(tiempo_choque);
 
-    for (Particula *particula : m_particulas)
-        particula->actualizar(1.0f - tiempo_choque);
+    interaccion(particula1, particula2);
+
+    particula1->actualizar(1 - tiempo_choque);
+    particula2->actualizar(1 - tiempo_choque);
 }
 
 void SistemaDeParticulas::interaccion(Particula *particula1, Particula *particula2)
@@ -39,7 +39,7 @@ void SistemaDeParticulas::interaccion(Particula *particula1, Particula *particul
     Vector2 direccion_1_2 = particula1->diferencia_posicion(particula2);
     Vector2 direccion_2_1 = particula2->diferencia_posicion(particula1);
     sistema.agregar_interaccion(particula1, particula2, direccion_1_2);
-    sistema.agregar_interaccion(particula1, particula2, direccion_2_1);
+    sistema.agregar_interaccion(particula2, particula1, direccion_2_1);
     sistema.expandir_interacciones();
 }
 
