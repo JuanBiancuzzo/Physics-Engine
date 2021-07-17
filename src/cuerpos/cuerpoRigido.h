@@ -4,10 +4,6 @@
 
 namespace cr
 {
-    class Circulo;
-    class Linea;
-    class AABB;
-
     struct PuntoDeColision
     {
         Vector2 normal;
