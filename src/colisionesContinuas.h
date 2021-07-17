@@ -47,7 +47,7 @@ namespace cc
         std::array<Linea, 2> extremos_de_camino();
         CuerpoExtendido *crear_cuerpo_extendido();
 
-    private: 
+    private:
         Vector2 posicion_futura();
     };
 
@@ -61,11 +61,13 @@ namespace cc
     {
     public:
         cr::CuerpoRigido *m_inicio, *m_final;
-        // cr::Poligono<4> m_poligono; buscar una forma para agregarlo por ahora no tengo los vertices
+        cr::Poligono<4> m_poligono;
 
     public:
-        CuerpoExtendido(cr::CuerpoRigido *cuerpo_inicio, cr::CuerpoRigido *cuerpo_final);
+        CuerpoExtendido(cr::CuerpoRigido *cuerpo_inicio, cr::CuerpoRigido *cuerpo_final, cr::Poligono<4> poligono);
+
         bool colisiona(cr::CuerpoRigido *area);
+        void actualizar(Vector2 posicion_futura);
     };
 
     struct Linea

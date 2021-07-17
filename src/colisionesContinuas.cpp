@@ -1,4 +1,5 @@
 #include "colisionesContinuas.h"
+#include "cuerpos/poligono.h"
 
 using namespace cc;
 
@@ -94,22 +95,40 @@ CuerpoExtendido *Particula::crear_cuerpo_extendido()
 {
     Vector2 posicion_final = posicion_futura();
     cr::CuerpoRigido *cuerpo_futuro = m_cuerpo->copia(posicion_final);
-    m_cuerpo_extendido = new CuerpoExtendido(m_cuerpo, cuerpo_futuro);
+    Vector2 direccion = (posicion_final - m_cuerpo->m_posicion).perpendicular();
+    cr::Poligono<4> poligono({m_cuerpo->punto_soporte(direccion),
+                              m_cuerpo->punto_soporte(direccion * -1.0f),
+                              cuerpo_futuro->punto_soporte(direccion),
+                              cuerpo_futuro->punto_soporte(direccion * -1.0f)});
+
+    m_cuerpo_extendido = new CuerpoExtendido(m_cuerpo, cuerpo_futuro, poligono);
     return m_cuerpo_extendido;
 }
 
-CuerpoExtendido::CuerpoExtendido(cr::CuerpoRigido *cuerpo_inicio, cr::CuerpoRigido *cuerpo_final)
-    : m_inicio(cuerpo_inicio), m_final(cuerpo_final)
+CuerpoExtendido::CuerpoExtendido(cr::CuerpoRigido *cuerpo_inicio, cr::CuerpoRigido *cuerpo_final, cr::Poligono<4> poligono)
+    : m_inicio(cuerpo_inicio), m_final(cuerpo_final), m_poligono(poligono)
 {
 }
 
 bool CuerpoExtendido::colisiona(cr::CuerpoRigido *area)
 {
-    bool cuerpo_inicio = false, cuerpo_final = false;
-    cuerpo_inicio = m_inicio->colisiona(area).colisiono;
-    if (!cuerpo_inicio)
-        cuerpo_final = m_final->colisiona(area).colisiono;
-    return cuerpo_inicio || cuerpo_final;
+    if (m_inicio->colisiona(area).colisiono)
+        return true;
+    if (m_final->colisiona(area).colisiono)
+        return true;
+    if (m_poligono.colisiona(area).colisiono)
+        return true;
+    return false;
+}
+
+void CuerpoExtendido::actualizar(Vector2 posicion_futura)
+{
+    m_final->m_posicion = posicion_futura;
+    Vector2 direccion = (m_final->m_posicion - m_inicio->m_posicion).perpendicular();
+    m_poligono.m_vertices[0] = m_inicio->punto_soporte(direccion);
+    m_poligono.m_vertices[1] = m_inicio->punto_soporte(direccion * -1.0f);
+    m_poligono.m_vertices[2] = m_final->punto_soporte(direccion);
+    m_poligono.m_vertices[3] = m_final->punto_soporte(direccion * -1.0f);
 }
 
 float Linea::punto_contacto(Linea linea)
