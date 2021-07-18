@@ -8,6 +8,23 @@ AABB::AABB(Vector2 posicion, float ancho, float alto)
     calcular_vertices();
 }
 
+AABB::AABB(float masa, Vector2 posicion, float ancho, float alto)
+    : CuerpoRigido(masa, posicion, .0f), m_ancho(ancho), m_alto(alto)
+{
+    calcular_vertices();
+}
+
+void AABB::modificar_posicion(Vector2 valor)
+{
+    m_posicion += valor;
+    for (Vector2 vertice : m_vertices)
+        vertice += valor;
+}
+
+void AABB::modificar_rotacion(float valor)
+{
+}
+
 void AABB::calcular_vertices()
 {
     m_vertices[0] = Vector2(m_posicion.x + m_ancho, m_posicion.y + m_alto);
@@ -18,8 +35,6 @@ void AABB::calcular_vertices()
 
 Vector2 AABB::punto_soporte(Vector2 direccion)
 {
-    calcular_vertices();
-
     Vector2 punto_soporte;
     float distanciaMaxima = std::numeric_limits<float>::min();
 
@@ -39,4 +54,15 @@ Vector2 AABB::punto_soporte(Vector2 direccion)
 CuerpoRigido *AABB::copia(Vector2 posicion)
 {
     return new AABB(m_posicion + posicion, m_ancho, m_alto);
+}
+
+float AABB::calcular_inercia()
+{
+    float masa_individual = m_masa / 4;
+    float inercia = .0f;
+
+    for (Vector2 vertice : m_vertices)
+        inercia += masa_individual * (m_posicion - vertice).modulo_cuadrado();
+
+    return inercia;
 }

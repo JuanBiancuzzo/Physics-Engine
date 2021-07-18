@@ -3,9 +3,24 @@
 
 using namespace cr;
 
-CuerpoRigido::CuerpoRigido(Vector2 posicion)
-    : m_posicion(posicion)
+CuerpoRigido::CuerpoRigido(float masa, Vector2 posicion, float rotacion)
+    : m_posicion(posicion), m_rotacion(rotacion), m_masa(masa), m_inercia(calcular_inercia())
 {
+}
+
+CuerpoRigido::CuerpoRigido(Vector2 posicion)
+    : m_posicion(posicion), m_rotacion(.0f), m_masa(1.0f), m_inercia(calcular_inercia())
+{
+}
+
+void CuerpoRigido::modificar_posicion(Vector2 valor)
+{
+    m_posicion += valor;
+}
+
+void CuerpoRigido::modificar_rotacion(float valor)
+{
+    m_rotacion += valor;
 }
 
 PuntoDeColision CuerpoRigido::punto_de_colision(CuerpoRigido *cuerpo_rigido)
@@ -16,7 +31,7 @@ PuntoDeColision CuerpoRigido::punto_de_colision(CuerpoRigido *cuerpo_rigido)
     float distancia = diferencia.modulo();
     Vector2 normal = diferencia.normal();
 
-    return {normal, distancia, gjk.colisionan()};
+    return {punto_soporte(normal), cuerpo_rigido->punto_soporte(normal * -1.0f), normal, distancia, gjk.colisionan()};
 }
 
 bool CuerpoRigido::colisiona(CuerpoRigido *cuerpo_rigido)

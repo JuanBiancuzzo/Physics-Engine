@@ -26,13 +26,15 @@ struct Vector2
 
     float modulo() const;
     float modulo_cuadrado() const;
-
     float distancia(const Vector2 &otro) const;
     float distancia_cuadrada(const Vector2 &otro) const;
 
     Vector2 proyeccion(const Vector2 &otro) const;
     Vector2 normal() const;
     Vector2 perpendicular() const;
+    Vector2 rotar(float radianes) const; // medida en radianes
+
+    float vectorial(const Vector2 &otro) const;
 
     bool nulo() const;
 };
