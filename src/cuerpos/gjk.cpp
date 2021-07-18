@@ -9,9 +9,15 @@ Gjk::Gjk(CuerpoRigido *cuerpo1, CuerpoRigido *cuerpo2)
 
 bool Gjk::colisionan()
 {
-    Vector2 direccion = (m_cuerpo2->m_posicion - m_cuerpo1->m_posicion).normal();
+    Simplex simplex;
+    return colisionan(simplex);
+}
+
+bool Gjk::colisionan(Simplex &simplex)
+{
+    Vector2 direccion = Vector2(.1f, .0f);
     Vector2 punto_soporte = soporte(direccion);
-    Simplex simplex(punto_soporte);
+    simplex.agregar_vertice(punto_soporte);
     direccion = punto_soporte * -1.0f; // vector direccion del punto hasta el origen
 
     while (true)
@@ -19,10 +25,54 @@ bool Gjk::colisionan()
         punto_soporte = soporte(direccion);
         if (punto_soporte * direccion < 0)
             return false;
+
         simplex.agregar_vertice(punto_soporte);
         if (simplex.contiene_origen(direccion))
             return true;
     }
+}
+
+cr::PuntoDeColision Gjk::info_colision()
+{ // buscar errores
+    Simplex simplex;
+    bool resultado = colisionan(simplex);
+    Polytope polytope(simplex.inicio(), simplex.fin());
+
+    int minIndex = 0;
+    float minDistance = std::numeric_limits<float>::max();
+    Vector2 minNormal;
+
+    while (minDistance == std::numeric_limits<float>::max())
+    {
+        for (int i = 0; i < polytope.cantidad(); i++)
+        {
+            int j = (i + 1) % polytope.cantidad();
+
+            Vector2 ij = polytope[j] - polytope[i];
+            Vector2 normal = ij.perpendicular().normal();
+
+            if (normal * polytope[i] < 0)
+                normal *= -1.0f;
+
+            if (normal * polytope[i] < minDistance)
+            {
+                minDistance = normal * polytope[i];
+                minNormal = normal;
+                minIndex = j;
+            }
+        }
+
+        Vector2 punto_soporte = soporte(minNormal);
+        float sDistance = minNormal * punto_soporte;
+
+        if (std::abs(sDistance - minDistance) > .001f)
+        {
+            minDistance = std::numeric_limits<float>::max();
+            polytope.insertar(minIndex, punto_soporte);
+        }
+    }
+
+    return {m_cuerpo1->punto_soporte(minNormal), minNormal, resultado};
 }
 
 Vector2 Gjk::soporte(Vector2 &direccion)
@@ -31,15 +81,15 @@ Vector2 Gjk::soporte(Vector2 &direccion)
     return m_cuerpo1->punto_soporte(direccion) - m_cuerpo2->punto_soporte(opuesta);
 }
 
-Simplex::Simplex(Vector2 primer_vertice)
-    : m_vertices({primer_vertice, Vector2(), Vector2()}), m_cantidad(0)
+Simplex::Simplex()
+    : m_vertices({Vector2(), Vector2(), Vector2()}), m_cantidad(0)
 {
 }
 
 void Simplex::agregar_vertice(Vector2 &vertice)
 {
     m_vertices = {vertice, m_vertices[0], m_vertices[1]};
-    m_cantidad = std::min(m_cantidad + 1, 3u);
+    m_cantidad = std::min(m_cantidad + 1, 3);
 }
 
 bool Simplex::contiene_origen(Vector2 &direccion)
@@ -53,7 +103,6 @@ bool Simplex::contiene_origen(Vector2 &direccion)
         return caso_triangulo(direccion);
         break;
     }
-    // nunca se tendria que llegar aca
     return false;
 }
 
@@ -66,6 +115,16 @@ Simplex &Simplex::operator=(std::initializer_list<Vector2> lista)
     return *this;
 }
 
+std::array<Vector2, 3>::const_iterator Simplex::inicio() const
+{
+    return m_vertices.begin();
+}
+
+std::array<Vector2, 3>::const_iterator Simplex::fin() const
+{
+    return m_vertices.end() - (3 - m_cantidad);
+}
+
 bool en_rango(float valor, float valor_esperado)
 {
     float dv = .1f;
@@ -74,15 +133,16 @@ bool en_rango(float valor, float valor_esperado)
 
 bool Simplex::caso_linea(Vector2 &direccion)
 {
-    Vector3 a, b, origen;
+    Vector3 a, b;
     a = m_vertices[0];
     b = m_vertices[1];
-    origen = Vector2();
+    Vector3 origen;
 
     Vector3 ab = b - a;
     Vector3 ao = origen - a;
 
     direccion = ((ab.vectorial(ao)).vectorial(ab)).dos_dimensiones();
+
     return false;
 }
 
@@ -100,39 +160,39 @@ bool Simplex::caso_triangulo(Vector2 &direccion)
 
     Vector3 abc = ab.vectorial(ac);
 
-    if (abc.vectorial(ac) * ao > 0)
+    Vector3 ab_prep = (ac.vectorial(ab)).vectorial(ab);
+    Vector3 ac_prep = (ab.vectorial(ac)).vectorial(ac);
+
+    if (ab_prep * ao > 0)
     {
-        if (ac * ao > 0)
-        {
-            *this = {a.dos_dimensiones(), c.dos_dimensiones()};
-            direccion = (ac.vectorial(ao).vectorial(ac)).dos_dimensiones();
-        }
-        else
-        {
-            *this = {a.dos_dimensiones(), b.dos_dimensiones()};
-            return caso_linea(direccion);
-        }
+        *this = {a.dos_dimensiones(), b.dos_dimensiones()};
+        return false;
     }
-    else
+    if (ac_prep * ao > 0)
     {
-        if (ab.vectorial(abc) * ao > 0)
-        {
-            *this = {a.dos_dimensiones(), b.dos_dimensiones()};
-            return caso_linea(direccion);
-        }
-        else
-        {
-            if (abc * ao > 0)
-            {
-                direccion = abc.dos_dimensiones();
-            }
-            else
-            {
-                *this = {a.dos_dimensiones(), b.dos_dimensiones(), c.dos_dimensiones()};
-                direccion = (abc * -1.0f).dos_dimensiones();
-            }
-        }
+        *this = {a.dos_dimensiones(), c.dos_dimensiones()};
+        return false;
     }
 
     return true;
+}
+
+Polytope::Polytope(auto inicio, auto fin)
+    : m_vertices(inicio, fin)
+{
+}
+
+int Polytope::cantidad()
+{
+    return m_vertices.size();
+}
+
+Vector2 &Polytope::operator[](int i)
+{
+    return m_vertices[i];
+}
+
+void Polytope::insertar(int posicion, Vector2 &vertice)
+{
+    m_vertices.insert(m_vertices.begin() + posicion, vertice);
 }
