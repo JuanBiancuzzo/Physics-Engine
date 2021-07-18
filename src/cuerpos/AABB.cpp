@@ -6,12 +6,14 @@ AABB::AABB(Vector2 posicion, float ancho, float alto)
     : CuerpoRigido(posicion), m_ancho(ancho), m_alto(alto)
 {
     calcular_vertices();
+    m_inercia = calcular_inercia();
 }
 
 AABB::AABB(float masa, Vector2 posicion, float ancho, float alto)
     : CuerpoRigido(masa, posicion, .0f), m_ancho(ancho), m_alto(alto)
 {
     calcular_vertices();
+    m_inercia = calcular_inercia();
 }
 
 void AABB::modificar_posicion(Vector2 valor)
