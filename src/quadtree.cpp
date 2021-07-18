@@ -151,7 +151,7 @@ void agregar_entidad_sin_repetir(std::vector<Entidad *> &lista, Entidad *entidad
 
 void Node::buscar(cr::CuerpoRigido *frontera, std::vector<Entidad *> &output)
 {
-    if (!m_area.colisiona(frontera).colisiono)
+    if (!m_area.colisiona(frontera))
         return;
 
     if (!m_subdivisiones.empty())
