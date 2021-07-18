@@ -25,8 +25,8 @@ namespace cr
 
         virtual Vector2 punto_soporte(Vector2 dir) = 0;
         virtual CuerpoRigido *copia(Vector2 posicion) = 0;
-        virtual float calcular_inercia() = 0;
 
+        virtual float calcular_inercia();
         virtual void modificar_posicion(Vector2 valor);
         virtual void modificar_rotacion(float valor);
 
