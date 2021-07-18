@@ -116,9 +116,10 @@ void Particula::velocidad_por_choque(Vector2 fuerza_choque)
     m_velocidad_guardada += (fuerza_choque) / m_cuerpo->m_masa;
 }
 
-void Particula::aplicar_fuerza(Vector2 fuerza)
+void Particula::aplicar_fuerza(Vector2 punto_aplicacion, Vector2 fuerza)
 {
     m_fuerza_guardada += fuerza;
+    m_torque += (punto_aplicacion - m_cuerpo->m_posicion).vectorial(fuerza);
 }
 
 ParticulaEstatica::ParticulaEstatica(cr::CuerpoRigido *cuerpo)
@@ -140,7 +141,7 @@ void ParticulaEstatica::velocidad_por_choque(Vector2 fuerza_choque)
 {
 }
 
-void ParticulaEstatica::aplicar_fuerza(Vector2 fuerza)
+void ParticulaEstatica::aplicar_fuerza(Vector2 punto_aplicacion, Vector2 fuerza)
 {
 }
 
@@ -186,8 +187,8 @@ bool Interaccion::expandir(Particula *particula)
 
     if (hay_resultante)
     {
-        m_particula->aplicar_fuerza(fuerza_resultante);
-        particula->aplicar_fuerza(fuerza_resultante * -1.0f);
+        m_particula->aplicar_fuerza(m_punto_aplicacion, fuerza_resultante);
+        particula->aplicar_fuerza(m_punto_aplicacion, fuerza_resultante * -1.0f);
     }
 
     if (hay_resultante || hay_choque)

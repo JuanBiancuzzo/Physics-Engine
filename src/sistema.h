@@ -28,7 +28,7 @@ namespace sistema
     public:
         cr::CuerpoRigido *m_cuerpo;
         Vector2 m_velocidad, m_fuerza;
-        float m_velocidad_angular, m_torque;
+        float m_torque;
         float m_coeficiente;
         std::vector<Interaccion *> m_interacciones;
 
@@ -50,7 +50,7 @@ namespace sistema
         virtual void actualizar();
 
         virtual void velocidad_por_choque(Vector2 fuerza_choque);
-        virtual void aplicar_fuerza(Vector2 fuerza);
+        virtual void aplicar_fuerza(Vector2 punto_aplicacion, Vector2 fuerza);
     };
 
     class ParticulaEstatica : public Particula
@@ -62,7 +62,7 @@ namespace sistema
         void actualizar() override;
 
         void velocidad_por_choque(Vector2 fuerza_choque) override;
-        void aplicar_fuerza(Vector2 fuerza) override;
+        void aplicar_fuerza(Vector2 punto_aplicacion, Vector2 fuerza) override;
     };
 
     class Interaccion
