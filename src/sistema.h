@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "vector.h"
+#include "cuerpos/gjk.h"
 
 namespace sistema
 {
@@ -18,36 +19,49 @@ namespace sistema
         Sistema(std::vector<Particula *> particulas);
 
         void agregar_interaccion(Particula *particula, Particula *referencia, Vector2 &direccion);
+        void agregar_interaccion(Particula *particula, Particula *referencia);
         void expandir_interacciones();
     };
 
     class Particula
     {
     public:
+        cr::CuerpoRigido *m_cuerpo;
         Vector2 m_velocidad, m_fuerza;
         float m_masa, m_coeficiente;
-        bool m_estatica;
         std::vector<Interaccion *> m_interacciones;
 
-    private:
+    protected:
         Vector2 m_velocidad_guardada, m_fuerza_guardada;
         std::vector<Particula *> m_historial;
 
     public:
-        Particula(float masa, Vector2 velocidad, Vector2 fuerza, float coeficiente);
-        Particula(); // estatica
+        Particula(float masa, cr::CuerpoRigido *cuerpo, Vector2 velocidad, Vector2 fuerza, float coeficiente);
         ~Particula();
 
         void agregar_interaccion(Particula *referencia, Vector2 &direccion);
-        bool expandir();
-
         void agregar_al_historial(Particula *particula);
+
+        bool interactua(Particula *referencia, Vector2 &direccion);
         bool visitaste(Particula *particula);
 
-        void actualizar();
+        virtual bool expandir();
+        virtual void actualizar();
 
-        void velocidad_por_choque(Vector2 fuerza_choque);
-        void aplicar_fuerza(Vector2 fuerza);
+        virtual void velocidad_por_choque(Vector2 fuerza_choque);
+        virtual void aplicar_fuerza(Vector2 fuerza);
+    };
+
+    class ParticulaEstatica : public Particula
+    {
+    public:
+        ParticulaEstatica(cr::CuerpoRigido *cuerpo);
+
+        bool expandir() override;
+        void actualizar() override;
+
+        void velocidad_por_choque(Vector2 fuerza_choque) override;
+        void aplicar_fuerza(Vector2 fuerza) override;
     };
 
     class Interaccion

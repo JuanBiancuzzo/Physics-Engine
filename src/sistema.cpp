@@ -22,6 +22,14 @@ void Sistema::agregar_interaccion(Particula *particula, Particula *referencia, V
     particula->agregar_interaccion(referencia, direccion);
 }
 
+void Sistema::agregar_interaccion(Particula *particula, Particula *referencia)
+{
+    Vector2 direccion;
+    if (!referencia->interactua(particula, direccion))
+        direccion = particula->m_cuerpo->punto_de_colision(referencia->m_cuerpo).normal;
+    particula->agregar_interaccion(referencia, direccion);
+}
+
 void Sistema::expandir_interacciones()
 {
     bool terminado = false;
@@ -36,14 +44,9 @@ void Sistema::expandir_interacciones()
     }
 }
 
-Particula::Particula(float masa, Vector2 velocidad, Vector2 fuerza, float coeficiente)
-    : m_velocidad(velocidad), m_fuerza(fuerza), m_masa(masa), m_coeficiente(coeficiente), m_estatica(false),
+Particula::Particula(float masa, cr::CuerpoRigido *cuerpo, Vector2 velocidad, Vector2 fuerza, float coeficiente)
+    : m_cuerpo(cuerpo), m_velocidad(velocidad), m_fuerza(fuerza), m_masa(masa), m_coeficiente(coeficiente),
       m_velocidad_guardada(velocidad), m_fuerza_guardada(fuerza)
-{
-}
-
-Particula::Particula()
-    : m_estatica(true)
 {
 }
 
@@ -62,6 +65,30 @@ void Particula::agregar_interaccion(Particula *referencia, Vector2 &direccion)
     m_interacciones.emplace_back(new Interaccion(referencia, direccion));
 }
 
+void Particula::agregar_al_historial(Particula *particula)
+{
+    m_historial.emplace_back(particula);
+}
+
+bool Particula::interactua(Particula *referencia, Vector2 &direccion)
+{
+    for (Interaccion *interaccion : m_interacciones)
+        if (interaccion->m_particula == referencia)
+        {
+            direccion = interaccion->m_direccion * -1.0f;
+            return true;
+        }
+    return false;
+}
+
+bool Particula::visitaste(Particula *particula)
+{
+    for (Particula *p : m_historial)
+        if (p == particula)
+            return true;
+    return false;
+}
+
 bool Particula::expandir()
 {
     if (m_fuerza.nulo() && m_velocidad.nulo())
@@ -75,19 +102,6 @@ bool Particula::expandir()
     return !hay_interaccion;
 }
 
-void Particula::agregar_al_historial(Particula *particula)
-{
-    m_historial.emplace_back(particula);
-}
-
-bool Particula::visitaste(Particula *particula)
-{
-    for (Particula *p : m_historial)
-        if (p == particula)
-            return true;
-    return false;
-}
-
 void Particula::actualizar()
 {
     m_velocidad = m_velocidad_guardada;
@@ -97,14 +111,35 @@ void Particula::actualizar()
 
 void Particula::velocidad_por_choque(Vector2 fuerza_choque)
 {
-    if (!m_estatica)
-        m_velocidad_guardada += (fuerza_choque) / m_masa;
+    m_velocidad_guardada += (fuerza_choque) / m_masa;
 }
 
 void Particula::aplicar_fuerza(Vector2 fuerza)
 {
-    if (!m_estatica)
-        m_fuerza_guardada += fuerza;
+    m_fuerza_guardada += fuerza;
+}
+
+ParticulaEstatica::ParticulaEstatica(cr::CuerpoRigido *cuerpo)
+    : Particula(-1.0f, cuerpo, Vector2(), Vector2(), -1.0f)
+{
+}
+
+bool ParticulaEstatica::expandir()
+{
+    return true;
+}
+
+void ParticulaEstatica::actualizar()
+{
+    m_historial.clear();
+}
+
+void ParticulaEstatica::velocidad_por_choque(Vector2 fuerza_choque)
+{
+}
+
+void ParticulaEstatica::aplicar_fuerza(Vector2 fuerza)
+{
 }
 
 Interaccion::Interaccion(Particula *particula, Vector2 &direccion)
@@ -115,10 +150,10 @@ Interaccion::Interaccion(Particula *particula, Vector2 &direccion)
 Vector2 fuerza_de_choque(Particula *particula, Particula *referencia, Vector2 &direccion)
 {
     float masa1 = particula->m_masa;
-    float masa2 = (referencia->m_estatica) ? masa1 : referencia->m_masa;
+    float masa2 = (referencia->m_masa < 0) ? masa1 : referencia->m_masa;
 
     float coeficiente1 = particula->m_coeficiente;
-    float coeficiente2 = (referencia->m_estatica) ? coeficiente1 : referencia->m_coeficiente;
+    float coeficiente2 = (referencia->m_coeficiente < 0) ? coeficiente1 : referencia->m_coeficiente;
 
     float coeficiente = (coeficiente1 + coeficiente2) / 4.0f + .5f;
 
@@ -127,7 +162,7 @@ Vector2 fuerza_de_choque(Particula *particula, Particula *referencia, Vector2 &d
 
     Vector2 fuerza = (velocidad_de_choque * masa1 * masa2) / (promedio_de_masas);
 
-    return fuerza * coeficiente * (referencia->m_estatica ? 2.0f : 1.0f);
+    return fuerza * coeficiente * (referencia->m_masa < 0 ? 2.0f : 1.0f);
 }
 
 bool Interaccion::expandir(Particula *particula)
