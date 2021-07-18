@@ -28,7 +28,8 @@ namespace sistema
     public:
         cr::CuerpoRigido *m_cuerpo;
         Vector2 m_velocidad, m_fuerza;
-        float m_masa, m_coeficiente;
+        float m_velocidad_angular, m_torque;
+        float m_coeficiente;
         std::vector<Interaccion *> m_interacciones;
 
     protected:
@@ -36,7 +37,7 @@ namespace sistema
         std::vector<Particula *> m_historial;
 
     public:
-        Particula(float masa, cr::CuerpoRigido *cuerpo, Vector2 velocidad, Vector2 fuerza, float coeficiente);
+        Particula(cr::CuerpoRigido *cuerpo, Vector2 velocidad, Vector2 fuerza, float coeficiente);
         ~Particula();
 
         void agregar_interaccion(Particula *referencia, Vector2 &direccion);

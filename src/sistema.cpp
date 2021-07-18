@@ -44,8 +44,8 @@ void Sistema::expandir_interacciones()
     }
 }
 
-Particula::Particula(float masa, cr::CuerpoRigido *cuerpo, Vector2 velocidad, Vector2 fuerza, float coeficiente)
-    : m_cuerpo(cuerpo), m_velocidad(velocidad), m_fuerza(fuerza), m_masa(masa), m_coeficiente(coeficiente),
+Particula::Particula(cr::CuerpoRigido *cuerpo, Vector2 velocidad, Vector2 fuerza, float coeficiente)
+    : m_cuerpo(cuerpo), m_velocidad(velocidad), m_fuerza(fuerza), m_coeficiente(coeficiente),
       m_velocidad_guardada(velocidad), m_fuerza_guardada(fuerza)
 {
 }
@@ -111,7 +111,7 @@ void Particula::actualizar()
 
 void Particula::velocidad_por_choque(Vector2 fuerza_choque)
 {
-    m_velocidad_guardada += (fuerza_choque) / m_masa;
+    m_velocidad_guardada += (fuerza_choque) / m_cuerpo->m_masa;
 }
 
 void Particula::aplicar_fuerza(Vector2 fuerza)
@@ -120,7 +120,7 @@ void Particula::aplicar_fuerza(Vector2 fuerza)
 }
 
 ParticulaEstatica::ParticulaEstatica(cr::CuerpoRigido *cuerpo)
-    : Particula(-1.0f, cuerpo, Vector2(), Vector2(), -1.0f)
+    : Particula(cuerpo, Vector2(), Vector2(), -1.0f)
 {
 }
 
@@ -149,8 +149,8 @@ Interaccion::Interaccion(Particula *particula, Vector2 &direccion)
 
 Vector2 fuerza_de_choque(Particula *particula, Particula *referencia, Vector2 &direccion)
 {
-    float masa1 = particula->m_masa;
-    float masa2 = (referencia->m_masa < 0) ? masa1 : referencia->m_masa;
+    float masa1 = particula->m_cuerpo->m_masa;
+    float masa2 = (referencia->m_cuerpo->m_masa < 0) ? masa1 : referencia->m_cuerpo->m_masa;
 
     float coeficiente1 = particula->m_coeficiente;
     float coeficiente2 = (referencia->m_coeficiente < 0) ? coeficiente1 : referencia->m_coeficiente;
@@ -162,7 +162,7 @@ Vector2 fuerza_de_choque(Particula *particula, Particula *referencia, Vector2 &d
 
     Vector2 fuerza = (velocidad_de_choque * masa1 * masa2) / (promedio_de_masas);
 
-    return fuerza * coeficiente * (referencia->m_masa < 0 ? 2.0f : 1.0f);
+    return fuerza * coeficiente * (referencia->m_cuerpo->m_masa < 0 ? 2.0f : 1.0f);
 }
 
 bool Interaccion::expandir(Particula *particula)

@@ -10,17 +10,17 @@ public:
 
 public:
     Particula_pos(float masa, Vector2 posicion, Vector2 velocidad, Vector2 fuerza, float coeficiente)
-        : m_circulo(cr::Circulo(posicion, .0f)), Particula(masa, &m_circulo, velocidad, fuerza, coeficiente)
+        : m_circulo(cr::Circulo(masa, posicion, .0f, .0f)), Particula(&m_circulo, velocidad, fuerza, coeficiente)
     {
     }
 
     Particula_pos(float masa, Vector2 velocidad, Vector2 fuerza, float coeficiente)
-        : m_circulo(cr::Circulo(Vector2(), .0f)), Particula(masa, &m_circulo, velocidad, fuerza, coeficiente)
+        : m_circulo(cr::Circulo(masa, Vector2(), .0f, .0f)), Particula(&m_circulo, velocidad, fuerza, coeficiente)
     {
     }
 
     Particula_pos()
-        : m_circulo(cr::Circulo(Vector2(), .0f)), Particula(-1.0f, &m_circulo, Vector2(), Vector2(), -1.0f)
+        : m_circulo(cr::Circulo(-1.0f, Vector2(), .0f, .0f)), Particula(&m_circulo, Vector2(), Vector2(), -1.0f)
     {
     }
 
@@ -31,18 +31,18 @@ public:
 
     void actualizar(float dt)
     {
-        m_velocidad += (m_fuerza * dt) / m_masa;
+        m_velocidad += (m_fuerza * dt) / m_cuerpo->m_masa;
         m_fuerza *= .0f;
     }
 };
 
 TEST(SistemaTest, Dos_particulas_y_el_piso_sin_velocidad_ninguna_sus_fuerzas_finales_son_cero)
 {
-    cr::Circulo posicion1(Vector2(.0f, 2.0f), .0f);
-    Particula particula1 = Particula(1.0f, &posicion1, Vector2(), Vector2(.0f, -10.0f), 1.0f);
-    cr::Circulo posicion2(Vector2(.0f, 1.0f), .0f);
-    Particula particula2 = Particula(2.0f, &posicion2, Vector2(), Vector2(.0f, -20.0f), 1.0f);
-    cr::Poligono<2> linea({Vector2(1.0f, .0f), Vector2(-1.0f, .0f)});
+    cr::Circulo posicion1(1.0f, Vector2(.0f, 3.0f), .0f, 1.0f);
+    Particula particula1 = Particula(&posicion1, Vector2(), Vector2(.0f, -10.0f), 1.0f);
+    cr::Circulo posicion2(2.0f, Vector2(.0f, 1.0f), .0f, 1.0f);
+    Particula particula2 = Particula(&posicion2, Vector2(), Vector2(.0f, -20.0f), 1.0f);
+    cr::Poligono<2> linea(-1.0f, {Vector2(1.0f, .0f), Vector2(-1.0f, .0f)});
     Particula piso = ParticulaEstatica(&linea);
 
     Sistema sistema({&particula1, &particula2, &piso});
@@ -62,11 +62,11 @@ TEST(SistemaTest, Dos_particulas_y_el_piso_sin_velocidad_ninguna_sus_fuerzas_fin
 
 TEST(SistemaTest, Dos_particulas_y_el_piso_el_primero_con_velocidad_y_rebota_con_su_velocidad_invertida)
 {
-    cr::Circulo posicion1(Vector2(.0f, 3.0f), 1.0f);
-    Particula particula1 = Particula(1.0f, &posicion1, Vector2(.0f, -10.0f), Vector2(.0f, -10.0f), 1.0f);
-    cr::Circulo posicion2(Vector2(.0f, 1.0f), 1.0f);
-    Particula particula2 = Particula(2.0f, &posicion2, Vector2(), Vector2(.0f, -20.0f), 1.0f);
-    cr::Poligono<2> linea({Vector2(1.0f, .0f), Vector2(-1.0f, .0f)});
+    cr::Circulo posicion1(1.0f, Vector2(.0f, 3.0f), .0f, 1.0f);
+    Particula particula1 = Particula(&posicion1, Vector2(.0f, -10.0f), Vector2(.0f, -10.0f), 1.0f);
+    cr::Circulo posicion2(2.0f, Vector2(.0f, 1.0f), .0f, 1.0f);
+    Particula particula2 = Particula(&posicion2, Vector2(), Vector2(.0f, -20.0f), 1.0f);
+    cr::Poligono<2> linea(-1.0f, {Vector2(1.0f, .0f), Vector2(-1.0f, .0f)});
     Particula piso = ParticulaEstatica(&linea);
 
     Sistema sistema({&particula1, &particula2, &piso});
@@ -86,11 +86,11 @@ TEST(SistemaTest, Dos_particulas_y_el_piso_el_primero_con_velocidad_y_rebota_con
 
 TEST(SistemaTest, Dos_particulas_sobre_el_piso_una_tiene_velocidad_y_terminan_intercambiando_velocidades)
 {
-    cr::Circulo posicion1(Vector2(-1.0f, .0f), 1.0f);
-    Particula particula1 = Particula(1.0f, &posicion1, Vector2(10.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
-    cr::Circulo posicion2(Vector2(1.0f, .0f), 1.0f);
-    Particula particula2 = Particula(1.0f, &posicion2, Vector2(), Vector2(.0f, -10.0f), 1.0f);
-    cr::Poligono<2> linea({Vector2(2.0f, .0f), Vector2(-2.0f, .0f)});
+    cr::Circulo posicion1(1.0f, Vector2(-1.0f, .0f), .0f, 1.0f);
+    Particula particula1 = Particula(&posicion1, Vector2(10.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
+    cr::Circulo posicion2(1.0f, Vector2(1.0f, .0f), .0f, 1.0f);
+    Particula particula2 = Particula(&posicion2, Vector2(), Vector2(.0f, -10.0f), 1.0f);
+    cr::Poligono<2> linea(-1.0f, {Vector2(2.0f, .0f), Vector2(-2.0f, .0f)});
     Particula piso = ParticulaEstatica(&linea);
 
     Sistema sistema({&particula1, &particula2, &piso});
