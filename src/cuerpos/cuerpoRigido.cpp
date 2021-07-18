@@ -36,7 +36,7 @@ PuntoDeColision CuerpoRigido::punto_de_colision(CuerpoRigido *cuerpo_rigido)
     float distancia = diferencia.modulo();
     Vector2 normal = diferencia.normal();
 
-    return {punto_soporte(normal), cuerpo_rigido->punto_soporte(normal * -1.0f), normal, distancia, gjk.colisionan()};
+    return {punto_soporte(normal), normal, distancia, gjk.colisionan()};
 }
 
 bool CuerpoRigido::colisiona(CuerpoRigido *cuerpo_rigido)

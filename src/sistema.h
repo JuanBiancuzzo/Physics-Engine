@@ -40,10 +40,10 @@ namespace sistema
         Particula(cr::CuerpoRigido *cuerpo, Vector2 velocidad, Vector2 fuerza, float coeficiente);
         ~Particula();
 
-        void agregar_interaccion(Particula *referencia, Vector2 &direccion);
+        void agregar_interaccion(Particula *referencia, Vector2 &normal, Vector2 &punto_aplicacion);
         void agregar_al_historial(Particula *particula);
 
-        bool interactua(Particula *referencia, Vector2 &direccion);
+        bool interactua(Particula *referencia, Vector2 &normal, Vector2 &punto_aplicacion);
         bool visitaste(Particula *particula);
 
         virtual bool expandir();
@@ -69,10 +69,10 @@ namespace sistema
     {
     public:
         Particula *m_particula;
-        Vector2 m_direccion;
+        Vector2 m_normal, m_punto_aplicacion;
 
     public:
-        Interaccion(Particula *particula, Vector2 &direccion);
+        Interaccion(Particula *particula, Vector2 &normal, Vector2 &punto_aplicacion);
 
         bool expandir(Particula *particula);
     };

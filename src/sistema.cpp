@@ -19,15 +19,16 @@ Sistema::Sistema(std::vector<Particula *> particulas)
 
 void Sistema::agregar_interaccion(Particula *particula, Particula *referencia, Vector2 &direccion)
 {
-    particula->agregar_interaccion(referencia, direccion);
+    Vector2 punto_aplicacion = particula->m_cuerpo->punto_soporte(direccion);
+    particula->agregar_interaccion(referencia, direccion, punto_aplicacion);
 }
 
 void Sistema::agregar_interaccion(Particula *particula, Particula *referencia)
 {
-    Vector2 direccion;
-    if (!referencia->interactua(particula, direccion))
-        direccion = particula->m_cuerpo->punto_de_colision(referencia->m_cuerpo).normal;
-    particula->agregar_interaccion(referencia, direccion);
+    cr::PuntoDeColision pc;
+    if (!referencia->interactua(particula, pc.normal, pc.punto_aplicacion))
+        pc = particula->m_cuerpo->punto_de_colision(referencia->m_cuerpo);
+    particula->agregar_interaccion(referencia, pc.normal, pc.punto_aplicacion);
 }
 
 void Sistema::expandir_interacciones()
@@ -56,13 +57,13 @@ Particula::~Particula()
         delete interaccion;
 }
 
-void Particula::agregar_interaccion(Particula *referencia, Vector2 &direccion)
+void Particula::agregar_interaccion(Particula *referencia, Vector2 &normal, Vector2 &punto_aplicacion)
 {
     for (Interaccion *interaccion : m_interacciones)
         if (interaccion->m_particula == referencia)
             return;
 
-    m_interacciones.emplace_back(new Interaccion(referencia, direccion));
+    m_interacciones.emplace_back(new Interaccion(referencia, normal, punto_aplicacion));
 }
 
 void Particula::agregar_al_historial(Particula *particula)
@@ -70,12 +71,13 @@ void Particula::agregar_al_historial(Particula *particula)
     m_historial.emplace_back(particula);
 }
 
-bool Particula::interactua(Particula *referencia, Vector2 &direccion)
+bool Particula::interactua(Particula *referencia, Vector2 &normal, Vector2 &punto_aplicacion)
 {
     for (Interaccion *interaccion : m_interacciones)
         if (interaccion->m_particula == referencia)
         {
-            direccion = interaccion->m_direccion * -1.0f;
+            normal = interaccion->m_normal * -1.0f;
+            punto_aplicacion = interaccion->m_punto_aplicacion;
             return true;
         }
     return false;
@@ -142,8 +144,8 @@ void ParticulaEstatica::aplicar_fuerza(Vector2 fuerza)
 {
 }
 
-Interaccion::Interaccion(Particula *particula, Vector2 &direccion)
-    : m_particula(particula), m_direccion(direccion)
+Interaccion::Interaccion(Particula *particula, Vector2 &normal, Vector2 &punto_aplicacion)
+    : m_particula(particula), m_normal(normal), m_punto_aplicacion(punto_aplicacion)
 {
 }
 
@@ -170,11 +172,11 @@ bool Interaccion::expandir(Particula *particula)
     if (m_particula->visitaste(particula))
         return false;
 
-    Vector2 fuerza_resultante = particula->m_fuerza.proyeccion(m_direccion);
-    Vector2 fuerza_choque = fuerza_de_choque(particula, m_particula, m_direccion);
+    Vector2 fuerza_resultante = particula->m_fuerza.proyeccion(m_normal);
+    Vector2 fuerza_choque = fuerza_de_choque(particula, m_particula, m_normal);
 
-    bool hay_resultante = fuerza_resultante * m_direccion > 0;
-    bool hay_choque = fuerza_choque * m_direccion > 0 && particula->m_velocidad * m_direccion > 0;
+    bool hay_resultante = fuerza_resultante * m_normal > 0;
+    bool hay_choque = fuerza_choque * m_normal > 0 && particula->m_velocidad * m_normal > 0;
 
     if (hay_choque)
     {
