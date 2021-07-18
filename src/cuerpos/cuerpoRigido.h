@@ -8,7 +8,6 @@ namespace cr
     {
         Vector2 punto_aplicacion;
         Vector2 normal;
-        float distancia;
         bool colisiono;
     };
 
