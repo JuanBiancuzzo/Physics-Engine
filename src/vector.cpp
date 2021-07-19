@@ -67,6 +67,13 @@ bool Vector2::operator==(const Vector2 &otro) const
     return en_x && en_y;
 }
 
+Vector2 &Vector2::operator=(const Vector3 &otro)
+{
+    x = otro.x;
+    y = otro.y;
+    return *this;
+}
+
 float Vector2::modulo() const
 {
     return sqrt(pow(x, 2) + pow(y, 2));
@@ -120,6 +127,13 @@ bool Vector2::nulo() const
 {
     return (*this == *this * .0f);
 }
+
+void Vector2::imprimir() const
+{
+    std::cout << x << ", " << y << std::endl;
+}
+
+// vector 3
 
 Vector3::Vector3()
     : x(.0f), y(.0f), z(.0f)
@@ -189,7 +203,7 @@ bool Vector3::operator==(const Vector3 &otro) const
     return en_x && en_y && en_z;
 }
 
-Vector3 Vector3::operator=(const Vector2 &otro)
+Vector3 &Vector3::operator=(const Vector2 &otro)
 {
     x = otro.x;
     y = otro.y;
@@ -246,4 +260,9 @@ Vector3 Vector3::normal() const
 bool Vector3::nulo() const
 {
     return (*this == *this * .0f);
+}
+
+void Vector3::imprimir() const
+{
+    std::cout << x << ", " << y << ", " << z << std::endl;
 }

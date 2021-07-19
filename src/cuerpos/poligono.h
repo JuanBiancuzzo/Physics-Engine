@@ -42,14 +42,14 @@ namespace cr
         {
         }
 
-        Vector2 punto_soporte(Vector2 dir) override
+        Vector2 punto_soporte(Vector2 direccion) override
         {
             Vector2 punto_soporte;
             float distanciaMaxima = std::numeric_limits<float>::min();
 
             for (Vector2 vertice : m_vertices)
             {
-                float distancia = vertice * dir;
+                float distancia = (vertice - m_posicion) * direccion;
                 if (distancia > distanciaMaxima)
                 {
                     distanciaMaxima = distancia;

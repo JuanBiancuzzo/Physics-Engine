@@ -3,6 +3,28 @@
 
 using namespace cr;
 
+TEST(CuerposTest, Colision_entre_aabb_y_aabb_fuera_de_rango)
+{
+    AABB rect(Vector2(-4.0f, -3.5f), 3.0f, 1.5f);
+    AABB rect2(Vector2(4.0f, 2.0f), 2.0f, 2.0f);
+    bool colicion_rr2 = rect.colisiona(&rect2);
+    bool colicion_r2r = rect2.colisiona(&rect);
+
+    ASSERT_FALSE(colicion_r2r);
+    ASSERT_FALSE(colicion_rr2);
+}
+
+TEST(CuerposTest, Colision_entre_aabb_y_aabb_en_rango)
+{
+    AABB rect(Vector2(1.0f, 1.0f), 2.0f, 2.0f);
+    AABB rect2(Vector2(4.0f, 2.0f), 2.0f, 2.0f);
+    bool colicion_rr2 = rect.colisiona(&rect2);
+    bool colicion_r2r = rect2.colisiona(&rect);
+
+    ASSERT_TRUE(colicion_r2r);
+    ASSERT_TRUE(colicion_rr2);
+}
+
 TEST(CuerposTest, Colision_entre_circulo_y_aabb_en_rango)
 {
     AABB rect(Vector2(), 64.0f, 64.0f);

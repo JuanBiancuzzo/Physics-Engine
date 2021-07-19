@@ -4,6 +4,8 @@
 
 const float delta = 0.01f;
 
+struct Vector3;
+
 struct Vector2
 {
     float x, y;
@@ -23,6 +25,7 @@ struct Vector2
     void operator/=(float alpha);
 
     bool operator==(const Vector2 &otro) const;
+    Vector2 &operator=(const Vector3 &otro);
 
     float modulo() const;
     float modulo_cuadrado() const;
@@ -37,6 +40,7 @@ struct Vector2
     float vectorial(const Vector2 &otro) const;
 
     bool nulo() const;
+    void imprimir() const;
 };
 
 struct Vector3
@@ -58,7 +62,7 @@ struct Vector3
     void operator/=(float alpha);
 
     bool operator==(const Vector3 &otro) const;
-    Vector3 operator=(const Vector2 &otro);
+    Vector3 &operator=(const Vector2 &otro);
 
     float modulo() const;
     float modulo_cuadrado() const;
@@ -73,4 +77,5 @@ struct Vector3
     Vector3 normal() const;
 
     bool nulo() const;
+    void imprimir() const;
 };

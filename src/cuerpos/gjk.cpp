@@ -15,14 +15,15 @@ bool Gjk::colisionan()
 
 bool Gjk::colisionan(Simplex &simplex)
 {
-    Vector2 direccion = Vector2(.1f, .0f);
+    Vector2 direccion = Vector2(1.0f, .0f);
     Vector2 punto_soporte = soporte(direccion);
     simplex.agregar_vertice(punto_soporte);
-    direccion = punto_soporte * -1.0f; // vector direccion del punto hasta el origen
+    direccion = punto_soporte * -1.0f;
 
     while (true)
     {
         punto_soporte = soporte(direccion);
+
         if (punto_soporte * direccion < 0)
             return false;
 
@@ -30,6 +31,7 @@ bool Gjk::colisionan(Simplex &simplex)
         if (simplex.contiene_origen(direccion))
             return true;
     }
+    return false;
 }
 
 cr::PuntoDeColision Gjk::info_colision()
@@ -94,16 +96,9 @@ void Simplex::agregar_vertice(Vector2 &vertice)
 
 bool Simplex::contiene_origen(Vector2 &direccion)
 {
-    switch (m_cantidad)
-    {
-    case 2:
+    if (m_cantidad == 2)
         return caso_linea(direccion);
-        break;
-    case 3:
-        return caso_triangulo(direccion);
-        break;
-    }
-    return false;
+    return caso_triangulo(direccion);
 }
 
 Simplex &Simplex::operator=(std::initializer_list<Vector2> lista)
@@ -125,12 +120,6 @@ std::array<Vector2, 3>::const_iterator Simplex::fin() const
     return m_vertices.end() - (3 - m_cantidad);
 }
 
-bool en_rango(float valor, float valor_esperado)
-{
-    float dv = .1f;
-    return (valor_esperado - dv < valor && valor < valor_esperado + dv);
-}
-
 bool Simplex::caso_linea(Vector2 &direccion)
 {
     Vector3 a, b;
@@ -141,36 +130,36 @@ bool Simplex::caso_linea(Vector2 &direccion)
     Vector3 ab = b - a;
     Vector3 ao = origen - a;
 
-    direccion = ((ab.vectorial(ao)).vectorial(ab)).dos_dimensiones();
+    direccion = (ab.vectorial(ao).vectorial(ab)).dos_dimensiones();
 
     return false;
 }
 
 bool Simplex::caso_triangulo(Vector2 &direccion)
 {
-    Vector3 a, b, c, origen;
+    Vector3 a, b, c;
     a = m_vertices[0];
     b = m_vertices[1];
     c = m_vertices[2];
-    origen = Vector2();
+    Vector3 origen;
 
     Vector3 ab = b - a;
-    Vector3 ac = a - c;
+    Vector3 ac = c - a;
     Vector3 ao = origen - a;
 
-    Vector3 abc = ab.vectorial(ac);
-
-    Vector3 ab_prep = (ac.vectorial(ab)).vectorial(ab);
-    Vector3 ac_prep = (ab.vectorial(ac)).vectorial(ac);
-
-    if (ab_prep * ao > 0)
+    Vector3 ab_perp = (ac.vectorial(ab)).vectorial(ab);
+    if (ab_perp * ao > 0)
     {
         *this = {a.dos_dimensiones(), b.dos_dimensiones()};
+        direccion = ab_perp.dos_dimensiones();
         return false;
     }
-    if (ac_prep * ao > 0)
+
+    Vector3 ac_perp = (ab.vectorial(ac)).vectorial(ac);
+    if (ac_perp * ao > 0)
     {
         *this = {a.dos_dimensiones(), c.dos_dimensiones()};
+        direccion = ac_perp.dos_dimensiones();
         return false;
     }
 

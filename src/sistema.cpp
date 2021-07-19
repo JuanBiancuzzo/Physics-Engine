@@ -28,6 +28,10 @@ void Sistema::agregar_interaccion(Particula *particula, Particula *referencia)
     cr::PuntoDeColision pc;
     if (!referencia->interactua(particula, pc.normal, pc.punto_aplicacion))
         pc = particula->m_cuerpo->punto_de_colision(referencia->m_cuerpo);
+
+    std::cout << "Punto de colision info:" << std::endl;
+    std::cout << "Normal: " << pc.normal.x << ", " << pc.normal.y << std::endl;
+    std::cout << "Punto de aplicacion: " << pc.punto_aplicacion.x << ", " << pc.punto_aplicacion.y << std::endl;
     particula->agregar_interaccion(referencia, pc.normal, pc.punto_aplicacion);
 }
 

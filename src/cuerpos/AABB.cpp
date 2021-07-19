@@ -40,7 +40,7 @@ Vector2 AABB::punto_soporte(Vector2 direccion)
 
     for (Vector2 vertice : m_vertices)
     {
-        float distancia = vertice * direccion;
+        float distancia = (vertice - m_posicion) * direccion;
         if (distancia > distanciaMaxima)
         {
             distanciaMaxima = distancia;
