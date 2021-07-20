@@ -35,10 +35,13 @@ bool Gjk::colisionan(Simplex &simplex)
 }
 
 cr::PuntoDeColision Gjk::info_colision()
-{ // buscar errores
+{
     Simplex simplex;
     bool resultado = colisionan(simplex);
     Polytope polytope(simplex.inicio(), simplex.fin());
+
+    if (!resultado)
+        return {Vector2(), Vector2(), resultado};
 
     int minIndex = 0;
     float minDistance = std::numeric_limits<float>::max();
