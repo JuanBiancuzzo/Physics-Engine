@@ -43,41 +43,20 @@ cr::PuntoDeColision Gjk::info_colision()
     if (!resultado)
         return {Vector2(), Vector2(), resultado};
 
-    int minIndex = 0;
-    float minDistance = std::numeric_limits<float>::max();
-    Vector2 minNormal;
-
-    while (minDistance == std::numeric_limits<float>::max())
+    Borde borde;
+    while (borde.distancia == std::numeric_limits<float>::max())
     {
-        for (int i = 0; i < polytope.cantidad(); i++)
+        polytope.borde_mas_cercano(borde);
+
+        Vector2 punto_soporte = soporte(borde.normal);
+        if (std::abs(borde.normal * punto_soporte - borde.distancia) > .001f)
         {
-            int j = (i + 1) % polytope.cantidad();
-
-            Vector2 ij = polytope[j] - polytope[i];
-            Vector2 normal = ij.perpendicular().normal();
-
-            if (normal * polytope[i] < 0)
-                normal *= -1.0f;
-
-            if (normal * polytope[i] < minDistance)
-            {
-                minDistance = normal * polytope[i];
-                minNormal = normal;
-                minIndex = j;
-            }
-        }
-
-        Vector2 punto_soporte = soporte(minNormal);
-        float sDistance = minNormal * punto_soporte;
-
-        if (std::abs(sDistance - minDistance) > .001f)
-        {
-            minDistance = std::numeric_limits<float>::max();
-            polytope.insertar(minIndex, punto_soporte);
+            borde.distancia = std::numeric_limits<float>::max();
+            polytope.insertar(borde.index, punto_soporte);
         }
     }
 
-    return {m_cuerpo1->punto_soporte(minNormal), minNormal, resultado};
+    return {m_cuerpo1->punto_soporte(borde.normal), borde.normal, resultado};
 }
 
 Vector2 Gjk::soporte(Vector2 &direccion)
@@ -187,4 +166,26 @@ Vector2 &Polytope::operator[](int i)
 void Polytope::insertar(int posicion, Vector2 &vertice)
 {
     m_vertices.insert(m_vertices.begin() + posicion, vertice);
+}
+
+void Polytope::borde_mas_cercano(Borde &borde)
+{
+    for (int i = 0; i < m_vertices.size(); i++)
+    {
+        int j = (i + 1) % m_vertices.size();
+
+        Vector2 ij = m_vertices[j] - m_vertices[i];
+        Vector2 normal = ij.perpendicular().normal();
+
+        if (normal * m_vertices[i] < 0)
+            normal *= -1.0f;
+
+        float distancia = normal * m_vertices[i];
+        if (distancia < borde.distancia)
+        {
+            borde.distancia = distancia;
+            borde.normal = normal;
+            borde.index = j;
+        }
+    }
 }

@@ -9,6 +9,7 @@
 #include "poligono.h"
 
 class Simplex;
+struct Borde;
 
 class Gjk
 {
@@ -59,4 +60,17 @@ public:
     int cantidad();
     Vector2 &operator[](int i);
     void insertar(int posicion, Vector2 &vertice);
+    void borde_mas_cercano(Borde &borde);
+};
+
+struct Borde
+{
+    float distancia;
+    Vector2 normal;
+    int index;
+
+    Borde()
+        : distancia(std::numeric_limits<float>::max()), index(0)
+    {
+    }
 };
