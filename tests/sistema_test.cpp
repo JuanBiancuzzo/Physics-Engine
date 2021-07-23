@@ -1,6 +1,8 @@
 #include "gtest/gtest.h"
 #include "../src/sistema.h"
 
+#include <math.h>
+
 using namespace sistema;
 
 class Particula_pos : public Particula
@@ -112,211 +114,176 @@ TEST(SistemaTest, Dos_particulas_sobre_el_piso_una_tiene_velocidad_y_terminan_in
 
 TEST(SistemaTest, Dos_particulas_sobre_el_piso_una_tienen_velocidades_y_hay_un_choque_elastico)
 {
-    std::vector<Particula *> particulas;
-    Particula *particula1 = new Particula_pos(1.0f, Vector2(30.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
-    Particula *particula2 = new Particula_pos(2.0f, Vector2(-30.0f, .0f), Vector2(.0f, -20.0f), 1.0f);
-    Particula *piso = new Particula_pos();
+    cr::Circulo posicion1(1.0f, Vector2(-1.0f, 1.0f), .0f, 1.0f);
+    Particula particula1 = Particula(&posicion1, Vector2(30.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
+    cr::Circulo posicion2(2.0f, Vector2(1.0f, 1.0f), .0f, 1.0f);
+    Particula particula2 = Particula(&posicion2, Vector2(-30.0f, .0f), Vector2(.0f, -20.0f), 1.0f);
+    cr::Poligono<2> linea(-1.0f, {Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
+    Particula piso = ParticulaEstatica(&linea);
 
-    particulas.emplace_back(particula1);
-    particulas.emplace_back(particula2);
-    particulas.emplace_back(piso);
+    Sistema sistema({&particula1, &particula2, &piso});
 
-    Sistema sistema(particulas);
-
-    Vector2 dir_abajo(.0f, -1.0f), dir_arriba(.0f, 1.0f), dir_derecha(1.0f, .0f), dir_izquierda(-1.0f, .0f);
-    sistema.agregar_interaccion(particula1, piso, dir_abajo);
-    sistema.agregar_interaccion(particula2, piso, dir_abajo);
-    sistema.agregar_interaccion(piso, particula2, dir_arriba);
-    sistema.agregar_interaccion(piso, particula1, dir_arriba);
-    sistema.agregar_interaccion(particula1, particula2, dir_derecha);
-    sistema.agregar_interaccion(particula2, particula1, dir_izquierda);
+    sistema.agregar_interaccion(&particula1, &particula2);
+    sistema.agregar_interaccion(&particula2, &particula1);
+    sistema.agregar_interaccion(&particula1, &piso);
+    sistema.agregar_interaccion(&piso, &particula1);
+    sistema.agregar_interaccion(&particula2, &piso);
+    sistema.agregar_interaccion(&piso, &particula2);
 
     sistema.expandir_interacciones();
-    for (Particula *p : particulas)
+    for (Particula *p : {&particula1, &particula2, &piso})
         ((Particula_pos *)p)->actualizar(1.0f);
 
-    ASSERT_EQ(particula1->m_velocidad, Vector2(-50.0f, .0f));
-    ASSERT_EQ(particula2->m_velocidad, Vector2(10.0f, .0f));
-
-    for (Particula *p : particulas)
-        delete p;
+    ASSERT_EQ(particula1.m_velocidad, Vector2(-50.0f, .0f));
+    ASSERT_EQ(particula2.m_velocidad, Vector2(10.0f, .0f));
 }
 
 TEST(SistemaTest, Particula_estando_en_una_esquina_y_una_velocidad_horizontal_rebota_contra_la_pared)
 {
-    std::vector<Particula *> particulas;
-    Particula *particula = new Particula_pos(1.0f, Vector2(10.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
-    Particula *piso = new Particula_pos();
-    Particula *pared = new Particula_pos();
+    cr::Circulo posicion(1.0f, Vector2(-1.0f, 1.0f), .0f, 1.0f);
+    Particula particula = Particula(&posicion, Vector2(10.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
+    cr::Poligono<2> linea_piso(-1.0f, {Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
+    Particula piso = ParticulaEstatica(&linea_piso);
+    cr::Poligono<2> linea_pared(-1.0f, {Vector2(.0f, 10.0f), Vector2(.0f, -10.0f)});
+    Particula pared = ParticulaEstatica(&linea_pared);
 
-    particulas.emplace_back(particula);
-    particulas.emplace_back(piso);
-    particulas.emplace_back(pared);
+    Sistema sistema({&particula, &piso, &pared});
 
-    Sistema sistema(particulas);
-
-    Vector2 dir_abajo(.0f, -1.0f), dir_arriba(.0f, 1.0f), dir_derecha(1.0f, .0f), dir_izquierda(-1.0f, .0f);
-    sistema.agregar_interaccion(particula, piso, dir_abajo);
-    sistema.agregar_interaccion(piso, particula, dir_arriba);
-    sistema.agregar_interaccion(particula, pared, dir_derecha);
-    sistema.agregar_interaccion(pared, particula, dir_izquierda);
+    sistema.agregar_interaccion(&particula, &piso);
+    sistema.agregar_interaccion(&particula, &pared);
+    sistema.agregar_interaccion(&pared, &particula);
+    sistema.agregar_interaccion(&pared, &piso);
+    sistema.agregar_interaccion(&piso, &particula);
+    sistema.agregar_interaccion(&piso, &pared);
 
     sistema.expandir_interacciones();
-    for (Particula *p : particulas)
+    for (Particula *p : {&particula, &piso, &pared})
         ((Particula_pos *)p)->actualizar(1.0f);
 
-    ASSERT_EQ(particula->m_velocidad, Vector2(-10.0f, .0f));
+    particula.m_velocidad.imprimir();
 
-    for (Particula *p : particulas)
-        delete p;
+    ASSERT_EQ(particula.m_velocidad, Vector2(-10.0f, .0f));
 }
 
 TEST(SistemaTest, Particula_choca_contra_el_piso_con_una_velocidad_y_rebota_terminando_con_la_velocidad_opuesta)
 {
-    std::vector<Particula *> particulas;
-    Particula *particula = new Particula_pos(1.0f, Vector2(.0f, -10.0f), Vector2(.0f, -10.0f), 1.0f);
-    Particula *piso = new Particula_pos();
+    cr::Circulo posicion(1.0f, Vector2(.0f, 1.0f), .0f, 1.0f);
+    Particula particula = Particula(&posicion, Vector2(.0f, -10.0f), Vector2(.0f, -10.0f), 1.0f);
+    cr::Poligono<2> linea_piso(-1.0f, {Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
+    Particula piso = ParticulaEstatica(&linea_piso);
 
-    particulas.emplace_back(particula);
-    particulas.emplace_back(piso);
+    Sistema sistema({&particula, &piso});
 
-    Sistema sistema(particulas);
-
-    Vector2 dir_abajo(.0f, -1.0f), dir_arriba(.0f, 1.0f);
-    sistema.agregar_interaccion(particula, piso, dir_abajo);
-    sistema.agregar_interaccion(piso, particula, dir_arriba);
+    sistema.agregar_interaccion(&particula, &piso);
+    sistema.agregar_interaccion(&piso, &particula);
 
     sistema.expandir_interacciones();
-    for (Particula *p : particulas)
+    for (Particula *p : {&particula, &piso})
         ((Particula_pos *)p)->actualizar(1.0f);
 
-    ASSERT_EQ(particula->m_velocidad, Vector2(.0f, 10.0f));
-
-    for (Particula *p : particulas)
-        delete p;
+    ASSERT_EQ(particula.m_velocidad, Vector2(.0f, 10.0f));
 }
 
-TEST(SistemaTest, Dos_particulas_con_velocidades_en_la_misma_direccion_pero_hay_choque)
+TEST(SistemaTest, Dos_particulas_con_velocidades_en_la_misma_direccion_la_que_esta_adelante_tiene_menor_velocidad)
 {
-    std::vector<Particula *> particulas;
-    Particula *particula1 = new Particula_pos(1.0f, Vector2(.0f, 10.0f / 3.0f), Vector2(.0f, .0f), 1.0f);
-    Particula *particula2 = new Particula_pos(2.0f, Vector2(.0f, 20.0f / 3.0f), Vector2(.0f, .0f), 1.0f);
+    cr::Circulo posicion1(1.0f, Vector2(.0f, 3.0f), .0f, 1.0f);
+    Particula particula1 = Particula(&posicion1, Vector2(.0f, 10.0f / 3.0f), Vector2(.0f, .0f), 1.0f);
+    cr::Circulo posicion2(2.0f, Vector2(.0f, 1.0f), .0f, 1.0f);
+    Particula particula2 = Particula(&posicion2, Vector2(.0f, 20.0f / 3.0f), Vector2(.0f, .0f), 1.0f);
 
-    particulas.emplace_back(particula1);
-    particulas.emplace_back(particula2);
+    Sistema sistema({&particula1, &particula2});
 
-    Sistema sistema(particulas);
-
-    Vector2 dir_abajo(.0f, -1.0f), dir_arriba(.0f, 1.0f);
-    sistema.agregar_interaccion(particula2, particula1, dir_arriba);
-    sistema.agregar_interaccion(particula1, particula2, dir_abajo);
+    sistema.agregar_interaccion(&particula2, &particula1);
+    sistema.agregar_interaccion(&particula1, &particula2);
 
     sistema.expandir_interacciones();
-    for (Particula *p : particulas)
+    for (Particula *p : {&particula1, &particula2})
         ((Particula_pos *)p)->actualizar(1.0f);
 
-    ASSERT_EQ(particula1->m_velocidad, Vector2(.0f, 7.77f));
-    ASSERT_EQ(particula2->m_velocidad, Vector2(.0f, 4.44f));
-
-    for (Particula *p : particulas)
-        delete p;
+    ASSERT_EQ(particula1.m_velocidad, Vector2(.0f, 7.77f));
+    ASSERT_EQ(particula2.m_velocidad, Vector2(.0f, 4.44f));
 }
 
 TEST(SistemaTest, Simular_el_pendulo_de_newton_con_todas_las_particulas_de_la_misma_masa)
 {
-    std::vector<Particula *> particulas;
-    Particula *particula1 = new Particula_pos(1.0f, Vector2(10.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
-    Particula *particula2 = new Particula_pos(1.0f, Vector2(.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
-    Particula *particula3 = new Particula_pos(1.0f, Vector2(.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
-    Particula *particula4 = new Particula_pos(1.0f, Vector2(.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
-    Particula *particula5 = new Particula_pos(1.0f, Vector2(.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
-    Particula *piso = new Particula_pos();
 
-    particulas.emplace_back(particula1);
-    particulas.emplace_back(particula2);
-    particulas.emplace_back(particula3);
-    particulas.emplace_back(particula4);
-    particulas.emplace_back(particula5);
-    particulas.emplace_back(piso);
+    cr::Circulo posicion1(1.0f, Vector2(-4.0f, 1.0f), .0f, 1.0f);
+    Particula particula1 = Particula(&posicion1, Vector2(10.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
+    cr::Circulo posicion2(1.0f, Vector2(-2.0f, 1.0f), .0f, 1.0f);
+    Particula particula2 = Particula(&posicion2, Vector2(.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
+    cr::Circulo posicion3(1.0f, Vector2(.0f, 1.0f), .0f, 1.0f);
+    Particula particula3 = Particula(&posicion3, Vector2(.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
+    cr::Circulo posicion4(1.0f, Vector2(2.0f, 1.0f), .0f, 1.0f);
+    Particula particula4 = Particula(&posicion4, Vector2(.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
+    cr::Circulo posicion5(1.0f, Vector2(4.0f, 1.0f), .0f, 1.0f);
+    Particula particula5 = Particula(&posicion5, Vector2(.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
+    cr::Poligono<2> linea_piso(-1.0f, {Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
+    Particula piso = ParticulaEstatica(&linea_piso);
 
-    Sistema sistema(particulas);
+    Sistema sistema({&particula1, &particula2, &particula3, &particula4, &particula5, &piso});
 
-    Vector2 dir_abajo(.0f, -1.0f), dir_arriba(.0f, 1.0f), dir_derecha(1.0f, .0f), dir_izquierda(-1.0f, .0f);
-    sistema.agregar_interaccion(particula1, piso, dir_abajo);
-    sistema.agregar_interaccion(particula2, piso, dir_abajo);
-    sistema.agregar_interaccion(particula3, piso, dir_abajo);
-    sistema.agregar_interaccion(particula4, piso, dir_abajo);
-    sistema.agregar_interaccion(particula5, piso, dir_abajo);
-    sistema.agregar_interaccion(piso, particula1, dir_arriba);
-    sistema.agregar_interaccion(piso, particula2, dir_arriba);
-    sistema.agregar_interaccion(piso, particula3, dir_arriba);
-    sistema.agregar_interaccion(piso, particula4, dir_arriba);
-    sistema.agregar_interaccion(piso, particula5, dir_arriba);
-    sistema.agregar_interaccion(particula1, particula2, dir_derecha);
-    sistema.agregar_interaccion(particula2, particula1, dir_izquierda);
-    sistema.agregar_interaccion(particula2, particula3, dir_derecha);
-    sistema.agregar_interaccion(particula3, particula2, dir_izquierda);
-    sistema.agregar_interaccion(particula3, particula4, dir_derecha);
-    sistema.agregar_interaccion(particula4, particula3, dir_izquierda);
-    sistema.agregar_interaccion(particula4, particula5, dir_derecha);
-    sistema.agregar_interaccion(particula5, particula4, dir_izquierda);
+    sistema.agregar_interaccion(&particula1, &piso);
+    sistema.agregar_interaccion(&particula2, &piso);
+    sistema.agregar_interaccion(&particula3, &piso);
+    sistema.agregar_interaccion(&particula4, &piso);
+    sistema.agregar_interaccion(&particula5, &piso);
+    sistema.agregar_interaccion(&piso, &particula1);
+    sistema.agregar_interaccion(&piso, &particula2);
+    sistema.agregar_interaccion(&piso, &particula3);
+    sistema.agregar_interaccion(&piso, &particula4);
+    sistema.agregar_interaccion(&piso, &particula5);
+    sistema.agregar_interaccion(&particula1, &particula2);
+    sistema.agregar_interaccion(&particula2, &particula1);
+    sistema.agregar_interaccion(&particula2, &particula3);
+    sistema.agregar_interaccion(&particula3, &particula2);
+    sistema.agregar_interaccion(&particula3, &particula4);
+    sistema.agregar_interaccion(&particula4, &particula3);
+    sistema.agregar_interaccion(&particula4, &particula5);
+    sistema.agregar_interaccion(&particula5, &particula4);
 
     sistema.expandir_interacciones();
-    for (Particula *p : particulas)
+    for (Particula *p : {&particula1, &particula2, &particula3, &particula4, &particula5, &piso})
         ((Particula_pos *)p)->actualizar(1.0f);
 
-    ASSERT_EQ(particula1->m_velocidad, Vector2(.0f, .0f));
-    ASSERT_EQ(particula2->m_velocidad, Vector2(.0f, .0f));
-    ASSERT_EQ(particula3->m_velocidad, Vector2(.0f, .0f));
-    ASSERT_EQ(particula4->m_velocidad, Vector2(.0f, .0f));
-    ASSERT_EQ(particula5->m_velocidad, Vector2(10.0f, .0f));
-
-    for (Particula *p : particulas)
-        delete p;
+    ASSERT_EQ(particula1.m_velocidad, Vector2(.0f, .0f));
+    ASSERT_EQ(particula2.m_velocidad, Vector2(.0f, .0f));
+    ASSERT_EQ(particula3.m_velocidad, Vector2(.0f, .0f));
+    ASSERT_EQ(particula4.m_velocidad, Vector2(.0f, .0f));
+    ASSERT_EQ(particula5.m_velocidad, Vector2(10.0f, .0f));
 }
 
 TEST(SistemaTest, Tres_particulas_con_las_fuerzas_de_peso_posicionadas_en_forma_de_piramide_las_de_abajo_se_mueven_para_los_costados)
 {
-    std::vector<Particula *> particulas;
-    Particula_pos *particula1 = new Particula_pos(1.0f, Vector2(-0.2f, .0f), Vector2(.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
-    Particula_pos *particula2 = new Particula_pos(1.0f, Vector2(.0f, 1.0f), Vector2(.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
-    Particula_pos *particula3 = new Particula_pos(1.0f, Vector2(.2f, .0f), Vector2(.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
-    Particula *piso = new Particula_pos();
+    cr::Circulo posicion1(1.0f, Vector2(-1.0f, 1.0f), .0f, 1.0f);
+    Particula particula1 = Particula(&posicion1, Vector2(.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
+    cr::Circulo posicion2(1.0f, Vector2(.0f, .99f + sqrt(3)), .0f, 1.0f);
+    Particula particula2 = Particula(&posicion2, Vector2(.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
+    cr::Circulo posicion3(1.0f, Vector2(1.0f, 1.0f), .0f, 1.0f);
+    Particula particula3 = Particula(&posicion3, Vector2(.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
+    cr::Poligono<2> linea_piso(-1.0f, {Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
+    Particula piso = ParticulaEstatica(&linea_piso);
 
-    particulas.emplace_back(particula1);
-    particulas.emplace_back(particula2);
-    particulas.emplace_back(particula3);
-    particulas.emplace_back(piso);
+    Sistema sistema({&particula1, &particula2, &particula3, &piso});
 
-    Sistema sistema(particulas);
-
-    Vector2 dir_1_2 = particula1->posicion_relativa(particula2), dir_2_1 = particula2->posicion_relativa(particula1);
-    Vector2 dir_1_3 = particula1->posicion_relativa(particula3), dir_3_1 = particula3->posicion_relativa(particula1);
-    Vector2 dir_2_3 = particula2->posicion_relativa(particula3), dir_3_2 = particula3->posicion_relativa(particula2);
-    sistema.agregar_interaccion(particula2, particula1, dir_2_1);
-    sistema.agregar_interaccion(particula1, particula2, dir_1_2);
-    sistema.agregar_interaccion(particula2, particula3, dir_2_3);
-    sistema.agregar_interaccion(particula3, particula2, dir_3_2);
-    sistema.agregar_interaccion(particula1, particula3, dir_1_3);
-    sistema.agregar_interaccion(particula3, particula1, dir_3_1);
-
-    Vector2 dir_abajo(.0f, -1.0f), dir_arriba(.0f, 1.0f);
-    sistema.agregar_interaccion(particula1, piso, dir_abajo);
-    sistema.agregar_interaccion(particula3, piso, dir_abajo);
-    sistema.agregar_interaccion(piso, particula1, dir_arriba);
-    sistema.agregar_interaccion(piso, particula3, dir_arriba);
+    sistema.agregar_interaccion(&particula2, &particula1);
+    sistema.agregar_interaccion(&particula2, &particula3);
+    sistema.agregar_interaccion(&particula1, &particula2);
+    sistema.agregar_interaccion(&particula3, &particula2);
+    sistema.agregar_interaccion(&particula1, &particula3);
+    sistema.agregar_interaccion(&particula3, &particula1);
+    sistema.agregar_interaccion(&particula1, &piso);
+    sistema.agregar_interaccion(&piso, &particula1);
+    sistema.agregar_interaccion(&particula3, &piso);
+    sistema.agregar_interaccion(&piso, &particula3);
 
     sistema.expandir_interacciones();
-    for (Particula *p : particulas)
+    for (Particula *p : {&particula1, &particula2, &particula3, &piso})
         ((Particula_pos *)p)->actualizar(1.0f);
 
-    ASSERT_NEAR(particula1->m_velocidad.y, .0f, .01f);
-    ASSERT_NEAR(particula2->m_velocidad.x, .0f, .01f);
-    ASSERT_NEAR(particula3->m_velocidad.y, .0f, .01f);
-    ASSERT_NEAR(particula1->m_velocidad.x, -1.0f * particula3->m_velocidad.x, .01f);
-
-    for (Particula *p : particulas)
-        delete p;
+    ASSERT_NEAR(particula1.m_velocidad.y, .0f, .01f);
+    ASSERT_NEAR(particula2.m_velocidad.x, .0f, .01f);
+    ASSERT_NEAR(particula3.m_velocidad.y, .0f, .01f);
+    ASSERT_NEAR(particula1.m_velocidad.x, -1.0f * particula3.m_velocidad.x, .01f);
 }
 
 TEST(SistemaTest, Tres_particulas_sin_fuerzas_posicionadas_en_una_piramide_donde_la_de_mas_arriba_tiene_velocidad_se_mueven)

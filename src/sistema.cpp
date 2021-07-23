@@ -28,6 +28,8 @@ void Sistema::agregar_interaccion(Particula *particula, Particula *referencia)
     cr::PuntoDeColision pc;
     if (!referencia->interactua(particula, pc.normal, pc.punto_aplicacion))
         pc = particula->m_cuerpo->punto_de_colision(referencia->m_cuerpo);
+
+    pc.normal.imprimir();
     particula->agregar_interaccion(referencia, pc.normal, pc.punto_aplicacion);
 }
 
