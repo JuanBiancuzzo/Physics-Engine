@@ -17,6 +17,12 @@ bool Gjk::colisionan(Simplex &simplex)
 {
     Vector2 direccion = Vector2(1.0f, .0f);
     Vector2 punto_soporte = soporte(direccion);
+    if (punto_soporte.nulo())
+    {
+        direccion = Vector2(.0f, 1.0f);
+        punto_soporte = soporte(direccion);
+    }
+
     simplex.agregar_vertice(punto_soporte);
     direccion = punto_soporte * -1.0f;
 
@@ -173,14 +179,17 @@ void Polytope::borde_mas_cercano(Borde &borde)
     for (int i = 0; i < m_vertices.size(); i++)
     {
         int j = (i + 1) % m_vertices.size();
+        int k = (i + 2) % m_vertices.size();
 
-        Vector2 ij = m_vertices[j] - m_vertices[i];
-        Vector2 normal = ij.perpendicular().normal();
+        Vector3 ij, ik;
+        ij = m_vertices[j] - m_vertices[i];
+        ik = m_vertices[k] - m_vertices[i];
 
-        if (normal * m_vertices[i] < 0)
-            normal *= -1.0f;
+        Vector3 direccion = (ij.vectorial(ik)).vectorial(ij) * -1.0f;
+        Vector2 normal = direccion.dos_dimensiones().normal();
 
         float distancia = normal * m_vertices[i];
+
         if (distancia < borde.distancia)
         {
             borde.distancia = distancia;

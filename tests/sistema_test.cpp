@@ -86,11 +86,11 @@ TEST(SistemaTest, Dos_particulas_y_el_piso_el_primero_con_velocidad_y_rebota_con
 
 TEST(SistemaTest, Dos_particulas_sobre_el_piso_una_tiene_velocidad_y_terminan_intercambiando_velocidades)
 {
-    cr::Circulo posicion1(1.0f, Vector2(-1.0f, .0f), .0f, 1.0f);
+    cr::Circulo posicion1(1.0f, Vector2(-1.0f, 1.0f), .0f, 1.0f);
     Particula particula1 = Particula(&posicion1, Vector2(10.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
-    cr::Circulo posicion2(1.0f, Vector2(1.0f, .0f), .0f, 1.0f);
+    cr::Circulo posicion2(1.0f, Vector2(1.0f, 1.0f), .0f, 1.0f);
     Particula particula2 = Particula(&posicion2, Vector2(), Vector2(.0f, -10.0f), 1.0f);
-    cr::Poligono<2> linea(-1.0f, {Vector2(2.0f, .0f), Vector2(-2.0f, .0f)});
+    cr::Poligono<2> linea(-1.0f, {Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
     Particula piso = ParticulaEstatica(&linea);
 
     Sistema sistema({&particula1, &particula2, &piso});

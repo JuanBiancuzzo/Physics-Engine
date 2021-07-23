@@ -123,3 +123,76 @@ TEST(CuerposTest, Colision_entre_circulo_de_radio_nulo_y_aabb_y_estan_puestos_en
     ASSERT_TRUE(colicion_cr);
     ASSERT_TRUE(colicion_rc);
 }
+
+TEST(CuerposTest, Direccion_de_colision_entre_un_circulo_centro_y_arriba_de_un_aabb_es_hacia_abajo)
+{
+    Circulo circulo(Vector2(.0f, 1.0f), 1.0f);
+    AABB rect(Vector2(.0f, -1.0f), 10.0f, 1.0f);
+
+    PuntoDeColision pdc = circulo.punto_de_colision(&rect);
+    ASSERT_EQ(pdc.normal, Vector2(.0f, -1.0f));
+}
+
+TEST(CuerposTest, Direccion_de_colision_entre_un_circulo_no_centro_y_arriba_de_un_aabb_es_hacia_abajo)
+{
+    Circulo circulo(Vector2(3.0f, 1.0f), 1.0f);
+    AABB rect(Vector2(.0f, -1.0f), 10.0f, 1.0f);
+
+    PuntoDeColision pdc = circulo.punto_de_colision(&rect);
+    ASSERT_EQ(pdc.normal, Vector2(.0f, -1.0f));
+}
+
+TEST(CuerposTest, Direccion_de_colision_entre_un_circulo_centro_y_arriba_de_una_linea_es_hacia_abajo)
+{
+    Circulo circulo(Vector2(.0f, 1.0f), 1.0f);
+    Poligono<2> linea({Vector2(-10.0f, .0f), Vector2(10.0f, .0f)});
+
+    PuntoDeColision pdc = circulo.punto_de_colision(&linea);
+    ASSERT_EQ(pdc.normal, Vector2(.0f, -1.0f));
+}
+
+TEST(CuerposTest, Direccion_de_colision_entre_un_circulo_no_centro_y_arriba_de_una_linea_es_hacia_abajo)
+{
+    Circulo circulo(Vector2(3.0f, 1.0f), 1.0f);
+    Poligono<2> linea({Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
+
+    PuntoDeColision pdc = circulo.punto_de_colision(&linea);
+    ASSERT_EQ(pdc.normal, Vector2(.0f, -1.0f));
+}
+
+TEST(CuerposTest, Direccion_de_colision_entre_un_circulo_no_centro_y_metido_en_la_linea_y_arriba_de_una_linea_es_hacia_abajo)
+{
+    Circulo circulo(Vector2(.0f, .0f), 1.0f);
+    Poligono<2> linea({Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
+
+    PuntoDeColision pdc = circulo.punto_de_colision(&linea);
+    ASSERT_EQ(pdc.normal, Vector2(.0f, .0f));
+}
+
+TEST(CuerposTest, Direccion_de_colision_entre_dos_circulos_uno_al_lado_del_otro)
+{
+    Circulo circulo1(Vector2(-1.0f, .0f), 1.0f);
+    Circulo circulo2(Vector2(1.0f, .0f), 1.0f);
+
+    PuntoDeColision pdc = circulo1.punto_de_colision(&circulo2);
+    ASSERT_TRUE(pdc.colisiono);
+    ASSERT_EQ(pdc.normal, Vector2(1.0f, .0f));
+}
+
+TEST(CuerposTest, Direccion_de_colision_entre_un_circulo_centro_y_un_aabb_es_hacia_la_derecha)
+{
+    Circulo circulo(Vector2(.0f, .0f), 1.0f);
+    AABB rect(Vector2(2.0f, .0f), 1.0f, 1.0f);
+
+    PuntoDeColision pdc = circulo.punto_de_colision(&rect);
+    ASSERT_EQ(pdc.normal, Vector2(1.0f, .0f));
+}
+
+TEST(CuerposTest, Direccion_de_colision_entre_dos_aabb_es_hacia_la_derecha)
+{
+    AABB rect1(Vector2(.0f, .0f), 1.0f, 1.0f);
+    AABB rect2(Vector2(2.0f, .0f), 1.0f, 1.0f);
+
+    PuntoDeColision pdc = rect1.punto_de_colision(&rect2);
+    ASSERT_EQ(pdc.normal, Vector2(1.0f, .0f));
+}
