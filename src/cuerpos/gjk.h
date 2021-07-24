@@ -7,6 +7,7 @@
 #include "AABB.h"
 #include "circulo.h"
 #include "poligono.h"
+#include "rectangulo.h"
 
 class Simplex;
 struct Borde;

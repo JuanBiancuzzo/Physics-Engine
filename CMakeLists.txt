@@ -17,6 +17,7 @@ add_library(Core
   ${SOURCE_CUERPOS}/poligono.h
   ${SOURCE_CUERPOS}/circulo.cpp
   ${SOURCE_CUERPOS}/AABB.cpp
+  ${SOURCE_CUERPOS}/rectangulo.cpp
 )
 add_executable(Main main/main.cpp)
 
