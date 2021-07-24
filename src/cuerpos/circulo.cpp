@@ -5,11 +5,13 @@ using namespace cr;
 Circulo::Circulo(Vector2 posicion, float radio)
     : CuerpoRigido(posicion), m_radio(radio)
 {
+    m_inercia = calcular_inercia();
 }
 
 Circulo::Circulo(float masa, Vector2 posicion, float rotacion, float radio)
     : CuerpoRigido(masa, posicion, rotacion), m_radio(radio)
 {
+    m_inercia = calcular_inercia();
 }
 
 Vector2 Circulo::punto_soporte(Vector2 dir)

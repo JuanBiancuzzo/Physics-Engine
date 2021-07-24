@@ -6,6 +6,7 @@ Rectangulo::Rectangulo(float masa, Vector2 posicion, float rotacion, float ancho
     : CuerpoRigido(masa, posicion, rotacion), m_ancho(ancho), m_alto(alto)
 {
     calcular_vertices();
+    m_inercia = calcular_inercia();
 }
 
 void Rectangulo::modificar_posicion(Vector2 valor)

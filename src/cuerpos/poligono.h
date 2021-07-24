@@ -25,21 +25,25 @@ namespace cr
         Poligono<cant_vertices>(float masa, Vector2 posicion, float rotacion, std::array<Vector2, cant_vertices> vertices)
             : CuerpoRigido(masa, posicion, rotacion), m_vertices(vertices)
         {
+            m_inercia = calcular_inercia();
         }
 
         Poligono<cant_vertices>(Vector2 posicion, std::array<Vector2, cant_vertices> vertices)
             : CuerpoRigido(posicion), m_vertices(vertices)
         {
+            m_inercia = calcular_inercia();
         }
 
         Poligono<cant_vertices>(float masa, std::array<Vector2, cant_vertices> vertices)
             : CuerpoRigido(masa, Vector2(), .0f), m_vertices(vertices)
         {
+            m_inercia = calcular_inercia();
         }
 
         Poligono<cant_vertices>(std::array<Vector2, cant_vertices> vertices)
             : CuerpoRigido(calcular_centro<cant_vertices>(vertices)), m_vertices(vertices)
         {
+            m_inercia = calcular_inercia();
         }
 
         Vector2 punto_soporte(Vector2 direccion) override

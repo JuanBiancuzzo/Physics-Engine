@@ -4,12 +4,12 @@
 using namespace cr;
 
 CuerpoRigido::CuerpoRigido(float masa, Vector2 posicion, float rotacion)
-    : m_posicion(posicion), m_rotacion(rotacion), m_masa(masa), m_inercia(calcular_inercia())
+    : m_posicion(posicion), m_rotacion(rotacion), m_masa(masa)
 {
 }
 
 CuerpoRigido::CuerpoRigido(Vector2 posicion)
-    : m_posicion(posicion), m_rotacion(.0f), m_masa(1.0f), m_inercia(calcular_inercia())
+    : m_posicion(posicion), m_rotacion(.0f), m_masa(1.0f)
 {
 }
 
