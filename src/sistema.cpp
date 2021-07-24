@@ -28,8 +28,6 @@ void Sistema::agregar_interaccion(Particula *particula, Particula *referencia)
     cr::PuntoDeColision pc;
     if (!referencia->interactua(particula, pc.normal, pc.punto_aplicacion))
         pc = particula->m_cuerpo->punto_de_colision(referencia->m_cuerpo);
-
-    // pc.normal.imprimir();
     particula->agregar_interaccion(referencia, pc.normal, pc.punto_aplicacion);
 }
 
@@ -48,7 +46,13 @@ void Sistema::expandir_interacciones()
 }
 
 Particula::Particula(cr::CuerpoRigido *cuerpo, Vector2 velocidad, Vector2 fuerza, float coeficiente)
-    : m_cuerpo(cuerpo), m_velocidad(velocidad), m_fuerza(fuerza), m_coeficiente(coeficiente),
+    : m_cuerpo(cuerpo), m_velocidad(velocidad), m_fuerza(fuerza), m_velocidad_angular(.0f), m_torque(.0f), m_coeficiente(coeficiente),
+      m_velocidad_guardada(velocidad), m_fuerza_guardada(fuerza)
+{
+}
+
+Particula::Particula(cr::CuerpoRigido *cuerpo, Vector2 velocidad, Vector2 fuerza, float velocidad_angular, float torque, float coeficiente)
+    : m_cuerpo(cuerpo), m_velocidad(velocidad), m_fuerza(fuerza), m_velocidad_angular(velocidad_angular), m_torque(torque), m_coeficiente(coeficiente),
       m_velocidad_guardada(velocidad), m_fuerza_guardada(fuerza)
 {
 }
@@ -79,7 +83,7 @@ bool Particula::interactua(Particula *referencia, Vector2 &normal, Vector2 &punt
         if (interaccion->m_particula == referencia)
         {
             normal = interaccion->m_normal * -1.0f;
-            punto_aplicacion = interaccion->m_punto_aplicacion;
+            punto_aplicacion = referencia->m_cuerpo->punto_soporte(normal);
             return true;
         }
     return false;

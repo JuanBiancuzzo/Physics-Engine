@@ -28,7 +28,7 @@ namespace sistema
     public:
         cr::CuerpoRigido *m_cuerpo;
         Vector2 m_velocidad, m_fuerza;
-        float m_torque;
+        float m_velocidad_angular, m_torque;
         float m_coeficiente;
         std::vector<Interaccion *> m_interacciones;
 
@@ -38,6 +38,7 @@ namespace sistema
 
     public:
         Particula(cr::CuerpoRigido *cuerpo, Vector2 velocidad, Vector2 fuerza, float coeficiente);
+        Particula(cr::CuerpoRigido *cuerpo, Vector2 velocidad, Vector2 fuerza, float velocidad_angular, float torque, float coeficiente);
         ~Particula();
 
         void agregar_interaccion(Particula *referencia, Vector2 &normal, Vector2 &punto_aplicacion);
