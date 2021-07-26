@@ -1,11 +1,14 @@
 #pragma once
 
 #include "../vector.h"
+#include "caracteristica.h"
 
 namespace cr
 {
+
     struct PuntoDeColision
     {
+        // Caracteristica *caracteristica;
         Vector2 punto_aplicacion;
         Vector2 normal;
         bool colisiono;
@@ -23,6 +26,7 @@ namespace cr
         CuerpoRigido(Vector2 posicion);
 
         virtual Vector2 punto_soporte(Vector2 dir) = 0;
+        // virtual Caracteristica* caracteristica_en_dir(Vector2 dir) = 0; el hecho que tenga que ser un puntero me pone nervioso
         virtual CuerpoRigido *copia(Vector2 posicion) = 0;
 
         virtual float calcular_inercia();

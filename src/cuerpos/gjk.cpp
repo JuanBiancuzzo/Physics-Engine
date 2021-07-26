@@ -1,8 +1,8 @@
 #include "gjk.h"
 
-using namespace cr;
+using namespace gjk;
 
-Gjk::Gjk(CuerpoRigido *cuerpo1, CuerpoRigido *cuerpo2)
+Gjk::Gjk(cr::CuerpoRigido *cuerpo1, cr::CuerpoRigido *cuerpo2)
     : m_cuerpo1(cuerpo1), m_cuerpo2(cuerpo2)
 {
 }
@@ -63,6 +63,31 @@ cr::PuntoDeColision Gjk::info_colision()
     }
 
     return {m_cuerpo1->punto_soporte(borde.normal), borde.normal, resultado};
+}
+
+Info_colision Gjk::info_de_colision()
+{
+    Simplex simplex;
+    bool resultado = colisionan(simplex);
+    Polytope polytope(simplex.inicio(), simplex.fin());
+
+    if (!resultado)
+        return {Vector2(), resultado};
+
+    Borde borde;
+    while (borde.distancia == std::numeric_limits<float>::max())
+    {
+        polytope.borde_mas_cercano(borde);
+
+        Vector2 punto_soporte = soporte(borde.normal);
+        if (std::abs(borde.normal * punto_soporte - borde.distancia) > .001f)
+        {
+            borde.distancia = std::numeric_limits<float>::max();
+            polytope.insertar(borde.index, punto_soporte);
+        }
+    }
+
+    return {borde.normal, resultado};
 }
 
 Vector2 Gjk::soporte(Vector2 &direccion)
