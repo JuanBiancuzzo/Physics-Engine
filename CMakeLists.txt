@@ -13,6 +13,7 @@ add_library(Core
   ${SOURCE}/sistema.cpp
   ${SOURCE}/vector.cpp
   ${SOURCE_CUERPOS}/cuerpoRigido.cpp
+  ${SOURCE_CUERPOS}/caracteristica.cpp
   ${SOURCE_CUERPOS}/gjk.cpp
   ${SOURCE_CUERPOS}/poligono.h
   ${SOURCE_CUERPOS}/circulo.cpp
