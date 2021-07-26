@@ -117,7 +117,7 @@ void Particula::actualizar()
     m_historial.clear();
 }
 
-void Particula::velocidad_por_choque(Vector2 fuerza_choque)
+void Particula::velocidad_por_choque(Vector2 punto_aplicacion, Vector2 fuerza_choque)
 {
     m_velocidad_guardada += (fuerza_choque) / m_cuerpo->m_masa;
 }
@@ -143,7 +143,7 @@ void ParticulaEstatica::actualizar()
     m_historial.clear();
 }
 
-void ParticulaEstatica::velocidad_por_choque(Vector2 fuerza_choque)
+void ParticulaEstatica::velocidad_por_choque(Vector2 punto_aplicacion, Vector2 fuerza_choque)
 {
 }
 
@@ -166,10 +166,10 @@ Vector2 fuerza_de_choque(Particula *particula, Particula *referencia, Vector2 &d
 
     float coeficiente = (coeficiente1 + coeficiente2) / 4.0f + .5f;
 
-    Vector2 velocidad_de_choque = particula->m_velocidad.proyeccion(direccion) - referencia->m_velocidad.proyeccion(direccion);
+    Vector2 velocidad_relativa = particula->m_velocidad.proyeccion(direccion) - referencia->m_velocidad.proyeccion(direccion);
     float promedio_de_masas = (masa1 + masa2) / 2.0f;
 
-    Vector2 fuerza = (velocidad_de_choque * masa1 * masa2) / (promedio_de_masas);
+    Vector2 fuerza = (velocidad_relativa * masa1 * masa2) / (promedio_de_masas);
 
     return fuerza * coeficiente * (referencia->m_cuerpo->m_masa < 0 ? 2.0f : 1.0f);
 }
@@ -187,8 +187,8 @@ bool Interaccion::expandir(Particula *particula)
 
     if (hay_choque)
     {
-        m_particula->velocidad_por_choque(fuerza_choque);
-        particula->velocidad_por_choque(fuerza_choque * -1.0f);
+        m_particula->velocidad_por_choque(m_punto_aplicacion, fuerza_choque);
+        particula->velocidad_por_choque(m_punto_aplicacion, fuerza_choque * -1.0f);
     }
 
     if (hay_resultante)

@@ -50,7 +50,7 @@ namespace sistema
         virtual bool expandir();
         virtual void actualizar();
 
-        virtual void velocidad_por_choque(Vector2 fuerza_choque);
+        virtual void velocidad_por_choque(Vector2 punto_aplicacion, Vector2 fuerza_choque);
         virtual void aplicar_fuerza(Vector2 punto_aplicacion, Vector2 fuerza);
     };
 
@@ -62,7 +62,7 @@ namespace sistema
         bool expandir() override;
         void actualizar() override;
 
-        void velocidad_por_choque(Vector2 fuerza_choque) override;
+        void velocidad_por_choque(Vector2 punto_aplicacion, Vector2 fuerza_choque) override;
         void aplicar_fuerza(Vector2 punto_aplicacion, Vector2 fuerza) override;
     };
 
