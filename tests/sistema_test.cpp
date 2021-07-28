@@ -35,7 +35,7 @@ TEST(SistemaTest, Dos_particulas_y_el_piso_sin_velocidad_ninguna_sus_fuerzas_fin
     cr::Circulo posicion2(2.0f, Vector2(.0f, 1.0f), .0f, 1.0f);
     Particula particula2 = Particula(&posicion2, Vector2(), Vector2(.0f, -20.0f), 1.0f);
     cr::Poligono<2> linea(-1.0f, {Vector2(1.0f, .0f), Vector2(-1.0f, .0f)});
-    Particula piso = ParticulaEstatica(&linea);
+    Particula piso = Particula(&linea);
 
     Sistema sistema({&particula1, &particula2, &piso});
 
@@ -59,7 +59,7 @@ TEST(SistemaTest, Dos_particulas_y_el_piso_el_primero_con_velocidad_y_rebota_con
     cr::Circulo posicion2(2.0f, Vector2(.0f, 1.0f), .0f, 1.0f);
     Particula particula2 = Particula(&posicion2, Vector2(), Vector2(.0f, -20.0f), 1.0f);
     cr::Poligono<2> linea(-1.0f, {Vector2(1.0f, .0f), Vector2(-1.0f, .0f)});
-    Particula piso = ParticulaEstatica(&linea);
+    Particula piso = Particula(&linea);
 
     Sistema sistema({&particula1, &particula2, &piso});
 
@@ -83,7 +83,7 @@ TEST(SistemaTest, Dos_particulas_sobre_el_piso_una_tiene_velocidad_y_terminan_in
     cr::Circulo posicion2(1.0f, Vector2(1.0f, 1.0f), .0f, 1.0f);
     Particula particula2 = Particula(&posicion2, Vector2(), Vector2(.0f, -10.0f), 1.0f);
     cr::Poligono<2> linea(-1.0f, {Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
-    Particula piso = ParticulaEstatica(&linea);
+    Particula piso = Particula(&linea);
 
     Sistema sistema({&particula1, &particula2, &piso});
 
@@ -109,7 +109,7 @@ TEST(SistemaTest, Dos_particulas_sobre_el_piso_una_tienen_velocidades_y_hay_un_c
     cr::Circulo posicion2(2.0f, Vector2(1.0f, 1.0f), .0f, 1.0f);
     Particula particula2 = Particula(&posicion2, Vector2(-30.0f, .0f), Vector2(.0f, -20.0f), 1.0f);
     cr::Poligono<2> linea(-1.0f, {Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
-    Particula piso = ParticulaEstatica(&linea);
+    Particula piso = Particula(&linea);
 
     Sistema sistema({&particula1, &particula2, &piso});
 
@@ -133,9 +133,9 @@ TEST(SistemaTest, Particula_estando_en_una_esquina_y_una_velocidad_horizontal_re
     cr::Circulo posicion(1.0f, Vector2(-1.0f, 1.0f), .0f, 1.0f);
     Particula particula = Particula(&posicion, Vector2(10.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
     cr::Poligono<2> linea_piso(-1.0f, {Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
-    Particula piso = ParticulaEstatica(&linea_piso);
+    Particula piso = Particula(&linea_piso);
     cr::Poligono<2> linea_pared(-1.0f, {Vector2(.0f, 10.0f), Vector2(.0f, -10.0f)});
-    Particula pared = ParticulaEstatica(&linea_pared);
+    Particula pared = Particula(&linea_pared);
 
     Sistema sistema({&particula, &piso, &pared});
 
@@ -158,7 +158,7 @@ TEST(SistemaTest, Particula_choca_contra_el_piso_con_una_velocidad_y_rebota_term
     cr::Circulo posicion(1.0f, Vector2(.0f, 1.0f), .0f, 1.0f);
     Particula particula = Particula(&posicion, Vector2(.0f, -10.0f), Vector2(.0f, -10.0f), 1.0f);
     cr::Poligono<2> linea_piso(-1.0f, {Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
-    Particula piso = ParticulaEstatica(&linea_piso);
+    Particula piso = Particula(&linea_piso);
 
     Sistema sistema({&particula, &piso});
 
@@ -205,7 +205,7 @@ TEST(SistemaTest, Simular_el_pendulo_de_newton_con_todas_las_particulas_de_la_mi
     cr::Circulo posicion5(1.0f, Vector2(4.0f, 1.0f), .0f, 1.0f);
     Particula particula5 = Particula(&posicion5, Vector2(.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
     cr::Poligono<2> linea_piso(-1.0f, {Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
-    Particula piso = ParticulaEstatica(&linea_piso);
+    Particula piso = Particula(&linea_piso);
 
     Sistema sistema({&particula1, &particula2, &particula3, &particula4, &particula5, &piso});
 
@@ -248,7 +248,7 @@ TEST(SistemaTest, Tres_particulas_con_las_fuerzas_de_peso_posicionadas_en_forma_
     cr::Circulo posicion3(1.0f, Vector2(1.0f, 1.0f), .0f, 1.0f);
     Particula particula3 = Particula(&posicion3, Vector2(.0f, .0f), Vector2(.0f, -10.0f), 1.0f);
     cr::Poligono<2> linea_piso(-1.0f, {Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
-    Particula piso = ParticulaEstatica(&linea_piso);
+    Particula piso = Particula(&linea_piso);
 
     Sistema sistema({&particula1, &particula2, &particula3, &piso});
 
@@ -309,7 +309,7 @@ TEST(SistemaTest, Tres_particulas_sin_fuerzas_posicionadas_en_una_piramide_donde
     cr::Circulo posicion3(1.0f, Vector2(1.0f, 1.0f), .0f, 1.0f);
     Particula particula3 = Particula(&posicion3, Vector2(.0f, .0f), Vector2(.0f, .0f), 1.0f);
     cr::Poligono<2> linea_piso(-1.0f, {Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
-    Particula piso = ParticulaEstatica(&linea_piso);
+    Particula piso = Particula(&linea_piso);
 
     Sistema sistema({&particula1, &particula2, &particula3, &piso});
 
@@ -498,9 +498,9 @@ TEST(SistemaTest, Una_particula_choca_contra_la_esquina_y_el_choque_es_plastico_
     cr::Circulo posicion(1.0f, Vector2(-1.0f, 1.0f), .0f, 1.0f);
     Particula particula = Particula(&posicion, Vector2(10.0f, -10.0f), Vector2(.0f, -10.0f), .0f);
     cr::Poligono<2> linea_piso(-1.0f, {Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
-    Particula piso = ParticulaEstatica(&linea_piso);
+    Particula piso = Particula(&linea_piso);
     cr::Poligono<2> linea_pared(-1.0f, {Vector2(.0f, 10.0f), Vector2(.0f, -10.0f)});
-    Particula pared = ParticulaEstatica(&linea_pared);
+    Particula pared = Particula(&linea_pared);
 
     Sistema sistema({&particula, &piso, &pared});
 
@@ -521,9 +521,9 @@ TEST(SistemaTest, Un_rectangulo_se_mantiene_sin_rotar_contra_una_esquina)
     cr::Rectangulo posicion(1.0f, Vector2(-10.0f, 10.0f), .0f, 10.0f, 10.0f);
     Particula particula = Particula(&posicion, Vector2(), Vector2(), 1.0f);
     cr::Poligono<2> linea_piso(-1.0f, {Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
-    Particula piso = ParticulaEstatica(&linea_piso);
+    Particula piso = Particula(&linea_piso);
     cr::Poligono<2> linea_pared(-1.0f, {Vector2(.0f, 10.0f), Vector2(.0f, -10.0f)});
-    Particula pared = ParticulaEstatica(&linea_pared);
+    Particula pared = Particula(&linea_pared);
 
     Sistema sistema({&particula, &piso, &pared});
 
