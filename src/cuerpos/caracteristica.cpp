@@ -2,42 +2,23 @@
 
 using namespace cr;
 
-Caracteristcia *Caracteristcia::intersecta(Caracteristcia *caracteristcia)
-{
-    caracteristcia->intersecta(this);
-}
-
-Arista::Arista(Vector2 inicio, Vector2 final)
-    : m_principal(inicio), m_final(final)
+Caracteristica::Caracteristica(Vector2 principal)
+    : m_vertices({principal})
 {
 }
 
-Caracteristcia *Arista::intersecta(Arista *arista)
+Caracteristica Caracteristica::intersecta(Caracteristica *caracteristica)
 {
+    return *this;
 }
 
-Caracteristcia *Arista::intersecta(Vertice *vertice)
+void Caracteristica::agregar_vertice(Vector2 vertice)
 {
-    return new Vertice(vertice->m_vertice);
+    m_vertices.emplace_back(vertice);
 }
 
-Vertice::Vertice(Vector2 punto)
-    : m_vertice(punto)
+void Caracteristica::reemplazar_vertice(Vector2 vertice)
 {
-}
-
-Arista Vertice::crear_arista(Vector2 final)
-{
-    return Arista(m_vertice, final);
-}
-
-Caracteristcia *Vertice::intersecta(Arista *arista)
-{
-    return new Vertice(m_vertice);
-}
-
-Caracteristcia *Vertice::intersecta(Vertice *vertice)
-{
-    Vector2 promedio = (m_vertice + vertice->m_vertice) / 2;
-    return new Vertice(promedio);
+    m_vertices.clear();
+    agregar_vertice(vertice);
 }

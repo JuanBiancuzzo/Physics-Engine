@@ -1,43 +1,24 @@
 #pragma once
 
 #include "../vector.h"
+#include <vector>
 
 namespace cr
 {
     class Arista;
     class Vertice;
 
-    class Caracteristcia
+    class Caracteristica
     {
     public:
-        Caracteristcia *intersecta(Caracteristcia *caracteristcia);
-
-        virtual Caracteristcia *intersecta(Arista *arista) = 0;
-        virtual Caracteristcia *intersecta(Vertice *vertice) = 0;
-    };
-
-    class Arista : public Caracteristcia
-    {
-    private:
-        Vector2 m_principal, m_final;
+        std::vector<Vector2> m_vertices;
 
     public:
-        Arista(Vector2 inicio, Vector2 final);
+        Caracteristica(Vector2 principal);
 
-        Caracteristcia *intersecta(Arista *arista);
-        Caracteristcia *intersecta(Vertice *vertice);
-    };
+        Caracteristica intersecta(Caracteristica *caracteristica);
 
-    class Vertice : public Caracteristcia
-    {
-    public:
-        Vector2 m_vertice;
-
-    public:
-        Vertice(Vector2 punto);
-
-        Arista crear_arista(Vector2 final);
-        Caracteristcia *intersecta(Arista *arista);
-        Caracteristcia *intersecta(Vertice *vertice);
+        void agregar_vertice(Vector2 vertice);
+        void reemplazar_vertice(Vector2 vertice);
     };
 }
