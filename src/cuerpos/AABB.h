@@ -23,6 +23,7 @@ namespace cr
 
         void calcular_vertices();
         Vector2 punto_soporte(Vector2 dir) override;
+        Caracteristica caracteristica_en_dir(Vector2 dir) override;
         CuerpoRigido *copia(Vector2 posicion) override;
         float calcular_inercia() override;
     };

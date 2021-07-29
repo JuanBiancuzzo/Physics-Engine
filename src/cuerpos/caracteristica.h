@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../vector.h"
-#include <vector>
+#include <array>
 
 namespace cr
 {
@@ -11,14 +11,15 @@ namespace cr
     class Caracteristica
     {
     public:
-        std::vector<Vector2> m_vertices;
+        std::array<Vector2, 2> m_vertices;
+        int m_cantidad;
 
     public:
-        Caracteristica(Vector2 principal);
+        Caracteristica();
 
-        Caracteristica intersecta(Caracteristica *caracteristica);
+        Caracteristica intersecta(Caracteristica &caracteristica, Vector2 &centro);
 
-        void agregar_vertice(Vector2 vertice);
-        void reemplazar_vertice(Vector2 vertice);
+        void agregar_vertice(Vector2 &vertice);
+        void reemplazar_vertice(Vector2 &vertice);
     };
 }

@@ -53,6 +53,28 @@ Vector2 AABB::punto_soporte(Vector2 direccion)
     return punto_soporte;
 }
 
+Caracteristica AABB::caracteristica_en_dir(Vector2 dir)
+{
+    Caracteristica caracteristica;
+    float distanciaMaxima = std::numeric_limits<float>::min();
+
+    for (Vector2 vertice : m_vertices)
+    {
+        float distancia = (vertice - m_posicion) * dir;
+        if (distancia > distanciaMaxima)
+        {
+            distanciaMaxima = distancia;
+            caracteristica.reemplazar_vertice(vertice);
+        }
+        else if (distancia == distanciaMaxima)
+        {
+            caracteristica.agregar_vertice(vertice);
+        }
+    }
+
+    return caracteristica;
+}
+
 CuerpoRigido *AABB::copia(Vector2 posicion)
 {
     return new AABB(m_posicion + posicion, m_ancho, m_alto);

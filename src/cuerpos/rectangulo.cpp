@@ -49,6 +49,28 @@ Vector2 Rectangulo::punto_soporte(Vector2 dir)
     return punto_soporte;
 }
 
+Caracteristica Rectangulo::caracteristica_en_dir(Vector2 dir)
+{
+    Caracteristica caracteristica;
+    float distanciaMaxima = std::numeric_limits<float>::min();
+
+    for (Vector2 vertice : m_vertices)
+    {
+        float distancia = (vertice - m_posicion) * dir;
+        if (distancia > distanciaMaxima)
+        {
+            distanciaMaxima = distancia;
+            caracteristica.reemplazar_vertice(vertice);
+        }
+        else if (distancia == distanciaMaxima)
+        {
+            caracteristica.agregar_vertice(vertice);
+        }
+    }
+
+    return caracteristica;
+}
+
 CuerpoRigido *Rectangulo::copia(Vector2 posicion)
 {
     return new Rectangulo(m_masa, m_posicion + posicion, m_rotacion, m_ancho, m_alto);
