@@ -26,7 +26,6 @@ namespace gjk
 
         bool colisionan();
         bool colisionan(Simplex &simplex);
-        cr::PuntoDeColision info_colision();
         Info_colision info_de_colision();
 
     private:

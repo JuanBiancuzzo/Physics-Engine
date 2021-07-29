@@ -53,7 +53,7 @@ void Particula::agregar_interaccion(Particula *referencia)
             return;
 
     cr::PuntoDeColision pdc = m_cuerpo->punto_de_colision(referencia->m_cuerpo);
-    Interaccion interaccion = {referencia, pdc.normal};
+    Interaccion interaccion = {referencia, pdc.normal, pdc.caracteristica};
     m_interacciones.emplace_back(interaccion);
 }
 

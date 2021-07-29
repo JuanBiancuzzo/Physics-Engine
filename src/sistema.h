@@ -26,6 +26,7 @@ namespace sistema
     {
         Particula *particula;
         Vector2 normal;
+        cr::Caracteristica impacto;
     };
 
     class Particula

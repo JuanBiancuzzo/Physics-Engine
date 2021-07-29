@@ -33,12 +33,11 @@ PuntoDeColision CuerpoRigido::punto_de_colision(CuerpoRigido *cuerpo_rigido)
     gjk::Gjk gjk(this, cuerpo_rigido);
     gjk::Info_colision info = gjk.info_de_colision();
 
-    // Caracteristica *cuerpo1 = this->caracteristica_en_dir(info.normal);
-    // Caracteristica *cuerpo2 = cuerpo_rigido->caracteristica_en_dir(info.normal * -1.0f); // revisar el signo
-    // Caracteristica *interseccion = cuerpo1->interseccion(cuerpo2);
-    // return {interseccion, info.normal, info.colision};
+    Caracteristica cuerpo1 = this->caracteristica_en_dir(info.normal);
+    Caracteristica cuerpo2 = cuerpo_rigido->caracteristica_en_dir(info.normal * -1.0f);
+    Caracteristica interseccion = cuerpo1.intersecta(cuerpo2, m_posicion);
 
-    return gjk.info_colision();
+    return {interseccion, info.normal, info.colision};
 }
 
 bool CuerpoRigido::colisiona(CuerpoRigido *cuerpo_rigido)

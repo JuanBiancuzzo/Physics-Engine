@@ -8,8 +8,7 @@ namespace cr
 
     struct PuntoDeColision
     {
-        // Caracteristica *caracteristica;
-        Vector2 punto_aplicacion;
+        Caracteristica caracteristica;
         Vector2 normal;
         bool colisiono;
     };

@@ -40,31 +40,6 @@ bool Gjk::colisionan(Simplex &simplex)
     return false;
 }
 
-cr::PuntoDeColision Gjk::info_colision()
-{
-    Simplex simplex;
-    bool resultado = colisionan(simplex);
-    Polytope polytope(simplex.inicio(), simplex.fin());
-
-    if (!resultado)
-        return {Vector2(), Vector2(), resultado};
-
-    Borde borde;
-    while (borde.distancia == std::numeric_limits<float>::max())
-    {
-        polytope.borde_mas_cercano(borde);
-
-        Vector2 punto_soporte = soporte(borde.normal);
-        if (std::abs(borde.normal * punto_soporte - borde.distancia) > .001f)
-        {
-            borde.distancia = std::numeric_limits<float>::max();
-            polytope.insertar(borde.index, punto_soporte);
-        }
-    }
-
-    return {m_cuerpo1->punto_soporte(borde.normal), borde.normal, resultado};
-}
-
 Info_colision Gjk::info_de_colision()
 {
     Simplex simplex;
