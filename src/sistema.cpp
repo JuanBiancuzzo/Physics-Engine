@@ -37,7 +37,7 @@ void Sistema::expandir_interacciones()
 }
 
 Particula::Particula(cr::CuerpoRigido *cuerpo, Vector2 velocidad, float velocidad_angular, float coeficiente)
-    : m_cuerpo(cuerpo), m_velocidad(velocidad), m_velocidad_angular(velocidad_angular), m_torque(.0f) m_coeficiente(coeficiente), m_velocidad_guardada(velocidad), m_es_estatico(false)
+    : m_cuerpo(cuerpo), m_velocidad(velocidad), m_velocidad_angular(velocidad_angular), m_torque(.0f), m_coeficiente(coeficiente), m_velocidad_guardada(velocidad), m_es_estatico(false)
 {
 }
 
@@ -111,15 +111,14 @@ bool Particula::choque_de_fuerzas(Particula *particula, Vector2 &normal)
 
     Vector2 fuerza_resultante = m_fuerza.proyeccion(normal);
 
-    bool hay_resultante = fuerza_resultante * normal > 0;
-
-    if (hay_resultante)
+    if (fuerza_resultante * normal > 0)
     {
         particula->m_fuerza_guardada += fuerza_resultante;
         m_fuerza_guardada -= fuerza_resultante;
+        return true;
     }
 
-    return hay_resultante;
+    return false;
 }
 
 bool Particula::choque_de_velocidades(Particula *particula, Vector2 &normal)
@@ -129,15 +128,14 @@ bool Particula::choque_de_velocidades(Particula *particula, Vector2 &normal)
 
     Vector2 fuerza_choque = fuerza_de_choque(particula, normal);
 
-    bool hay_choque = fuerza_choque * normal > 0 && m_velocidad * normal > 0;
-
-    if (hay_choque)
+    if (fuerza_choque * normal > 0 && m_velocidad * normal > 0)
     {
         particula->m_velocidad_guardada += fuerza_choque / particula->m_cuerpo->m_masa;
         m_velocidad_guardada -= fuerza_choque / m_cuerpo->m_masa;
+        return true;
     }
 
-    return hay_choque;
+    return false;
 }
 
 Vector2 Particula::fuerza_de_choque(Particula *particula, Vector2 &direccion)
