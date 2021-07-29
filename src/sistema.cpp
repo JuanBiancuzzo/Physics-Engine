@@ -36,14 +36,8 @@ void Sistema::expandir_interacciones()
     }
 }
 
-Particula::Particula(cr::CuerpoRigido *cuerpo, Vector2 velocidad, Vector2 fuerza, float velocidad_angular, float torque, float coeficiente)
-    : m_cuerpo(cuerpo), m_velocidad(velocidad), m_fuerza(fuerza), m_velocidad_angular(velocidad_angular), m_torque(torque), m_coeficiente(coeficiente),
-      m_velocidad_guardada(velocidad), m_fuerza_guardada(fuerza), m_es_estatico(false)
-{
-}
-
-Particula::Particula(cr::CuerpoRigido *cuerpo, Vector2 velocidad, Vector2 fuerza, float coeficiente)
-    : Particula(cuerpo, velocidad, fuerza, .0f, .0f, coeficiente)
+Particula::Particula(cr::CuerpoRigido *cuerpo, Vector2 velocidad, float velocidad_angular, float coeficiente)
+    : m_cuerpo(cuerpo), m_velocidad(velocidad), m_velocidad_angular(velocidad_angular), m_torque(.0f) m_coeficiente(coeficiente), m_velocidad_guardada(velocidad), m_es_estatico(false)
 {
 }
 
@@ -78,57 +72,72 @@ bool Particula::expandir()
 
     bool hay_interaccion = false;
     for (Interaccion interaccion : m_interacciones)
-        hay_interaccion |= this->choca(interaccion.particula, interaccion.normal);
+    {
+        bool resultado = this->choque_de_fuerzas(interaccion.particula, interaccion.normal);
+        resultado |= this->choque_de_velocidades(interaccion.particula, interaccion.normal);
+        if (resultado)
+            m_historial.emplace_back(interaccion.particula);
+        hay_interaccion |= resultado;
+    }
 
     return !hay_interaccion;
 }
 
 void Particula::actualizar()
 {
-    m_velocidad = m_velocidad_guardada;
-    m_fuerza = m_fuerza_guardada;
+    if (!m_es_estatico)
+    {
+        m_velocidad = m_velocidad_guardada;
+        m_fuerza = m_fuerza_guardada;
+    }
     m_historial.clear();
 }
 
-void Particula::velocidad_por_choque(Vector2 fuerza_choque)
+void Particula::aplicar_torque(float torque)
 {
-    if (!m_es_estatico)
-        m_velocidad_guardada += (fuerza_choque) / m_cuerpo->m_masa;
+    m_torque += torque;
 }
 
 void Particula::aplicar_fuerza(Vector2 fuerza)
 {
-    if (!m_es_estatico)
-        m_fuerza_guardada += fuerza;
+    m_fuerza += fuerza;
+    m_fuerza_guardada = m_fuerza;
 }
 
-bool Particula::choca(Particula *particula, Vector2 &normal)
+bool Particula::choque_de_fuerzas(Particula *particula, Vector2 &normal)
 {
     if (m_es_estatico || particula->visitaste(this))
         return false;
 
     Vector2 fuerza_resultante = m_fuerza.proyeccion(normal);
-    Vector2 fuerza_choque = fuerza_de_choque(particula, normal);
 
     bool hay_resultante = fuerza_resultante * normal > 0;
+
+    if (hay_resultante)
+    {
+        particula->m_fuerza_guardada += fuerza_resultante;
+        m_fuerza_guardada -= fuerza_resultante;
+    }
+
+    return hay_resultante;
+}
+
+bool Particula::choque_de_velocidades(Particula *particula, Vector2 &normal)
+{
+    if (m_es_estatico || particula->visitaste(this))
+        return false;
+
+    Vector2 fuerza_choque = fuerza_de_choque(particula, normal);
+
     bool hay_choque = fuerza_choque * normal > 0 && m_velocidad * normal > 0;
 
     if (hay_choque)
     {
-        particula->velocidad_por_choque(fuerza_choque);
-        velocidad_por_choque(fuerza_choque * -1.0f);
+        particula->m_velocidad_guardada += fuerza_choque / particula->m_cuerpo->m_masa;
+        m_velocidad_guardada -= fuerza_choque / m_cuerpo->m_masa;
     }
 
-    if (hay_resultante)
-    {
-        particula->aplicar_fuerza(fuerza_resultante);
-        aplicar_fuerza(fuerza_resultante * -1.0f);
-    }
-
-    if (hay_resultante || hay_choque)
-        m_historial.emplace_back(particula);
-
-    return hay_resultante || hay_choque;
+    return hay_choque;
 }
 
 Vector2 Particula::fuerza_de_choque(Particula *particula, Vector2 &direccion)

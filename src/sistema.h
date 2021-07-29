@@ -43,21 +43,23 @@ namespace sistema
         bool m_es_estatico;
 
     public:
-        Particula(cr::CuerpoRigido *cuerpo, Vector2 velocidad, Vector2 fuerza, float velocidad_angular, float torque, float coeficiente);
-        Particula(cr::CuerpoRigido *cuerpo, Vector2 velocidad, Vector2 fuerza, float coeficiente);
+        Particula(cr::CuerpoRigido *cuerpo, Vector2 velocidad, float velocidad_angular, float coeficiente);
         Particula(cr::CuerpoRigido *cuerpo);
 
         void agregar_interaccion(Particula *referencia);
-        bool visitaste(Particula *particula);
-
         bool expandir();
         void actualizar();
 
-        bool choca(Particula *particula, Vector2 &normal);
+        void aplicar_torque(float torque);
+        void aplicar_fuerza(Vector2 fuerza);
+
+    private:
+        bool visitaste(Particula *particula);
+
+        bool choque_de_fuerzas(Particula *particula, Vector2 &normal);
+        bool choque_de_velocidades(Particula *particula, Vector2 &normal);
+
         Vector2 fuerza_de_choque(Particula *particula, Vector2 &direccion);
         Vector2 velocidad_en_direccion(Vector2 &direccion);
-
-        void velocidad_por_choque(Vector2 fuerza_choque);
-        void aplicar_fuerza(Vector2 fuerza);
     };
 }
