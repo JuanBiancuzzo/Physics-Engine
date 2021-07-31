@@ -37,7 +37,8 @@ void Sistema::expandir_interacciones()
 }
 
 Particula::Particula(cr::CuerpoRigido *cuerpo, Vector2 velocidad, float velocidad_angular, float coeficiente)
-    : m_cuerpo(cuerpo), m_velocidad(velocidad), m_velocidad_angular(velocidad_angular), m_torque(.0f), m_coeficiente(coeficiente), m_velocidad_guardada(velocidad), m_es_estatico(false)
+    : m_cuerpo(cuerpo), m_velocidad(velocidad), m_velocidad_angular(velocidad_angular), m_torque(.0f), m_coeficiente(coeficiente),
+      m_velocidad_guardada(velocidad), m_es_estatico(false)
 {
 }
 
@@ -54,6 +55,7 @@ void Particula::agregar_interaccion(Particula *referencia)
 
     cr::PuntoDeColision pdc = m_cuerpo->punto_de_colision(referencia->m_cuerpo);
     Interaccion interaccion = {referencia, pdc.normal, pdc.caracteristica};
+
     m_interacciones.emplace_back(interaccion);
 }
 
@@ -73,8 +75,8 @@ bool Particula::expandir()
     bool hay_interaccion = false;
     for (Interaccion interaccion : m_interacciones)
     {
-        bool resultado = this->choque_de_fuerzas(interaccion.particula, interaccion.normal);
-        resultado |= this->choque_de_velocidades(interaccion.particula, interaccion.normal);
+        bool resultado = this->choque_de_fuerzas(interaccion.particula, interaccion.normal, interaccion.impacto);
+        resultado |= this->choque_de_velocidades(interaccion.particula, interaccion.normal, interaccion.impacto);
         if (resultado)
             m_historial.emplace_back(interaccion.particula);
         hay_interaccion |= resultado;
@@ -104,7 +106,7 @@ void Particula::aplicar_fuerza(Vector2 fuerza)
     m_fuerza_guardada = m_fuerza;
 }
 
-bool Particula::choque_de_fuerzas(Particula *particula, Vector2 &normal)
+bool Particula::choque_de_fuerzas(Particula *particula, Vector2 &normal, cr::Caracteristica impacto)
 {
     if (m_es_estatico || particula->visitaste(this))
         return false;
@@ -114,14 +116,26 @@ bool Particula::choque_de_fuerzas(Particula *particula, Vector2 &normal)
     if (fuerza_resultante * normal > 0)
     {
         particula->m_fuerza_guardada += fuerza_resultante;
+        particula->rotacion_por_choque(fuerza_resultante, impacto);
+
         m_fuerza_guardada -= fuerza_resultante;
+        rotacion_por_choque(fuerza_resultante * -1.0f, impacto);
         return true;
     }
 
     return false;
 }
 
-bool Particula::choque_de_velocidades(Particula *particula, Vector2 &normal)
+void Particula::rotacion_por_choque(Vector2 fuerza, cr::Caracteristica impacto)
+{
+    for (int i = 0; i < impacto.cantidad(); i++)
+    {
+        // (impacto[i] - m_cuerpo->m_posicion).imprimir();
+        m_torque += (impacto[i] - m_cuerpo->m_posicion).vectorial(fuerza);
+    }
+}
+
+bool Particula::choque_de_velocidades(Particula *particula, Vector2 &normal, cr::Caracteristica impacto)
 {
     if (m_es_estatico || particula->visitaste(this))
         return false;
@@ -131,7 +145,10 @@ bool Particula::choque_de_velocidades(Particula *particula, Vector2 &normal)
     if (fuerza_choque * normal > 0 && m_velocidad * normal > 0)
     {
         particula->m_velocidad_guardada += fuerza_choque / particula->m_cuerpo->m_masa;
+        particula->rotacion_por_choque(fuerza_choque, impacto);
+
         m_velocidad_guardada -= fuerza_choque / m_cuerpo->m_masa;
+        rotacion_por_choque(fuerza_choque * -1.0f, impacto);
         return true;
     }
 

@@ -196,3 +196,77 @@ TEST(CuerposTest, Direccion_de_colision_entre_dos_aabb_es_hacia_la_derecha)
     PuntoDeColision pdc = rect1.punto_de_colision(&rect2);
     ASSERT_EQ(pdc.normal, Vector2(1.0f, .0f));
 }
+
+TEST(CuerposTest, Caracteristica_del_impacto_entre_un_circulo_y_un_aabb_es_un_punto)
+{
+    Circulo circulo(Vector2(.0f, 1.0f), 1.0f);
+    AABB rect(Vector2(.0f, -1.0f), 1.0f, 1.0f);
+
+    PuntoDeColision pdc = circulo.punto_de_colision(&rect);
+
+    ASSERT_EQ(pdc.caracteristica.cantidad(), 1);
+    ASSERT_EQ(pdc.caracteristica[0], Vector2());
+}
+
+TEST(CuerposTest, Caracteristica_del_impacto_entre_dos_aabb_es_una_linea)
+{
+    AABB rect1(Vector2(.0f, 1.0f), 1.0f, 1.0f);
+    AABB rect2(Vector2(.0f, -1.0f), 1.0f, 1.0f);
+
+    PuntoDeColision pdc = rect1.punto_de_colision(&rect2);
+
+    ASSERT_EQ(pdc.caracteristica.cantidad(), 2);
+    ASSERT_EQ(pdc.caracteristica[0].x, pdc.caracteristica[1].x * -1.0f);
+    ASSERT_EQ(pdc.caracteristica[0].y, pdc.caracteristica[1].y);
+}
+
+TEST(CuerposTest, Caracteristica_del_impacto_entre_dos_aabb_no_alineados_es_una_linea)
+{
+    AABB rect1(Vector2(.0f, 1.0f), 1.0f, 1.0f);
+    AABB rect2(Vector2(.5f, -1.0f), 1.0f, 1.0f);
+
+    PuntoDeColision pdc = rect1.punto_de_colision(&rect2);
+
+    ASSERT_EQ(pdc.caracteristica.cantidad(), 2);
+    ASSERT_EQ(pdc.caracteristica[0], Vector2(-.5f, .0f));
+    ASSERT_EQ(pdc.caracteristica[1], Vector2(1.0f, .0f));
+}
+
+TEST(CuerposTest, Caracteristica_del_impacto_entre_dos_aabb_no_alineados_es_una_linea_y_el_area_de_colison_mas_chica)
+{
+    AABB rect1(Vector2(-1.0f, 1.0f), 1.0f, 1.0f);
+    AABB rect2(Vector2(.5f, -1.0f), 1.0f, 1.0f);
+
+    PuntoDeColision pdc = rect1.punto_de_colision(&rect2);
+
+    ASSERT_EQ(pdc.caracteristica.cantidad(), 2);
+    ASSERT_EQ(pdc.caracteristica[0], Vector2(-.5f, .0f));
+    ASSERT_EQ(pdc.caracteristica[1], Vector2());
+}
+
+TEST(CuerposTest, Caracteristica_del_impacto_entre_dos_aabb_alineados_pero_uno_es_mas_chico_que_otro_y_es_una_linea)
+{
+    AABB rect1(Vector2(.0f, 1.0f), .5f, 1.0f);
+    AABB rect2(Vector2(.0f, -1.0f), 1.0f, 1.0f);
+
+    PuntoDeColision pdc = rect1.punto_de_colision(&rect2);
+
+    ASSERT_EQ(pdc.caracteristica.cantidad(), 2);
+    ASSERT_EQ(pdc.caracteristica[0], Vector2(.5f, .0f));
+    ASSERT_EQ(pdc.caracteristica[1], Vector2(-.5f, .0f));
+}
+
+TEST(CuerposTest, Caracteristica_del_impacto_entre_un_aabb_y_una_linea)
+{
+    AABB rect(Vector2(.0f, 1.0f), 1.0f, 1.0f);
+    Poligono<2> linea({Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
+
+    PuntoDeColision pdc = rect.punto_de_colision(&linea);
+
+    ASSERT_TRUE(pdc.colisiono);
+    ASSERT_EQ(pdc.normal, Vector2(.0f, -1.0f));
+
+    ASSERT_EQ(pdc.caracteristica.cantidad(), 2);
+    ASSERT_EQ(pdc.caracteristica[0], Vector2(1.0f, .0f));
+    ASSERT_EQ(pdc.caracteristica[1], Vector2(-1.0f, .0f));
+}

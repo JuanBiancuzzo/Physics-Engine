@@ -535,45 +535,49 @@ TEST(SistemaTest, Una_particula_choca_contra_la_esquina_y_el_choque_es_plastico_
     ASSERT_EQ(particula.m_velocidad, Vector2());
 }
 
-// TEST(SistemaTest, Un_rectangulo_se_mantiene_sin_rotar_contra_una_esquina)
-// {
-//     cr::Rectangulo posicion(1.0f, Vector2(-10.0f, 10.0f), .0f, 10.0f, 10.0f);
-//     Particula particula = Particula(&posicion, Vector2(), Vector2(), 1.0f);
-//     cr::Poligono<2> linea_piso(-1.0f, {Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
-//     Particula piso = Particula(&linea_piso);
-//     cr::Poligono<2> linea_pared(-1.0f, {Vector2(.0f, 10.0f), Vector2(.0f, -10.0f)});
-//     Particula pared = Particula(&linea_pared);
+TEST(SistemaTest, Un_rectangulo_se_mantiene_sin_rotar_contra_una_esquina)
+{
+    cr::Rectangulo posicion(1.0f, Vector2(-10.0f, 10.0f), .0f, 10.0f, 10.0f);
+    Particula particula = Particula(&posicion, Vector2(), .0f, 1.0f);
+    particula.aplicar_fuerza(Vector2(.0f, -10.0f));
+    cr::Poligono<2> linea_piso(-1.0f, {Vector2(10.0f, .0f), Vector2(.0f, .0f)});
+    Particula piso = Particula(&linea_piso);
+    cr::Poligono<2> linea_pared(-1.0f, {Vector2(.0f, 10.0f), Vector2(.0f, .0f)}); // si es .0f, 10.0f tira un error entonces revisar eso
+    Particula pared = Particula(&linea_pared);
 
-//     Sistema sistema({&particula, &piso, &pared});
+    Sistema sistema({&particula, &piso, &pared});
 
-//     sistema.agregar_interaccion(&particula, &pared);
-//     sistema.agregar_interaccion(&pared, &particula);
-//     sistema.agregar_interaccion(&particula, &piso);
-//     sistema.agregar_interaccion(&piso, &particula);
+    sistema.agregar_interaccion(&particula, &pared);
+    sistema.agregar_interaccion(&pared, &particula);
+    sistema.agregar_interaccion(&particula, &piso);
+    sistema.agregar_interaccion(&piso, &particula);
 
-//     sistema.expandir_interacciones();
-//     for (Particula *p : {&particula, &piso, &pared})
-//         ((Particula_pos *)p)->actualizar(1.0f);
+    sistema.expandir_interacciones();
+    for (Particula *p : {&particula, &piso, &pared})
+        ((Particula_pos *)p)->actualizar(1.0f);
 
-//     ASSERT_NEAR(particula.m_velocidad_angular, .0f, .01f);
-// }
+    ASSERT_NEAR(particula.m_velocidad_angular, .0f, .01f);
+}
 
-// TEST(SistemaTest, Dos_particulas_rectangulares_chocan_produciendo_una_rotacion)
-// {
-//     cr::Rectangulo posicion1(1.0f, Vector2(1.5f, 1.0f), .0f, 1.5f, 1.0f);
-//     Particula particula1 = Particula(&posicion1, Vector2(.0f, -1.0f), Vector2(), 1.0f);
-//     cr::Rectangulo posicion2(1.0f, Vector2(-1.5f, -1.0f), .0f, 1.5f, 1.0f);
-//     Particula particula2 = Particula(&posicion2, Vector2(), Vector2(), 1.0f);
+TEST(SistemaTest, Dos_particulas_rectangulares_chocan_produciendo_una_rotacion)
+{
+    cr::Rectangulo posicion1(1.0f, Vector2(1.5f, 1.0f), .0f, 1.5f, 1.0f);
+    Particula particula1 = Particula(&posicion1, Vector2(.0f, -1.0f), .0f, 1.0f);
+    cr::Rectangulo posicion2(1.0f, Vector2(-1.5f, -1.0f), .0f, 1.5f, 1.0f);
+    Particula particula2 = Particula(&posicion2, Vector2(), .0f, 1.0f);
 
-//     Sistema sistema({&particula1, &particula2});
+    Sistema sistema({&particula1, &particula2});
 
-//     sistema.agregar_interaccion(&particula1, &particula2);
-//     sistema.agregar_interaccion(&particula2, &particula1);
+    sistema.agregar_interaccion(&particula1, &particula2);
+    sistema.agregar_interaccion(&particula2, &particula1);
 
-//     sistema.expandir_interacciones();
-//     for (Particula *p : {&particula1, &particula2})
-//         ((Particula_pos *)p)->actualizar(1.0f);
+    sistema.expandir_interacciones();
+    for (Particula *p : {&particula1, &particula2})
+        ((Particula_pos *)p)->actualizar(1.0f);
 
-//     ASSERT_TRUE(particula1.m_velocidad_angular < .0f);
-//     ASSERT_TRUE(particula2.m_velocidad_angular < .0f);
-// }
+    std::cout << particula1.m_velocidad_angular << std::endl;
+    std::cout << particula2.m_velocidad_angular << std::endl;
+
+    ASSERT_TRUE(particula1.m_velocidad_angular < .0f);
+    ASSERT_TRUE(particula2.m_velocidad_angular < .0f);
+}

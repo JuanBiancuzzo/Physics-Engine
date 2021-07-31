@@ -5,9 +5,6 @@
 
 namespace cr
 {
-    class Arista;
-    class Vertice;
-
     class Caracteristica
     {
     public:
@@ -17,9 +14,12 @@ namespace cr
     public:
         Caracteristica();
 
-        Caracteristica intersecta(Caracteristica &caracteristica, Vector2 &centro);
+        Caracteristica intersecta(Caracteristica &caracteristica);
 
         void agregar_vertice(Vector2 &vertice);
         void reemplazar_vertice(Vector2 &vertice);
+        int cantidad();
+
+        Vector2 operator[](int i);
     };
 }

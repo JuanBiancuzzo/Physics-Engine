@@ -57,8 +57,10 @@ namespace sistema
     private:
         bool visitaste(Particula *particula);
 
-        bool choque_de_fuerzas(Particula *particula, Vector2 &normal);
-        bool choque_de_velocidades(Particula *particula, Vector2 &normal);
+        bool choque_de_fuerzas(Particula *particula, Vector2 &normal, cr::Caracteristica impacto);
+        bool choque_de_velocidades(Particula *particula, Vector2 &normal, cr::Caracteristica impacto);
+
+        void rotacion_por_choque(Vector2 fuerza, cr::Caracteristica impacto);
 
         Vector2 fuerza_de_choque(Particula *particula, Vector2 &direccion);
         Vector2 velocidad_en_direccion(Vector2 &direccion);

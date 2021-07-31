@@ -61,12 +61,12 @@ Caracteristica AABB::caracteristica_en_dir(Vector2 dir)
     for (Vector2 vertice : m_vertices)
     {
         float distancia = (vertice - m_posicion) * dir;
-        if (distancia > distanciaMaxima)
+        if (distancia > distanciaMaxima + .01f)
         {
             distanciaMaxima = distancia;
             caracteristica.reemplazar_vertice(vertice);
         }
-        else if (distancia == distanciaMaxima)
+        else if (distancia > distanciaMaxima - .01f)
         {
             caracteristica.agregar_vertice(vertice);
         }
