@@ -22,10 +22,8 @@ void velocidades(std::vector<Particula *> particulas)
 {
     std::cout << "Velocidades" << std::endl;
     for (Particula *particula : particulas)
-    {
-        std::cout << " -> ";
-        particula->m_velocidad.imprimir();
-    }
+        std::cout << " -> " << particula->m_velocidad;
+    
 }
 
 TEST(SistemaTest, Dos_particulas_y_el_piso_sin_velocidad_ninguna_sus_fuerzas_finales_son_cero)
