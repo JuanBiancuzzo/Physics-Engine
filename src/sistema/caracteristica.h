@@ -3,7 +3,7 @@
 #include "../vector.h"
 #include <array>
 
-namespace cr
+namespace sistema
 {
     class Caracteristica
     {

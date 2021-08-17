@@ -1,6 +1,6 @@
 #include "caracteristica.h"
 
-using namespace cr;
+using namespace sistema;
 
 Caracteristica::Caracteristica()
     : m_vertices({Vector2(), Vector2()}), m_cantidad(0)

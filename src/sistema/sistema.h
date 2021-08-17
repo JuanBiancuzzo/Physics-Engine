@@ -2,8 +2,10 @@
 
 #include <vector>
 
-#include "vector.h"
-#include "cuerpos/gjk.h"
+#include "../vector.h"
+#include "../cuerpos/gjk.h"
+#include "fuerzas.h"
+#include "historial.h"
 
 namespace sistema
 {
@@ -26,26 +28,26 @@ namespace sistema
     {
         Particula *particula;
         Vector2 normal;
-        cr::Caracteristica impacto;
+        Caracteristica impacto;
     };
 
-    class Particula
+    class Particula : public Historial<Particula *>
     {
     public:
-        cr::CuerpoRigido *m_cuerpo;
-        Vector2 m_velocidad, m_fuerza;
-        float m_velocidad_angular, m_torque;
+        cr::InfoCuerpo *m_info;
+        Vector2 m_velocidad;
+        float m_velocidad_angular;
         float m_coeficiente;
         std::vector<Interaccion> m_interacciones;
+        std::vector<Intercambio> m_fuerzas;
 
     protected:
-        Vector2 m_velocidad_guardada, m_fuerza_guardada;
-        std::vector<Particula *> m_historial;
+        Vector2 m_velocidad_guardada;
         bool m_es_estatico;
 
     public:
-        Particula(cr::CuerpoRigido *cuerpo, Vector2 velocidad, float velocidad_angular, float coeficiente);
-        Particula(cr::CuerpoRigido *cuerpo);
+        Particula(cr::InfoCuerpo *info, Vector2 velocidad, float velocidad_angular, float coeficiente);
+        Particula(cr::InfoCuerpo *info);
 
         void agregar_interaccion(Particula *referencia);
         bool expandir();
@@ -55,12 +57,10 @@ namespace sistema
         void aplicar_fuerza(Vector2 fuerza);
 
     private:
-        bool visitaste(Particula *particula);
+        // bool choque_de_fuerzas(Particula *particula, Vector2 &normal, Caracteristica impacto);
+        bool choque_de_velocidades(Particula *particula, Vector2 &normal, Caracteristica impacto);
 
-        bool choque_de_fuerzas(Particula *particula, Vector2 &normal, cr::Caracteristica impacto);
-        bool choque_de_velocidades(Particula *particula, Vector2 &normal, cr::Caracteristica impacto);
-
-        void rotacion_por_choque(Vector2 fuerza, cr::Caracteristica impacto);
+        // void rotacion_por_choque(Vector2 fuerza, Caracteristica impacto);
 
         Vector2 fuerza_de_choque(Particula *particula, Vector2 &direccion);
         Vector2 velocidad_en_direccion(Vector2 &direccion);
