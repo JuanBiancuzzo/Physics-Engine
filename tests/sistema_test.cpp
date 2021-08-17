@@ -33,12 +33,14 @@ TEST(SistemaTest, Dos_particulas_y_el_piso_sin_velocidad_ninguna_sus_fuerzas_fin
     cr::Circulo cuerpo1(Vector2(.0f, 3.0f), .0f, 1.0f);
     cr::InfoCuerpo info1(&cuerpo1, 1.0f);
     Particula particula1 = Particula(&info1, Vector2(), .0f, 1.0f);
-    particula1.aplicar_fuerza(Vector2(.0f, -10.0f));
+    Fuerza fuerza1(Vector2(.0f, -10.0f));
+    particula1.aplicar_fuerza(&fuerza1);
 
     cr::Circulo cuerpo2(Vector2(.0f, 1.0f), .0f, 1.0f);
     cr::InfoCuerpo info2(&cuerpo2, 2.0f);
     Particula particula2 = Particula(&info2, Vector2(), .0f, 1.0f);
-    particula2.aplicar_fuerza(Vector2(.0f, -20.0f));
+    Fuerza fuerza2(Vector2(.0f, -20.0f));
+    particula2.aplicar_fuerza(&fuerza2);
 
     cr::Poligono<2> cuerpo_linea({Vector2(1.0f, .0f), Vector2(-1.0f, .0f)});
     cr::InfoCuerpo info_linea(&cuerpo_linea, .0f);
@@ -64,12 +66,14 @@ TEST(SistemaTest, Dos_particulas_y_el_piso_el_primero_con_velocidad_y_rebota_con
     cr::Circulo cuerpo1(Vector2(.0f, 3.0f), .0f, 1.0f);
     cr::InfoCuerpo info1(&cuerpo1, 1.0f);
     Particula particula1 = Particula(&info1, Vector2(.0f, -10.0f), .0f, 1.0f);
-    particula1.aplicar_fuerza(Vector2(.0f, -10.0f));
+    Fuerza fuerza1(Vector2(.0f, -10.0f));
+    particula1.aplicar_fuerza(&fuerza1);
 
     cr::Circulo cuerpo2(Vector2(.0f, 1.0f), .0f, 1.0f);
     cr::InfoCuerpo info2(&cuerpo2, 2.0f);
     Particula particula2 = Particula(&info2, Vector2(), .0f, 1.0f);
-    particula2.aplicar_fuerza(Vector2(.0f, -20.0f));
+    Fuerza fuerza2(Vector2(.0f, -20.0f));
+    particula2.aplicar_fuerza(&fuerza2);
 
     cr::Poligono<2> cuerpo_linea({Vector2(1.0f, .0f), Vector2(-1.0f, .0f)});
     cr::InfoCuerpo info_linea(&cuerpo_linea, .0f);
@@ -95,12 +99,14 @@ TEST(SistemaTest, Dos_particulas_sobre_el_piso_una_tiene_velocidad_y_terminan_in
     cr::Circulo cuerpo1(Vector2(-1.0f, 1.0f), .0f, 1.0f);
     cr::InfoCuerpo info1(&cuerpo1, 1.0f);
     Particula particula1 = Particula(&info1, Vector2(10.0f, .0f), .0f, 1.0f);
-    particula1.aplicar_fuerza(Vector2(.0f, -10.0f));
+    Fuerza fuerza1(Vector2(.0f, -10.0f));
+    particula1.aplicar_fuerza(&fuerza1);
 
     cr::Circulo cuerpo2(Vector2(1.0f, 1.0f), .0f, 1.0f);
     cr::InfoCuerpo info2(&cuerpo2, 1.0f);
     Particula particula2 = Particula(&info2, Vector2(), .0f, 1.0f);
-    particula2.aplicar_fuerza(Vector2(.0f, -10.0f));
+    Fuerza fuerza2(Vector2(.0f, -10.0f));
+    particula2.aplicar_fuerza(&fuerza2);
 
     cr::Poligono<2> cuerpo_linea({Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
     cr::InfoCuerpo info_linea(&cuerpo_linea, .0f);
@@ -128,12 +134,14 @@ TEST(SistemaTest, Dos_particulas_sobre_el_piso_una_tienen_velocidades_y_hay_un_c
     cr::Circulo cuerpo1(Vector2(-1.0f, 1.0f), .0f, 1.0f);
     cr::InfoCuerpo info1(&cuerpo1, 1.0f);
     Particula particula1 = Particula(&info1, Vector2(30.0f, .0f), .0f, 1.0f);
-    particula1.aplicar_fuerza(Vector2(.0f, -10.0f));
+    Fuerza fuerza1(Vector2(.0f, -10.0f));
+    particula1.aplicar_fuerza(&fuerza1);
 
     cr::Circulo cuerpo2(Vector2(1.0f, 1.0f), .0f, 1.0f);
     cr::InfoCuerpo info2(&cuerpo2, 2.0f);
     Particula particula2 = Particula(&info2, Vector2(-30.0f, .0f), .0f, 1.0f);
-    particula2.aplicar_fuerza(Vector2(.0f, -20.0f));
+    Fuerza fuerza2(Vector2(.0f, -20.0f));
+    particula2.aplicar_fuerza(&fuerza2);
 
     cr::Poligono<2> cuerpo_linea({Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
     cr::InfoCuerpo info_linea(&cuerpo_linea, .0f);
@@ -161,7 +169,8 @@ TEST(SistemaTest, Particula_estando_en_una_esquina_y_una_velocidad_horizontal_re
     cr::Circulo cuerpo(Vector2(-1.0f, 1.0f), .0f, 1.0f);
     cr::InfoCuerpo info(&cuerpo, 1.0f);
     Particula particula = Particula(&info, Vector2(10.0f, .0f), .0f, 1.0f);
-    particula.aplicar_fuerza(Vector2(.0f, -10.0f));
+    Fuerza fuerza(Vector2(.0f, -10.0f));
+    particula.aplicar_fuerza(&fuerza);
 
     cr::Poligono<2> cuerpo_piso({Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
     cr::InfoCuerpo info_piso(&cuerpo_piso, .0f);
@@ -192,7 +201,8 @@ TEST(SistemaTest, Particula_choca_contra_el_piso_con_una_velocidad_y_rebota_term
     cr::Circulo cuerpo(Vector2(.0f, 1.0f), .0f, 1.0f);
     cr::InfoCuerpo info(&cuerpo, 1.0f);
     Particula particula = Particula(&info, Vector2(.0f, -10.0f), .0f, 1.0f);
-    particula.aplicar_fuerza(Vector2(.0f, -10.0f));
+    Fuerza fuerza(Vector2(.0f, -10.0f));
+    particula.aplicar_fuerza(&fuerza);
 
     cr::Poligono<2> cuerpo_piso({Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
     cr::InfoCuerpo info_piso(&cuerpo, .0f);
@@ -238,27 +248,32 @@ TEST(SistemaTest, Simular_el_pendulo_de_newton_con_todas_las_particulas_de_la_mi
     cr::Circulo cuerpo1(Vector2(-4.0f, 1.0f), .0f, 1.0f);
     cr::InfoCuerpo info1(&cuerpo1, 1.0f);
     Particula particula1 = Particula(&info1, Vector2(10.0f, .0f), .0f, 1.0f);
-    particula1.aplicar_fuerza(Vector2(.0f, -10.0f));
+    Fuerza fuerza1(Vector2(.0f, -10.0f));
+    particula1.aplicar_fuerza(&fuerza1);
 
     cr::Circulo cuerpo2(Vector2(-2.0f, 1.0f), .0f, 1.0f);
     cr::InfoCuerpo info2(&cuerpo2, 1.0f);
     Particula particula2 = Particula(&info2, Vector2(.0f, .0f), .0f, 1.0f);
-    particula2.aplicar_fuerza(Vector2(.0f, -10.0f));
+    Fuerza fuerza2(Vector2(.0f, -10.0f));
+    particula2.aplicar_fuerza(&fuerza2);
 
     cr::Circulo cuerpo3(Vector2(.0f, 1.0f), .0f, 1.0f);
     cr::InfoCuerpo info3(&cuerpo3, 1.0f);
     Particula particula3 = Particula(&info3, Vector2(.0f, .0f), .0f, 1.0f);
-    particula3.aplicar_fuerza(Vector2(.0f, -10.0f));
+    Fuerza fuerza3(Vector2(.0f, -10.0f));
+    particula3.aplicar_fuerza(&fuerza3);
 
     cr::Circulo cuerpo4(Vector2(2.0f, 1.0f), .0f, 1.0f);
     cr::InfoCuerpo info4(&cuerpo4, 1.0f);
     Particula particula4 = Particula(&info4, Vector2(.0f, .0f), .0f, 1.0f);
-    particula4.aplicar_fuerza(Vector2(.0f, -10.0f));
+    Fuerza fuerza4(Vector2(.0f, -10.0f));
+    particula4.aplicar_fuerza(&fuerza4);
 
     cr::Circulo cuerpo5(Vector2(4.0f, 1.0f), .0f, 1.0f);
     cr::InfoCuerpo info5(&cuerpo5, 1.0f);
     Particula particula5 = Particula(&info5, Vector2(.0f, .0f), .0f, 1.0f);
-    particula5.aplicar_fuerza(Vector2(.0f, -10.0f));
+    Fuerza fuerza5(Vector2(.0f, -10.0f));
+    particula5.aplicar_fuerza(&fuerza5);
 
     cr::Poligono<2> cuerpo_piso({Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
     cr::InfoCuerpo info_piso(&cuerpo_piso, .0f);
@@ -301,17 +316,20 @@ TEST(SistemaTest, Tres_particulas_con_las_fuerzas_de_peso_posicionadas_en_forma_
     cr::Circulo cuerpo1(Vector2(-1.0f, 1.0f), .0f, 1.0f);
     cr::InfoCuerpo info1(&cuerpo1, 1.0f);
     Particula particula1 = Particula(&info1, Vector2(.0f, .0f), .0f, 1.0f);
-    particula1.aplicar_fuerza(Vector2(.0f, -10.0f));
+    Fuerza fuerza1(Vector2(.0f, -10.0f));
+    particula1.aplicar_fuerza(&fuerza1);
 
     cr::Circulo cuerpo2(Vector2(.0f, .99f + sqrt(3)), .0f, 1.0f);
     cr::InfoCuerpo info2(&cuerpo2, 1.0f);
     Particula particula2 = Particula(&info2, Vector2(.0f, .0f), .0f, 1.0f);
-    particula2.aplicar_fuerza(Vector2(.0f, -10.0f));
+    Fuerza fuerza2(Vector2(.0f, -10.0f));
+    particula2.aplicar_fuerza(&fuerza2);
 
     cr::Circulo cuerpo3(Vector2(1.0f, 1.0f), .0f, 1.0f);
     cr::InfoCuerpo info3(&cuerpo3, 1.0f);
     Particula particula3 = Particula(&info3, Vector2(.0f, .0f), .0f, 1.0f);
-    particula3.aplicar_fuerza(Vector2(.0f, -10.0f));
+    Fuerza fuerza3(Vector2(.0f, -10.0f));
+    particula3.aplicar_fuerza(&fuerza3);
 
     cr::Poligono<2> cuerpo_piso({Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
     cr::InfoCuerpo info_piso(&cuerpo_piso, .0f);
@@ -342,12 +360,17 @@ TEST(SistemaTest, Tres_particulas_con_las_fuerzas_de_peso_posicionadas_en_forma_
 
 TEST(SistemaTest, Tres_particulas_sin_fuerzas_posicionadas_en_una_piramide_donde_la_de_mas_arriba_tiene_velocidad_se_mueven)
 {
-    cr::Circulo posicion1(1.0f, Vector2(-1.0f, 1.0f), .0f, 1.0f);
-    Particula particula1 = Particula(&posicion1, Vector2(.0f, .0f), .0f, 1.0f);
-    cr::Circulo posicion2(1.0f, Vector2(.0f, .99f + sqrt(3)), .0f, 1.0f);
-    Particula particula2 = Particula(&posicion2, Vector2(.0f, -10.0f), .0f, 1.0f);
-    cr::Circulo posicion3(1.0f, Vector2(1.0f, 1.0f), .0f, 1.0f);
-    Particula particula3 = Particula(&posicion3, Vector2(.0f, .0f), .0f, 1.0f);
+    cr::Circulo cuerpo1(Vector2(-1.0f, 1.0f), .0f, 1.0f);
+    cr::InfoCuerpo info1(&cuerpo1, 1.0f);
+    Particula particula1 = Particula(&info1, Vector2(.0f, .0f), .0f, 1.0f);
+
+    cr::Circulo cuerpo2(Vector2(.0f, .99f + sqrt(3)), .0f, 1.0f);
+    cr::InfoCuerpo info2(&cuerpo2, 1.0f);
+    Particula particula2 = Particula(&info2, Vector2(.0f, -10.0f), .0f, 1.0f);
+
+    cr::Circulo cuerpo3(Vector2(1.0f, 1.0f), .0f, 1.0f);
+    cr::InfoCuerpo info3(&cuerpo3, 1.0f);
+    Particula particula3 = Particula(&info3, Vector2(.0f, .0f), .0f, 1.0f);
 
     Sistema sistema({&particula1, &particula2, &particula3});
 
@@ -369,14 +392,21 @@ TEST(SistemaTest, Tres_particulas_sin_fuerzas_posicionadas_en_una_piramide_donde
 
 TEST(SistemaTest, Tres_particulas_sin_fuerzas_posicionadas_en_una_piramide_donde_la_de_mas_arriba_tiene_velocidad_se_mueven_hace_chochar_contra_el_piso)
 {
-    cr::Circulo posicion1(1.0f, Vector2(-1.0f, 1.0f), .0f, 1.0f);
-    Particula particula1 = Particula(&posicion1, Vector2(.0f, .0f), .0f, 1.0f);
-    cr::Circulo posicion2(1.0f, Vector2(.0f, .99f + sqrt(3)), .0f, 1.0f);
-    Particula particula2 = Particula(&posicion2, Vector2(.0f, -10.0f), .0f, 1.0f);
-    cr::Circulo posicion3(1.0f, Vector2(1.0f, 1.0f), .0f, 1.0f);
-    Particula particula3 = Particula(&posicion3, Vector2(.0f, .0f), .0f, 1.0f);
-    cr::Poligono<2> linea_piso(-1.0f, {Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
-    Particula piso = Particula(&linea_piso);
+    cr::Circulo cuerpo1(Vector2(-1.0f, 1.0f), .0f, 1.0f);
+    cr::InfoCuerpo info1(&cuerpo1, 1.0f);
+    Particula particula1 = Particula(&info1, Vector2(.0f, .0f), .0f, 1.0f);
+
+    cr::Circulo cuerpo2(Vector2(.0f, .99f + sqrt(3)), .0f, 1.0f);
+    cr::InfoCuerpo info2(&cuerpo2, 1.0f);
+    Particula particula2 = Particula(&info2, Vector2(.0f, -10.0f), .0f, 1.0f);
+
+    cr::Circulo cuerpo3(Vector2(1.0f, 1.0f), .0f, 1.0f);
+    cr::InfoCuerpo info3(&cuerpo3, 1.0f);
+    Particula particula3 = Particula(&info3, Vector2(.0f, .0f), .0f, 1.0f);
+
+    cr::Poligono<2> cuerpo_piso({Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
+    cr::InfoCuerpo info_piso(&cuerpo_piso, .0f);
+    Particula piso = Particula(&info_piso);
 
     Sistema sistema({&particula1, &particula2, &particula3, &piso});
 
@@ -402,10 +432,13 @@ TEST(SistemaTest, Tres_particulas_sin_fuerzas_posicionadas_en_una_piramide_donde
 
 TEST(SistemaTest, Dos_particulas_tiene_un_choque_inelastico_de_50_porciento)
 {
-    cr::Circulo posicion1(1.0f, Vector2(-1.0f, .0f), .0f, 1.0f);
-    Particula particula1 = Particula(&posicion1, Vector2(1.0f, .0f), .0f, .5f);
-    cr::Circulo posicion2(1.0f, Vector2(1.0f, .0f), .0f, 1.0f);
-    Particula particula2 = Particula(&posicion2, Vector2(-1.0f, .0f), .0f, .5f);
+    cr::Circulo cuerpo1(Vector2(-1.0f, .0f), .0f, 1.0f);
+    cr::InfoCuerpo info1(&cuerpo1, 1.0f);
+    Particula particula1 = Particula(&info1, Vector2(1.0f, .0f), .0f, .5f);
+
+    cr::Circulo cuerpo2(Vector2(1.0f, .0f), .0f, 1.0f);
+    cr::InfoCuerpo info2(&cuerpo2, 1.0f);
+    Particula particula2 = Particula(&info2, Vector2(-1.0f, .0f), .0f, .5f);
 
     Sistema sistema({&particula1, &particula2});
 
@@ -422,10 +455,13 @@ TEST(SistemaTest, Dos_particulas_tiene_un_choque_inelastico_de_50_porciento)
 
 TEST(SistemaTest, Dos_particulas_tiene_un_choque_inelastico_de_25_porciento)
 {
-    cr::Circulo posicion1(1.0f, Vector2(-1.0f, .0f), .0f, 1.0f);
-    Particula particula1 = Particula(&posicion1, Vector2(1.0f, .0f), .0f, .25f);
-    cr::Circulo posicion2(1.0f, Vector2(1.0f, .0f), .0f, 1.0f);
-    Particula particula2 = Particula(&posicion2, Vector2(-1.0f, .0f), .0f, .25f);
+    cr::Circulo cuerpo1(Vector2(-1.0f, .0f), .0f, 1.0f);
+    cr::InfoCuerpo info1(&cuerpo1, 1.0f);
+    Particula particula1 = Particula(&info1, Vector2(1.0f, .0f), .0f, .25f);
+
+    cr::Circulo cuerpo2(Vector2(1.0f, .0f), .0f, 1.0f);
+    cr::InfoCuerpo info2(&cuerpo2, 1.0f);
+    Particula particula2 = Particula(&info2, Vector2(-1.0f, .0f), .0f, .25f);
 
     Sistema sistema({&particula1, &particula2});
 
@@ -442,10 +478,13 @@ TEST(SistemaTest, Dos_particulas_tiene_un_choque_inelastico_de_25_porciento)
 
 TEST(SistemaTest, Dos_particulas_con_masas_diferentes_tiene_un_choque_inelastico_de_50_porciento)
 {
-    cr::Circulo posicion1(1.0f, Vector2(-1.0f, .0f), .0f, 1.0f);
-    Particula particula1 = Particula(&posicion1, Vector2(1.0f, .0f), .0f, .5f);
-    cr::Circulo posicion2(2.0f, Vector2(1.0f, .0f), .0f, 1.0f);
-    Particula particula2 = Particula(&posicion2, Vector2(-1.0f, .0f), .0f, .5f);
+    cr::Circulo cuerpo1(Vector2(-1.0f, .0f), .0f, 1.0f);
+    cr::InfoCuerpo info1(&cuerpo1, 1.0f);
+    Particula particula1 = Particula(&info1, Vector2(1.0f, .0f), .0f, .5f);
+
+    cr::Circulo cuerpo2(Vector2(1.0f, .0f), .0f, 1.0f);
+    cr::InfoCuerpo info2(&cuerpo2, 2.0f);
+    Particula particula2 = Particula(&info2, Vector2(-1.0f, .0f), .0f, .5f);
 
     Sistema sistema({&particula1, &particula2});
 
@@ -462,10 +501,13 @@ TEST(SistemaTest, Dos_particulas_con_masas_diferentes_tiene_un_choque_inelastico
 
 TEST(SistemaTest, Dos_particulas_con_masas_diferentes_tiene_un_choque_inelastico_de_30_porciento)
 {
-    cr::Circulo posicion1(1.0f, Vector2(-1.0f, .0f), .0f, 1.0f);
-    Particula particula1 = Particula(&posicion1, Vector2(1.0f, .0f), .0f, .3f);
-    cr::Circulo posicion2(2.0f, Vector2(1.0f, .0f), .0f, 1.0f);
-    Particula particula2 = Particula(&posicion2, Vector2(-1.0f, .0f), .0f, .3f);
+    cr::Circulo cuerpo1(Vector2(-1.0f, .0f), .0f, 1.0f);
+    cr::InfoCuerpo info1(&cuerpo1, 1.0f);
+    Particula particula1 = Particula(&info1, Vector2(1.0f, .0f), .0f, .3f);
+
+    cr::Circulo cuerpo2(Vector2(1.0f, .0f), .0f, 1.0f);
+    cr::InfoCuerpo info2(&cuerpo2, 2.0f);
+    Particula particula2 = Particula(&info2, Vector2(-1.0f, .0f), .0f, .3f);
 
     Sistema sistema({&particula1, &particula2});
 
@@ -482,10 +524,13 @@ TEST(SistemaTest, Dos_particulas_con_masas_diferentes_tiene_un_choque_inelastico
 
 TEST(SistemaTest, Dos_particulas_con_masas_diferentes_tiene_un_choque_plastico)
 {
-    cr::Circulo posicion1(1.0f, Vector2(-1.0f, .0f), .0f, 1.0f);
-    Particula particula1 = Particula(&posicion1, Vector2(1.0f, .0f), .0f, .0f);
-    cr::Circulo posicion2(2.0f, Vector2(1.0f, .0f), .0f, 1.0f);
-    Particula particula2 = Particula(&posicion2, Vector2(-1.0f, .0f), .0f, .0f);
+    cr::Circulo cuerpo1(Vector2(-1.0f, .0f), .0f, 1.0f);
+    cr::InfoCuerpo info1(&cuerpo1, 1.0f);
+    Particula particula1 = Particula(&info1, Vector2(1.0f, .0f), .0f, .0f);
+
+    cr::Circulo cuerpo2(Vector2(1.0f, .0f), .0f, 1.0f);
+    cr::InfoCuerpo info2(&cuerpo2, 2.0f);
+    Particula particula2 = Particula(&info2, Vector2(-1.0f, .0f), .0f, .0f);
 
     Sistema sistema({&particula1, &particula2});
 
@@ -502,10 +547,13 @@ TEST(SistemaTest, Dos_particulas_con_masas_diferentes_tiene_un_choque_plastico)
 
 TEST(SistemaTest, Dos_particulas_de_la_misma_masa_tiene_un_choque_plastico)
 {
-    cr::Circulo posicion1(1.0f, Vector2(-1.0f, .0f), .0f, 1.0f);
-    Particula particula1 = Particula(&posicion1, Vector2(1.0f, .0f), .0f, .0f);
-    cr::Circulo posicion2(1.0f, Vector2(1.0f, .0f), .0f, 1.0f);
-    Particula particula2 = Particula(&posicion2, Vector2(-1.0f, .0f), .0f, .0f);
+    cr::Circulo cuerpo1(Vector2(-1.0f, .0f), .0f, 1.0f);
+    cr::InfoCuerpo info1(&cuerpo1, 1.0f);
+    Particula particula1 = Particula(&info1, Vector2(1.0f, .0f), .0f, .0f);
+
+    cr::Circulo cuerpo2(Vector2(1.0f, .0f), .0f, 1.0f);
+    cr::InfoCuerpo info2(&cuerpo2, 1.0f);
+    Particula particula2 = Particula(&info2, Vector2(-1.0f, .0f), .0f, .0f);
 
     Sistema sistema({&particula1, &particula2});
 
@@ -522,10 +570,13 @@ TEST(SistemaTest, Dos_particulas_de_la_misma_masa_tiene_un_choque_plastico)
 
 TEST(SistemaTest, Dos_particulas_de_la_misma_masa_tiene_un_choque_inelastico_de_50_porciento_en_dos_dimensiones)
 {
-    cr::Circulo posicion1(1.0f, Vector2(.0f, sqrt(2)), .0f, 1.0f);
-    Particula particula1 = Particula(&posicion1, Vector2(.0f, -1.0f), .0f, .5f);
-    cr::Circulo posicion2(1.0f, Vector2(sqrt(2), .0f), .0f, 1.0f);
-    Particula particula2 = Particula(&posicion2, Vector2(-1.0f, .0f), .0f, .5f);
+    cr::Circulo cuerpo1(Vector2(.0f, sqrt(2)), .0f, 1.0f);
+    cr::InfoCuerpo info1(&cuerpo1, 1.0f);
+    Particula particula1 = Particula(&info1, Vector2(.0f, -1.0f), .0f, .5f);
+
+    cr::Circulo cuerpo2(Vector2(sqrt(2), .0f), .0f, 1.0f);
+    cr::InfoCuerpo info2(&cuerpo2, 1.0f);
+    Particula particula2 = Particula(&info2, Vector2(-1.0f, .0f), .0f, .5f);
 
     Sistema sistema({&particula1, &particula2});
 
@@ -542,10 +593,13 @@ TEST(SistemaTest, Dos_particulas_de_la_misma_masa_tiene_un_choque_inelastico_de_
 
 TEST(SistemaTest, Dos_particulas_de_la_misma_masa_tiene_un_choque_inelastico_de_5_porciento_en_dos_dimensiones)
 {
-    cr::Circulo posicion1(1.0f, Vector2(.0f, sqrt(2)), .0f, 1.0f);
-    Particula particula1 = Particula(&posicion1, Vector2(.0f, -1.0f), .0f, .05f);
-    cr::Circulo posicion2(1.0f, Vector2(sqrt(2), .0f), .0f, 1.0f);
-    Particula particula2 = Particula(&posicion2, Vector2(-1.0f, .0f), .0f, .05f);
+    cr::Circulo cuerpo1(Vector2(.0f, sqrt(2)), .0f, 1.0f);
+    cr::InfoCuerpo info1(&cuerpo1, 1.0f);
+    Particula particula1 = Particula(&info1, Vector2(.0f, -1.0f), .0f, .05f);
+
+    cr::Circulo cuerpo2(Vector2(sqrt(2), .0f), .0f, 1.0f);
+    cr::InfoCuerpo info2(&cuerpo2, 1.0f);
+    Particula particula2 = Particula(&info2, Vector2(-1.0f, .0f), .0f, .05f);
 
     Sistema sistema({&particula1, &particula2});
 
@@ -562,13 +616,19 @@ TEST(SistemaTest, Dos_particulas_de_la_misma_masa_tiene_un_choque_inelastico_de_
 
 TEST(SistemaTest, Una_particula_choca_contra_la_esquina_y_el_choque_es_plastico_haciendo_que_su_velocidad_sea_cero)
 {
-    cr::Circulo posicion(1.0f, Vector2(-1.0f, 1.0f), .0f, 1.0f);
-    Particula particula = Particula(&posicion, Vector2(10.0f, -10.0f), .0f, .0f);
-    particula.aplicar_fuerza(Vector2(.0f, -10.0f));
-    cr::Poligono<2> linea_piso(-1.0f, {Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
-    Particula piso = Particula(&linea_piso);
-    cr::Poligono<2> linea_pared(-1.0f, {Vector2(.0f, 10.0f), Vector2(.0f, -10.0f)});
-    Particula pared = Particula(&linea_pared);
+    cr::Circulo cuerpo(Vector2(-1.0f, 1.0f), .0f, 1.0f);
+    cr::InfoCuerpo info(&cuerpo, 1.0f);
+    Particula particula = Particula(&info, Vector2(10.0f, -10.0f), .0f, .0f);
+    Fuerza fuerza(Vector2(.0f, -10.0f));
+    particula.aplicar_fuerza(&fuerza);
+
+    cr::Poligono<2> cuerpo_piso({Vector2(10.0f, .0f), Vector2(-10.0f, .0f)});
+    cr::InfoCuerpo info_piso(&cuerpo_piso, .0f);
+    Particula piso = Particula(&info_piso);
+
+    cr::Poligono<2> cuerpo_pared({Vector2(.0f, 10.0f), Vector2(.0f, -10.0f)});
+    cr::InfoCuerpo info_pared(&cuerpo_pared, 1.0f);
+    Particula pared = Particula(&info_pared);
 
     Sistema sistema({&particula, &piso, &pared});
 
@@ -586,13 +646,19 @@ TEST(SistemaTest, Una_particula_choca_contra_la_esquina_y_el_choque_es_plastico_
 
 TEST(SistemaTest, Un_rectangulo_se_mantiene_sin_rotar_contra_una_esquina)
 {
-    cr::Rectangulo posicion(1.0f, Vector2(-10.0f, 10.0f), .0f, 10.0f, 10.0f);
-    Particula particula = Particula(&posicion, Vector2(), .0f, 1.0f);
-    particula.aplicar_fuerza(Vector2(.0f, -10.0f));
-    cr::Poligono<2> linea_piso(-1.0f, {Vector2(10.0f, .0f), Vector2(.0f, .0f)});
-    Particula piso = Particula(&linea_piso);
-    cr::Poligono<2> linea_pared(-1.0f, {Vector2(.0f, 10.0f), Vector2(.0f, .0f)}); // si es .0f, 10.0f tira un error entonces revisar eso
-    Particula pared = Particula(&linea_pared);
+    cr::Rectangulo cuerpo(Vector2(-10.0f, 10.0f), .0f, 10.0f, 10.0f);
+    cr::InfoCuerpo info(&cuerpo, 1.0f);
+    Particula particula = Particula(&info, Vector2(), .0f, 1.0f);
+    Fuerza fuerza(Vector2(.0f, -10.0f));
+    particula.aplicar_fuerza(&fuerza);
+
+    cr::Poligono<2> cuerpo_piso({Vector2(10.0f, .0f), Vector2(.0f, .0f)});
+    cr::InfoCuerpo info_piso(&cuerpo_piso, .0f);
+    Particula piso = Particula(&info_piso);
+
+    cr::Poligono<2> cuerpo_pared({Vector2(.0f, 10.0f), Vector2(.0f, .0f)}); // si es .0f, 10.0f tira un error entonces revisar eso
+    cr::InfoCuerpo info_pared(&cuerpo_pared, .0f);
+    Particula pared = Particula(&info_pared);
 
     Sistema sistema({&particula, &piso, &pared});
 
@@ -610,10 +676,13 @@ TEST(SistemaTest, Un_rectangulo_se_mantiene_sin_rotar_contra_una_esquina)
 
 TEST(SistemaTest, Dos_particulas_rectangulares_chocan_produciendo_una_rotacion)
 {
-    cr::Rectangulo posicion1(1.0f, Vector2(1.5f, 1.0f), .0f, 1.5f, 1.0f);
-    Particula particula1 = Particula(&posicion1, Vector2(.0f, -1.0f), .0f, 1.0f);
-    cr::Rectangulo posicion2(1.0f, Vector2(-1.5f, -1.0f), .0f, 1.5f, 1.0f);
-    Particula particula2 = Particula(&posicion2, Vector2(), .0f, 1.0f);
+    cr::Rectangulo cuerpo1(Vector2(1.5f, 1.0f), .0f, 1.5f, 1.0f);
+    cr::InfoCuerpo info1(&cuerpo1, 1.0f);
+    Particula particula1 = Particula(&info1, Vector2(.0f, -1.0f), .0f, 1.0f);
+
+    cr::Rectangulo cuerpo2(Vector2(-1.5f, -1.0f), .0f, 1.5f, 1.0f);
+    cr::InfoCuerpo info2(&cuerpo2, 1.0f);
+    Particula particula2 = Particula(&info2, Vector2(), .0f, 1.0f);
 
     Sistema sistema({&particula1, &particula2});
 
