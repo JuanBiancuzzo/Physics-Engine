@@ -89,6 +89,11 @@ void Particula::actualizar()
     resetear();
 }
 
+void Particula::aplicar_fuerza(Intercambio *intercambio)
+{
+    m_fuerzas.emplace_back(intercambio);
+}
+
 // void Particula::aplicar_torque(float torque)
 // {
 //     m_torque += torque;

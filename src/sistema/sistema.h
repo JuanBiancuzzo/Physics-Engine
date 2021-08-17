@@ -39,7 +39,7 @@ namespace sistema
         float m_velocidad_angular;
         float m_coeficiente;
         std::vector<Interaccion> m_interacciones;
-        std::vector<Intercambio> m_fuerzas;
+        std::vector<Intercambio *> m_fuerzas;
 
     protected:
         Vector2 m_velocidad_guardada;
@@ -53,8 +53,9 @@ namespace sistema
         bool expandir();
         void actualizar();
 
-        void aplicar_torque(float torque);
-        void aplicar_fuerza(Vector2 fuerza);
+        void aplicar_fuerza(Intercambio *fuerza);
+        // void aplicar_torque(float torque);
+        // void aplicar_fuerza(Vector2 fuerza);
 
     private:
         // bool choque_de_fuerzas(Particula *particula, Vector2 &normal, Caracteristica impacto);
