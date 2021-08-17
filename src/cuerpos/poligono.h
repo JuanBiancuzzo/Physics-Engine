@@ -22,28 +22,19 @@ namespace cr
         std::array<Vector2, cant_vertices> m_vertices;
 
     public:
-        Poligono<cant_vertices>(float masa, Vector2 posicion, float rotacion, std::array<Vector2, cant_vertices> vertices)
-            : CuerpoRigido(masa, posicion, rotacion), m_vertices(vertices)
+        Poligono<cant_vertices>(Vector2 posicion, float rotacion, std::array<Vector2, cant_vertices> vertices)
+            : CuerpoRigido(posicion, rotacion), m_vertices(vertices)
         {
-            m_inercia = calcular_inercia();
         }
 
         Poligono<cant_vertices>(Vector2 posicion, std::array<Vector2, cant_vertices> vertices)
             : CuerpoRigido(posicion), m_vertices(vertices)
         {
-            m_inercia = calcular_inercia();
-        }
-
-        Poligono<cant_vertices>(float masa, std::array<Vector2, cant_vertices> vertices)
-            : CuerpoRigido(masa, Vector2(), .0f), m_vertices(vertices)
-        {
-            m_inercia = calcular_inercia();
         }
 
         Poligono<cant_vertices>(std::array<Vector2, cant_vertices> vertices)
             : CuerpoRigido(calcular_centro<cant_vertices>(vertices)), m_vertices(vertices)
         {
-            m_inercia = calcular_inercia();
         }
 
         Vector2 punto_soporte(Vector2 direccion) override
@@ -64,9 +55,9 @@ namespace cr
             return punto_soporte;
         }
 
-        Caracteristica caracteristica_en_dir(Vector2 dir) override
+        sistema::Caracteristica caracteristica_en_dir(Vector2 dir) override
         {
-            Caracteristica caracteristica;
+            sistema::Caracteristica caracteristica;
             float distanciaMaxima = std::numeric_limits<float>::min();
 
             for (Vector2 vertice : m_vertices)
@@ -91,7 +82,7 @@ namespace cr
             std::array<Vector2, cant_vertices> vertices;
             for (int i = 0; i < cant_vertices; i++)
                 vertices[i] = m_vertices[i] + posicion;
-            return new Poligono<cant_vertices>(m_masa, m_posicion, m_rotacion, vertices);
+            return new Poligono<cant_vertices>(m_posicion, m_rotacion, vertices);
         }
 
         void modificar_posicion(Vector2 valor) override
@@ -108,12 +99,12 @@ namespace cr
                 vertice = (vertice - m_posicion).rotar(valor) + m_posicion;
         }
 
-        float calcular_inercia() override
+        float calcular_inercia(float masa) override
         {
             float inercia = .0f;
 
             for (Vector2 vertice : m_vertices)
-                inercia += (m_masa / cant_vertices) * (m_posicion - vertice).modulo_cuadrado();
+                inercia += (masa / cant_vertices) * (m_posicion - vertice).modulo_cuadrado();
 
             return inercia;
         }

@@ -2,11 +2,10 @@
 
 using namespace cr;
 
-Rectangulo::Rectangulo(float masa, Vector2 posicion, float rotacion, float ancho, float alto)
-    : CuerpoRigido(masa, posicion, rotacion), m_ancho(ancho), m_alto(alto)
+Rectangulo::Rectangulo(Vector2 posicion, float rotacion, float ancho, float alto)
+    : CuerpoRigido(posicion, rotacion), m_ancho(ancho), m_alto(alto)
 {
     calcular_vertices();
-    m_inercia = calcular_inercia();
 }
 
 void Rectangulo::modificar_posicion(Vector2 valor)
@@ -49,9 +48,9 @@ Vector2 Rectangulo::punto_soporte(Vector2 dir)
     return punto_soporte;
 }
 
-Caracteristica Rectangulo::caracteristica_en_dir(Vector2 dir)
+sistema::Caracteristica Rectangulo::caracteristica_en_dir(Vector2 dir)
 {
-    Caracteristica caracteristica;
+    sistema::Caracteristica caracteristica;
     float distanciaMaxima = std::numeric_limits<float>::min();
 
     for (Vector2 vertice : m_vertices)
@@ -73,12 +72,12 @@ Caracteristica Rectangulo::caracteristica_en_dir(Vector2 dir)
 
 CuerpoRigido *Rectangulo::copia(Vector2 posicion)
 {
-    return new Rectangulo(m_masa, m_posicion + posicion, m_rotacion, m_ancho, m_alto);
+    return new Rectangulo(m_posicion + posicion, m_rotacion, m_ancho, m_alto);
 }
 
-float Rectangulo::calcular_inercia()
+float Rectangulo::calcular_inercia(float masa)
 {
-    float masa_individual = m_masa / 4;
+    float masa_individual = masa / 4;
     float inercia = .0f;
 
     for (Vector2 vertice : m_vertices)
