@@ -40,8 +40,12 @@ struct Vector2
     float vectorial(const Vector2 &otro) const;
 
     bool nulo() const;
-    void imprimir() const;
 };
+
+inline std::ostream &operator<<(std::ostream &os, const Vector2 &s)
+{
+    return (os << "(" << s.x << ", " << s.y << ")" << std::endl);
+}
 
 struct Vector3
 {
@@ -77,5 +81,9 @@ struct Vector3
     Vector3 normal() const;
 
     bool nulo() const;
-    void imprimir() const;
 };
+
+inline std::ostream &operator<<(std::ostream &os, const Vector3 &s)
+{
+    return (os << "(" << s.x << ", " << s.y << ", " << s.z << ")" << std::endl);
+}

@@ -128,11 +128,6 @@ bool Vector2::nulo() const
     return (*this == *this * .0f);
 }
 
-void Vector2::imprimir() const
-{
-    std::cout << x << ", " << y << std::endl;
-}
-
 // vector 3
 
 Vector3::Vector3()
@@ -260,9 +255,4 @@ Vector3 Vector3::normal() const
 bool Vector3::nulo() const
 {
     return (*this == *this * .0f);
-}
-
-void Vector3::imprimir() const
-{
-    std::cout << x << ", " << y << ", " << z << std::endl;
 }
