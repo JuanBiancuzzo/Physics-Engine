@@ -6,14 +6,17 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp -o3")
 set(SOURCE "${PROJECT_SOURCE_DIR}/src")
 set(SOURCE_CUERPOS "${PROJECT_SOURCE_DIR}/src/cuerpos")
+set(SOURCE_SISTEMA "${PROJECT_SOURCE_DIR}/src/sistema")
 
 add_library(Core
   ${SOURCE}/motorDeFisicas.cpp
   ${SOURCE}/quadtree.cpp
-  ${SOURCE}/sistema.cpp
   ${SOURCE}/vector.cpp
+  ${SOURCE_SISTEMA}/sistema.cpp
+  ${SOURCE_SISTEMA}/caracteristica.cpp
+  ${SOURCE_SISTEMA}/fuerzas.cpp
+  ${SOURCE_SISTEMA}/historial.h
   ${SOURCE_CUERPOS}/cuerpoRigido.cpp
-  ${SOURCE_CUERPOS}/caracteristica.cpp
   ${SOURCE_CUERPOS}/gjk.cpp
   ${SOURCE_CUERPOS}/poligono.h
   ${SOURCE_CUERPOS}/circulo.cpp
