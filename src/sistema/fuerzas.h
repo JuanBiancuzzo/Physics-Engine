@@ -18,12 +18,16 @@ namespace sistema
     class Fuerza : public Intercambio
     {
     public:
+        Fuerza(Vector2 magnitud);
+
         void aplicar() override;
     };
 
     class Torque : public Intercambio
     {
     public:
+        Torque(Vector2 magnitud);
+
         void aplicar() override;
     };
 }
