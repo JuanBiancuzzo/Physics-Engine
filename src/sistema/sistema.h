@@ -4,7 +4,6 @@
 
 #include "../vector.h"
 #include "../cuerpos/gjk.h"
-#include "fuerzas.h"
 #include "historial.h"
 
 namespace sistema
@@ -54,6 +53,9 @@ namespace sistema
         void actualizar();
 
         void aplicar_fuerza(Intercambio *fuerza);
+
+        void afectar_velocidad(Vector2 magnitud);
+        void afectar_rotacion(float magnitud);
         // void aplicar_torque(float torque);
         // void aplicar_fuerza(Vector2 fuerza);
 
@@ -71,11 +73,13 @@ namespace sistema
     {
     protected:
         Vector2 m_magnitud;
+        Vector2 m_magnitud_reservada;
 
     public:
         Intercambio(Vector2 magnitud);
 
         virtual void aplicar(Vector2 direccion, Particula *particula) = 0;
+        void actualizar();
     };
 
     class Velocidad : public Intercambio

@@ -82,17 +82,31 @@ bool Particula::expandir()
 
 void Particula::actualizar()
 {
-    if (!m_es_estatico)
-    {
-        // m_velocidad = m_velocidad_guardada;
-        // m_fuerza = m_fuerza_guardada;
-    }
     resetear();
+    if (m_es_estatico)
+        return;
+
+    for (Intercambio *intercambio : m_fuerzas)
+        intercambio->actualizar(); 
 }
 
 void Particula::aplicar_fuerza(Intercambio *intercambio)
 {
     m_fuerzas.emplace_back(intercambio);
+}
+
+void Particula::afectar_velocidad(Vector2 magnitud)
+{
+    if (m_es_estatico)
+        return;
+    m_velocidad += magnitud / m_info->masa;
+}
+
+void Particula::afectar_rotacion(float magnitud)
+{
+    if (m_es_estatico)
+        return;
+    m_velocidad_angular += magnitud / m_info->inercia;
 }
 
 // void Particula::aplicar_torque(float torque)
@@ -176,8 +190,13 @@ void Particula::aplicar_fuerza(Intercambio *intercambio)
 // }
 
 Intercambio::Intercambio(Vector2 magnitud)
-    : m_magnitud(magnitud)
+    : m_magnitud(magnitud), m_magnitud_reservada(magnitud)
 {
+}
+
+void Intercambio::actualizar()
+{
+    m_magnitud = m_magnitud_reservada;
 }
 
 Velocidad::Velocidad(Vector2 magnitud)
@@ -196,7 +215,12 @@ Fuerza::Fuerza(Vector2 magnitud)
 
 void Fuerza::aplicar(Vector2 direccion, Particula *particula)
 {
-    particula->aplicar_fuerza(this->en_dir(direccion));
+    if (m_magnitud * direccion <= 0)
+        return;
+
+    Vector2 fuerza_direccionada = m_magnitud.proyeccion(direccion);
+    particula->afectar_velocidad(fuerza_direccionada);
+    m_magnitud_reservada -= fuerza_direccionada;
 }
 
 Intercambio *Fuerza::en_dir(Vector2 direccion)
