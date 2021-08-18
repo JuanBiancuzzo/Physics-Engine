@@ -11,6 +11,7 @@ namespace sistema
 {
     class Particula;
     class Interaccion;
+    class Intercambio;
 
     class Sistema
     {
@@ -35,14 +36,13 @@ namespace sistema
     {
     public:
         cr::InfoCuerpo *m_info;
+        float m_coeficiente;
         Vector2 m_velocidad;
         float m_velocidad_angular;
-        float m_coeficiente;
         std::vector<Interaccion> m_interacciones;
         std::vector<Intercambio *> m_fuerzas;
 
     protected:
-        Vector2 m_velocidad_guardada;
         bool m_es_estatico;
 
     public:
@@ -59,11 +59,55 @@ namespace sistema
 
     private:
         // bool choque_de_fuerzas(Particula *particula, Vector2 &normal, Caracteristica impacto);
-        bool choque_de_velocidades(Particula *particula, Vector2 &normal, Caracteristica impacto);
+        // bool choque_de_velocidades(Particula *particula, Vector2 &normal, Caracteristica impacto);
 
         // void rotacion_por_choque(Vector2 fuerza, Caracteristica impacto);
 
-        Vector2 fuerza_de_choque(Particula *particula, Vector2 &direccion);
-        Vector2 velocidad_en_direccion(Vector2 &direccion);
+        // Vector2 fuerza_de_choque(Particula *particula, Vector2 &direccion);
+        // Vector2 velocidad_en_direccion(Vector2 &direccion);
+    };
+
+    class Intercambio
+    {
+    protected:
+        Vector2 m_magnitud;
+
+    public:
+        Intercambio(Vector2 magnitud);
+
+        virtual void aplicar(Vector2 direccion, Particula *particula) = 0;
+    };
+
+    class Velocidad : public Intercambio
+    {
+    public:
+        Velocidad(Vector2 magnitud);
+
+        void aplicar(Vector2 direccion, Particula *particula) override;
+    };
+
+    class Fuerza : public Intercambio
+    {
+    public:
+        Fuerza(Vector2 magnitud);
+
+        void aplicar(Vector2 direccion, Particula *particula) override;
+        Intercambio *en_dir(Vector2 direccion);
+    };
+
+    class VelocidadAngular : public Intercambio
+    {
+    public:
+        VelocidadAngular(Vector2 magnitud);
+
+        void aplicar(Vector2 direccion, Particula *particula) override;
+    };
+
+    class Torque : public Intercambio
+    {
+    public:
+        Torque(Vector2 magnitud);
+
+        void aplicar(Vector2 direccion, Particula *particula) override;
     };
 }

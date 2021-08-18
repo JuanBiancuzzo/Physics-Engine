@@ -37,8 +37,7 @@ void Sistema::expandir_interacciones()
 }
 
 Particula::Particula(cr::InfoCuerpo *info, Vector2 velocidad, float velocidad_angular, float coeficiente)
-    : m_info(info), m_velocidad(velocidad), m_velocidad_angular(velocidad_angular), m_coeficiente(coeficiente),
-      m_velocidad_guardada(velocidad), m_es_estatico(false)
+    : m_info(info), m_coeficiente(coeficiente), m_es_estatico(false)
 {
 }
 
@@ -62,7 +61,8 @@ void Particula::agregar_interaccion(Particula *referencia)
 bool Particula::expandir()
 {
     // if ((m_fuerza.nulo() && m_velocidad.nulo()) || m_es_estatico)
-    if (m_velocidad.nulo() || m_es_estatico)
+    // if (m_velocidad.nulo() || m_es_estatico)
+    if (m_es_estatico)
         return true;
 
     bool hay_interaccion = false;
@@ -70,7 +70,8 @@ bool Particula::expandir()
     {
         // bool resultado = this->choque_de_fuerzas(interaccion.particula, interaccion.normal, interaccion.impacto);
         // bool resultado |= this->choque_de_velocidades(interaccion.particula, interaccion.normal, interaccion.impacto);
-        bool resultado = this->choque_de_velocidades(interaccion.particula, interaccion.normal, interaccion.impacto);
+        // bool resultado = this->choque_de_velocidades(interaccion.particula, interaccion.normal, interaccion.impacto);
+        bool resultado = false;
         if (resultado)
             agregar_elemento(interaccion.particula);
         hay_interaccion |= resultado;
@@ -83,7 +84,7 @@ void Particula::actualizar()
 {
     if (!m_es_estatico)
     {
-        m_velocidad = m_velocidad_guardada;
+        // m_velocidad = m_velocidad_guardada;
         // m_fuerza = m_fuerza_guardada;
     }
     resetear();
@@ -134,42 +135,90 @@ void Particula::aplicar_fuerza(Intercambio *intercambio)
 //     }
 // }
 
-bool Particula::choque_de_velocidades(Particula *particula, Vector2 &normal, Caracteristica impacto)
+// bool Particula::choque_de_velocidades(Particula *particula, Vector2 &normal, Caracteristica impacto)
+// {
+//     if (m_es_estatico || particula->en_historial(this))
+//         return false;
+
+//     Vector2 fuerza_choque = fuerza_de_choque(particula, normal);
+
+//     if (fuerza_choque * normal > 0 && m_velocidad * normal > 0)
+//     {
+//         particula->m_velocidad_guardada += fuerza_choque / particula->m_info->masa;
+//         // particula->rotacion_por_choque(fuerza_choque, impacto);
+
+//         m_velocidad_guardada -= fuerza_choque / m_info->masa;
+//         // rotacion_por_choque(fuerza_choque * -1.0f, impacto);
+//         return true;
+//     }
+
+//     return false;
+// }
+
+// Vector2 Particula::fuerza_de_choque(Particula *particula, Vector2 &direccion)
+// {
+//     float masa = (particula->m_es_estatico) ? m_info->masa : particula->m_info->masa;
+//     float coeficiente = (particula->m_es_estatico) ? m_coeficiente : particula->m_coeficiente;
+
+//     float coeficiente_total = (m_coeficiente + coeficiente) / 4.0f + .5f;
+
+//     Vector2 velocidad_relativa = velocidad_en_direccion(direccion) - particula->velocidad_en_direccion(direccion);
+//     float promedio_de_masas = (m_info->masa + masa) / 2.0f;
+
+//     Vector2 fuerza = (velocidad_relativa * m_info->masa * masa) / (promedio_de_masas);
+
+//     return fuerza * coeficiente_total * (particula->m_es_estatico ? 2.0f : 1.0f);
+// }
+
+// Vector2 Particula::velocidad_en_direccion(Vector2 &direccion)
+// {
+//     return m_velocidad.proyeccion(direccion);
+// }
+
+Intercambio::Intercambio(Vector2 magnitud)
+    : m_magnitud(magnitud)
 {
-    if (m_es_estatico || particula->en_historial(this))
-        return false;
-
-    Vector2 fuerza_choque = fuerza_de_choque(particula, normal);
-
-    if (fuerza_choque * normal > 0 && m_velocidad * normal > 0)
-    {
-        particula->m_velocidad_guardada += fuerza_choque / particula->m_info->masa;
-        // particula->rotacion_por_choque(fuerza_choque, impacto);
-
-        m_velocidad_guardada -= fuerza_choque / m_info->masa;
-        // rotacion_por_choque(fuerza_choque * -1.0f, impacto);
-        return true;
-    }
-
-    return false;
 }
 
-Vector2 Particula::fuerza_de_choque(Particula *particula, Vector2 &direccion)
+Velocidad::Velocidad(Vector2 magnitud)
+    : Intercambio(magnitud)
 {
-    float masa = (particula->m_es_estatico) ? m_info->masa : particula->m_info->masa;
-    float coeficiente = (particula->m_es_estatico) ? m_coeficiente : particula->m_coeficiente;
-
-    float coeficiente_total = (m_coeficiente + coeficiente) / 4.0f + .5f;
-
-    Vector2 velocidad_relativa = velocidad_en_direccion(direccion) - particula->velocidad_en_direccion(direccion);
-    float promedio_de_masas = (m_info->masa + masa) / 2.0f;
-
-    Vector2 fuerza = (velocidad_relativa * m_info->masa * masa) / (promedio_de_masas);
-
-    return fuerza * coeficiente_total * (particula->m_es_estatico ? 2.0f : 1.0f);
 }
 
-Vector2 Particula::velocidad_en_direccion(Vector2 &direccion)
+void Velocidad::aplicar(Vector2 direccion, Particula *particula)
 {
-    return m_velocidad.proyeccion(direccion);
+}
+
+Fuerza::Fuerza(Vector2 magnitud)
+    : Intercambio(magnitud)
+{
+}
+
+void Fuerza::aplicar(Vector2 direccion, Particula *particula)
+{
+    particula->aplicar_fuerza(this->en_dir(direccion));
+}
+
+Intercambio *Fuerza::en_dir(Vector2 direccion)
+{
+    m_magnitud = m_magnitud.proyeccion(direccion);
+    return this;
+}
+
+VelocidadAngular::VelocidadAngular(Vector2 magnitud)
+    : Intercambio(magnitud)
+{
+}
+
+void VelocidadAngular::aplicar(Vector2 direccion, Particula *particula)
+{
+}
+
+Torque::Torque(Vector2 magnitud)
+    : Intercambio(magnitud)
+{
+}
+
+void Torque::aplicar(Vector2 direccion, Particula *particula)
+{
 }
