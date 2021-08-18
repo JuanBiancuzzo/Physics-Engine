@@ -41,8 +41,6 @@ namespace sistema
         float m_velocidad_angular;
         std::vector<Interaccion> m_interacciones;
         std::vector<std::pair<Intercambio *, bool>> m_fuerzas;
-
-    protected:
         bool m_es_estatico;
 
     public:
@@ -53,67 +51,84 @@ namespace sistema
         void agregar_interaccion(Particula *referencia);
         bool expandir();
         void actualizar();
+        void velocidad_final();
 
         void aplicar_fuerza(Intercambio *fuerza);
         void aplicar_fuerza(Intercambio *fuerza, bool alocado);
 
-        // void aplicar_torque(float torque);
-        // void aplicar_fuerza(Vector2 fuerza);
-
-    private:
-        // bool choque_de_fuerzas(Particula *particula, Vector2 &normal, Caracteristica impacto);
-        // bool choque_de_velocidades(Particula *particula, Vector2 &normal, Caracteristica impacto);
-
-        // void rotacion_por_choque(Vector2 fuerza, Caracteristica impacto);
-
-        // Vector2 fuerza_de_choque(Particula *particula, Vector2 &direccion);
-        // Vector2 velocidad_en_direccion(Vector2 &direccion);
+        Vector2 fuerza_de_choque(Particula *particula, Vector2 &direccion);
     };
 
     class Intercambio
+    {
+    public:
+        ~Intercambio();
+
+        virtual bool aplicar(Vector2 direccion, Particula *particula, Particula *referencia) = 0;
+        virtual void actualizar() = 0;
+        virtual void modificar(Vector2 &velocidad, float &velocidad_angular, cr::InfoCuerpo *info) = 0;
+    };
+
+    class MagnitudVectorial : public Intercambio
     {
     protected:
         Vector2 m_magnitud;
         Vector2 m_magnitud_reservada;
 
     public:
-        Intercambio(Vector2 magnitud);
-        ~Intercambio();
+        MagnitudVectorial(Vector2 magnitud);
 
-        virtual void aplicar(Vector2 direccion, Particula *particula) = 0;
-        void actualizar();
+        void actualizar() override;
+        void reservar_magnitud(Vector2 magnitud_nueva);
     };
 
-    class Velocidad : public Intercambio
+    class MagnitudEscalar : public Intercambio
+    {
+    protected:
+        float m_magnitud;
+        float m_magnitud_reservada;
+
+    public:
+        MagnitudEscalar(float magnitud);
+
+        void actualizar() override;
+        void reservar_magnitud(float magnitud_nueva);
+    };
+
+    class Velocidad : public MagnitudVectorial
     {
     public:
         Velocidad(Vector2 magnitud);
 
-        void aplicar(Vector2 direccion, Particula *particula) override;
+        bool aplicar(Vector2 direccion, Particula *particula, Particula *referencia) override;
+        void modificar(Vector2 &velocidad, float &velocidad_angular, cr::InfoCuerpo *info) override;
     };
 
-    class Fuerza : public Intercambio
+    class Fuerza : public MagnitudVectorial
     {
     public:
         Fuerza(Vector2 magnitud);
 
-        void aplicar(Vector2 direccion, Particula *particula) override;
+        bool aplicar(Vector2 direccion, Particula *particula, Particula *referencia) override;
+        void modificar(Vector2 &velocidad, float &velocidad_angular, cr::InfoCuerpo *info) override;
         Intercambio *en_dir(Vector2 direccion);
     };
 
-    class VelocidadAngular : public Intercambio
+    class VelocidadAngular : public MagnitudEscalar
     {
     public:
-        VelocidadAngular(Vector2 magnitud);
+        VelocidadAngular(float magnitud);
 
-        void aplicar(Vector2 direccion, Particula *particula) override;
+        bool aplicar(Vector2 direccion, Particula *particula, Particula *referencia) override;
+        void modificar(Vector2 &velocidad, float &velocidad_angular, cr::InfoCuerpo *info) override;
     };
 
-    class Torque : public Intercambio
+    class Torque : public MagnitudEscalar
     {
     public:
-        Torque(Vector2 magnitud);
+        Torque(float magnitud);
 
-        void aplicar(Vector2 direccion, Particula *particula) override;
+        bool aplicar(Vector2 direccion, Particula *particula, Particula *referencia) override;
+        void modificar(Vector2 &velocidad, float &velocidad_angular, cr::InfoCuerpo *info) override;
     };
 }
