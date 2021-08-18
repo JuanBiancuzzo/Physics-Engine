@@ -46,6 +46,13 @@ Particula::Particula(cr::InfoCuerpo *info)
 {
 }
 
+Particula::~Particula()
+{
+    for (std::pair<Intercambio*, bool> intercambio : m_fuerzas)
+        if (intercambio.second)
+            delete intercambio.first;
+}
+
 void Particula::agregar_interaccion(Particula *referencia)
 {
     for (Interaccion interaccion : m_interacciones)
@@ -62,7 +69,7 @@ bool Particula::expandir()
 {
     // if ((m_fuerza.nulo() && m_velocidad.nulo()) || m_es_estatico)
     // if (m_velocidad.nulo() || m_es_estatico)
-    if (m_es_estatico)
+    if (m_es_estatico || m_fuerzas.empty())
         return true;
 
     bool hay_interaccion = false;
@@ -86,27 +93,18 @@ void Particula::actualizar()
     if (m_es_estatico)
         return;
 
-    for (Intercambio *intercambio : m_fuerzas)
-        intercambio->actualizar(); 
+    for (std::pair<Intercambio*, bool> intercambio : m_fuerzas)
+        intercambio.first->actualizar();
 }
 
 void Particula::aplicar_fuerza(Intercambio *intercambio)
 {
-    m_fuerzas.emplace_back(intercambio);
+    m_fuerzas.emplace_back(std::pair(intercambio, false));
 }
 
-void Particula::afectar_velocidad(Vector2 magnitud)
+void Particula::aplicar_fuerza(Intercambio *intercambio, bool alocado)
 {
-    if (m_es_estatico)
-        return;
-    m_velocidad += magnitud / m_info->masa;
-}
-
-void Particula::afectar_rotacion(float magnitud)
-{
-    if (m_es_estatico)
-        return;
-    m_velocidad_angular += magnitud / m_info->inercia;
+    m_fuerzas.emplace_back(std::pair(intercambio, true));
 }
 
 // void Particula::aplicar_torque(float torque)
@@ -194,6 +192,10 @@ Intercambio::Intercambio(Vector2 magnitud)
 {
 }
 
+Intercambio::~Intercambio()
+{
+}
+
 void Intercambio::actualizar()
 {
     m_magnitud = m_magnitud_reservada;
@@ -219,7 +221,8 @@ void Fuerza::aplicar(Vector2 direccion, Particula *particula)
         return;
 
     Vector2 fuerza_direccionada = m_magnitud.proyeccion(direccion);
-    particula->afectar_velocidad(fuerza_direccionada);
+    particula->aplicar_fuerza(new Fuerza(fuerza_direccionada), true);
+
     m_magnitud_reservada -= fuerza_direccionada;
 }
 

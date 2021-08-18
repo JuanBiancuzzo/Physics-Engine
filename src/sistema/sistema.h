@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 
 #include "../vector.h"
 #include "../cuerpos/gjk.h"
@@ -39,7 +40,7 @@ namespace sistema
         Vector2 m_velocidad;
         float m_velocidad_angular;
         std::vector<Interaccion> m_interacciones;
-        std::vector<Intercambio *> m_fuerzas;
+        std::vector<std::pair<Intercambio *, bool>> m_fuerzas;
 
     protected:
         bool m_es_estatico;
@@ -47,15 +48,15 @@ namespace sistema
     public:
         Particula(cr::InfoCuerpo *info, Vector2 velocidad, float velocidad_angular, float coeficiente);
         Particula(cr::InfoCuerpo *info);
+        ~Particula();
 
         void agregar_interaccion(Particula *referencia);
         bool expandir();
         void actualizar();
 
         void aplicar_fuerza(Intercambio *fuerza);
+        void aplicar_fuerza(Intercambio *fuerza, bool alocado);
 
-        void afectar_velocidad(Vector2 magnitud);
-        void afectar_rotacion(float magnitud);
         // void aplicar_torque(float torque);
         // void aplicar_fuerza(Vector2 fuerza);
 
@@ -77,6 +78,7 @@ namespace sistema
 
     public:
         Intercambio(Vector2 magnitud);
+        ~Intercambio();
 
         virtual void aplicar(Vector2 direccion, Particula *particula) = 0;
         void actualizar();
