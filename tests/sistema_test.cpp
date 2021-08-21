@@ -22,28 +22,28 @@ void velocidades(std::vector<Particula *> particulas)
 {
     std::cout << "Velocidades" << std::endl;
     for (Particula *particula : particulas)
-        std::cout << " -> " << particula->m_velocidad;
+        std::cout << " -> " << particula->velocidad();
 }
 
 TEST(SistemaTest, Dos_particulas_y_el_piso_sin_velocidad_ninguna_sus_fuerzas_finales_son_cero)
 {
     cr::Circulo cuerpo1(Vector2(.0f, 3.0f), .0f, 1.0f);
     cr::InfoCuerpo info1(&cuerpo1, 1.0f);
-    Particula particula1 = Particula(&info1, Vector2(), .0f, 1.0f);
-    Fuerza fuerza1(Vector2(.0f, -10.0f));
-    particula1.aplicar_fuerza(&fuerza1);
+    ParticulaDinamica particula1 = ParticulaDinamica(&info1, Vector2(), .0f, 1.0f);
+    std::unique_ptr<Fuerza> fuerza1(new FuerzaAplicada(Vector2(.0f, -10.0f)));
+    particula1.aplicar_fuerza(fuerza1);
 
     cr::Circulo cuerpo2(Vector2(.0f, 1.0f), .0f, 1.0f);
     cr::InfoCuerpo info2(&cuerpo2, 2.0f);
-    Particula particula2 = Particula(&info2, Vector2(), .0f, 1.0f);
-    Fuerza fuerza2(Vector2(.0f, -20.0f));
-    particula2.aplicar_fuerza(&fuerza2);
+    ParticulaDinamica particula2 = ParticulaDinamica(&info2, Vector2(), .0f, 1.0f);
+    std::unique_ptr<Fuerza> fuerza2(new FuerzaAplicada(Vector2(.0f, -20.0f)));
+    particula2.aplicar_fuerza(fuerza2);
 
     cr::Poligono<2> cuerpo_linea({Vector2(1.0f, .0f), Vector2(-1.0f, .0f)});
-    cr::InfoCuerpo info_linea(&cuerpo_linea, .0f);
-    Particula piso = Particula(&info_linea);
+    ParticulaEstatica piso = ParticulaEstatica(&cuerpo_linea);
 
-    Sistema sistema({&particula1, &particula2, &piso});
+    std::vector<Particula *> particulas = {&particula1, &particula2, &piso};
+    Sistema sistema(particulas);
 
     sistema.agregar_interaccion(&particula1, &particula2);
     sistema.agregar_interaccion(&particula2, &piso);
@@ -51,32 +51,32 @@ TEST(SistemaTest, Dos_particulas_y_el_piso_sin_velocidad_ninguna_sus_fuerzas_fin
     sistema.agregar_interaccion(&particula2, &particula1);
 
     sistema.expandir_interacciones();
-    for (Particula *p : {&particula1, &particula2, &piso})
+    for (Particula *p : particulas)
         ((Particula_pos *)p)->actualizar(1.0f);
 
-    ASSERT_EQ(particula1.m_velocidad, Vector2());
-    ASSERT_EQ(particula2.m_velocidad, Vector2());
+    ASSERT_EQ(particula1.velocidad(), Vector2());
+    ASSERT_EQ(particula2.velocidad(), Vector2());
 }
 
 TEST(SistemaTest, Dos_particulas_y_el_piso_el_primero_con_velocidad_y_rebota_con_su_velocidad_invertida)
 {
     cr::Circulo cuerpo1(Vector2(.0f, 3.0f), .0f, 1.0f);
     cr::InfoCuerpo info1(&cuerpo1, 1.0f);
-    Particula particula1 = Particula(&info1, Vector2(.0f, -10.0f), .0f, 1.0f);
-    Fuerza fuerza1(Vector2(.0f, -10.0f));
-    particula1.aplicar_fuerza(&fuerza1);
+    ParticulaDinamica particula1 = ParticulaDinamica(&info1, Vector2(.0f, -10.0f), .0f, 1.0f);
+    std::unique_ptr<Fuerza> fuerza1(new FuerzaAplicada(Vector2(.0f, -10.0f)));
+    particula1.aplicar_fuerza(fuerza1);
 
     cr::Circulo cuerpo2(Vector2(.0f, 1.0f), .0f, 1.0f);
     cr::InfoCuerpo info2(&cuerpo2, 2.0f);
-    Particula particula2 = Particula(&info2, Vector2(), .0f, 1.0f);
-    Fuerza fuerza2(Vector2(.0f, -20.0f));
-    particula2.aplicar_fuerza(&fuerza2);
+    ParticulaDinamica particula2 = ParticulaDinamica(&info2, Vector2(), .0f, 1.0f);
+    std::unique_ptr<Fuerza> fuerza2(new FuerzaAplicada(Vector2(.0f, -20.0f)));
+    particula2.aplicar_fuerza(fuerza2);
 
     cr::Poligono<2> cuerpo_linea({Vector2(1.0f, .0f), Vector2(-1.0f, .0f)});
-    cr::InfoCuerpo info_linea(&cuerpo_linea, .0f);
-    Particula piso = Particula(&info_linea);
+    ParticulaEstatica piso = ParticulaEstatica(&cuerpo_linea);
 
-    Sistema sistema({&particula1, &particula2, &piso});
+    std::vector<Particula *> particulas = {&particula1, &particula2, &piso};
+    Sistema sistema(particulas);
 
     sistema.agregar_interaccion(&particula1, &particula2);
     sistema.agregar_interaccion(&particula2, &piso);
@@ -84,11 +84,11 @@ TEST(SistemaTest, Dos_particulas_y_el_piso_el_primero_con_velocidad_y_rebota_con
     sistema.agregar_interaccion(&particula2, &particula1);
 
     sistema.expandir_interacciones();
-    for (Particula *p : {&particula1, &particula2, &piso})
+    for (Particula *p : particulas)
         ((Particula_pos *)p)->actualizar(1.0f);
 
-    ASSERT_EQ(particula1.m_velocidad, Vector2(.0f, 7.777f));
-    ASSERT_EQ(particula2.m_velocidad, Vector2(.0f, 4.444f));
+    ASSERT_EQ(particula1.velocidad(), Vector2(.0f, 7.777f));
+    ASSERT_EQ(particula2.velocidad(), Vector2(.0f, 4.444f));
 }
 
 // TEST(SistemaTest, Dos_particulas_sobre_el_piso_una_tiene_velocidad_y_terminan_intercambiando_velocidades)
