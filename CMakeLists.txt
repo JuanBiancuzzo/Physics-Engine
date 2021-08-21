@@ -15,6 +15,8 @@ add_library(Core
   ${SOURCE_SISTEMA}/sistema.cpp
   ${SOURCE_SISTEMA}/caracteristica.cpp
   ${SOURCE_SISTEMA}/historial.h
+  ${SOURCE_SISTEMA}/fuerza.cpp
+  ${SOURCE_SISTEMA}/particula.cpp
   ${SOURCE_CUERPOS}/cuerpoRigido.cpp
   ${SOURCE_CUERPOS}/gjk.cpp
   ${SOURCE_CUERPOS}/poligono.h
