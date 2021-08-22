@@ -15,14 +15,14 @@ namespace sistema
         cr::CuerpoRigido *m_cuerpo;
 
     public:
-        std::vector<std::unique_ptr<Fuerza>> m_fuerzas;
+        std::vector<std::shared_ptr<Fuerza>> m_fuerzas;
         std::vector<Interaccion> m_interacciones;
 
     public:
         Particula(cr::CuerpoRigido *cuerpo);
         virtual ~Particula() = default;
 
-        void aplicar_fuerza(std::unique_ptr<Fuerza> &fuerza);
+        void aplicar_fuerza(std::shared_ptr<Fuerza> &fuerza);
         void agregar_interaccion(Particula *referencia);
 
         virtual bool expandir() = 0;

@@ -32,7 +32,7 @@ bool Velocidad::aplicar(Vector2 direccion, Particula *particula, Particula *refe
     if (fuerza_choque * direccion <= 0)
         return false;
 
-    std::unique_ptr<Fuerza> fuerza(new Velocidad(fuerza_choque));
+    std::shared_ptr<Fuerza> fuerza(new Velocidad(fuerza_choque));
     referencia->aplicar_fuerza(fuerza);
 
     reservar_magnitud(fuerza_choque * -1.0f);
@@ -55,7 +55,7 @@ bool FuerzaAplicada::aplicar(Vector2 direccion, Particula *particula, Particula 
         return false;
 
     Vector2 fuerza_direccionada = m_magnitud.proyeccion(direccion);
-    std::unique_ptr<Fuerza> fuerza(new FuerzaAplicada(fuerza_direccionada));
+    std::shared_ptr<Fuerza> fuerza(new FuerzaAplicada(fuerza_direccionada));
     referencia->aplicar_fuerza(fuerza);
 
     reservar_magnitud(fuerza_direccionada * -1.0f);

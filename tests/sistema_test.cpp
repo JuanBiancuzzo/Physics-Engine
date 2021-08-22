@@ -30,13 +30,13 @@ TEST(SistemaTest, Dos_particulas_y_el_piso_sin_velocidad_ninguna_sus_fuerzas_fin
     cr::Circulo cuerpo1(Vector2(.0f, 3.0f), .0f, 1.0f);
     cr::InfoCuerpo info1(&cuerpo1, 1.0f);
     ParticulaDinamica particula1 = ParticulaDinamica(&info1, Vector2(), .0f, 1.0f);
-    std::unique_ptr<Fuerza> fuerza1(new FuerzaAplicada(Vector2(.0f, -10.0f)));
+    std::shared_ptr<Fuerza> fuerza1(new FuerzaAplicada(Vector2(.0f, -10.0f)));
     particula1.aplicar_fuerza(fuerza1);
 
     cr::Circulo cuerpo2(Vector2(.0f, 1.0f), .0f, 1.0f);
     cr::InfoCuerpo info2(&cuerpo2, 2.0f);
     ParticulaDinamica particula2 = ParticulaDinamica(&info2, Vector2(), .0f, 1.0f);
-    std::unique_ptr<Fuerza> fuerza2(new FuerzaAplicada(Vector2(.0f, -20.0f)));
+    std::shared_ptr<Fuerza> fuerza2(new FuerzaAplicada(Vector2(.0f, -20.0f)));
     particula2.aplicar_fuerza(fuerza2);
 
     cr::Poligono<2> cuerpo_linea({Vector2(1.0f, .0f), Vector2(-1.0f, .0f)});
@@ -63,13 +63,13 @@ TEST(SistemaTest, Dos_particulas_y_el_piso_el_primero_con_velocidad_y_rebota_con
     cr::Circulo cuerpo1(Vector2(.0f, 3.0f), .0f, 1.0f);
     cr::InfoCuerpo info1(&cuerpo1, 1.0f);
     ParticulaDinamica particula1 = ParticulaDinamica(&info1, Vector2(.0f, -10.0f), .0f, 1.0f);
-    std::unique_ptr<Fuerza> fuerza1(new FuerzaAplicada(Vector2(.0f, -10.0f)));
+    std::shared_ptr<Fuerza> fuerza1(new FuerzaAplicada(Vector2(.0f, -10.0f)));
     particula1.aplicar_fuerza(fuerza1);
 
     cr::Circulo cuerpo2(Vector2(.0f, 1.0f), .0f, 1.0f);
     cr::InfoCuerpo info2(&cuerpo2, 2.0f);
     ParticulaDinamica particula2 = ParticulaDinamica(&info2, Vector2(), .0f, 1.0f);
-    std::unique_ptr<Fuerza> fuerza2(new FuerzaAplicada(Vector2(.0f, -20.0f)));
+    std::shared_ptr<Fuerza> fuerza2(new FuerzaAplicada(Vector2(.0f, -20.0f)));
     particula2.aplicar_fuerza(fuerza2);
 
     cr::Poligono<2> cuerpo_linea({Vector2(1.0f, .0f), Vector2(-1.0f, .0f)});
