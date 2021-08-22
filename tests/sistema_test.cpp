@@ -5,19 +5,6 @@
 
 using namespace sistema;
 
-class Particula_pos : public Particula
-{
-public:
-    void actualizar(float dt)
-    {
-        // m_velocidad += (m_fuerza * dt) / m_cuerpo->m_masa;
-        // m_fuerza *= .0f;
-        // if (m_cuerpo->m_inercia != .0f)
-        //     m_velocidad_angular += (m_torque * dt) / m_cuerpo->m_inercia;
-        // m_torque *= .0f;
-    }
-};
-
 void velocidades(std::vector<Particula *> particulas)
 {
     std::cout << "Velocidades" << std::endl;
@@ -52,8 +39,6 @@ TEST(SistemaTest, Dos_particulas_y_el_piso_sin_velocidad_ninguna_sus_fuerzas_fin
     sistema.agregar_interaccion(&particula2, &particula1);
 
     sistema.expandir_interacciones();
-    for (Particula *p : particulas)
-        ((Particula_pos *)p)->actualizar(1.0f);
 
     ASSERT_EQ(particula1.velocidad(), Vector2());
     ASSERT_EQ(particula2.velocidad(), Vector2());
@@ -86,8 +71,7 @@ TEST(SistemaTest, Dos_particulas_y_el_piso_el_primero_con_velocidad_y_rebota_con
     sistema.agregar_interaccion(&particula2, &particula1);
 
     sistema.expandir_interacciones();
-    for (Particula *p : particulas)
-        ((Particula_pos *)p)->actualizar(1.0f);
+    velocidades(particulas);
 
     ASSERT_EQ(particula1.velocidad(), Vector2(.0f, 7.777f));
     ASSERT_EQ(particula2.velocidad(), Vector2(.0f, 4.444f));

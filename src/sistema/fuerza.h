@@ -58,7 +58,6 @@ namespace sistema
 
         bool aplicar(Vector2 direccion, Particula *particula, Particula *referencia) override;
         void modificar(Vector2 &velocidad, float &velocidad_angular, cr::InfoCuerpo *info) override;
-        Fuerza *en_dir(Vector2 direccion);
     };
 
     class VelocidadAngular : public MagnitudEscalar

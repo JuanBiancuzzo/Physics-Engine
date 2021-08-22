@@ -24,7 +24,7 @@ Velocidad::Velocidad(Vector2 magnitud)
 
 bool Velocidad::aplicar(Vector2 direccion, Particula *particula, Particula *referencia)
 {
-    if (!referencia->puede_interactuar(referencia) || m_magnitud * direccion <= 0)
+    if (!particula->puede_interactuar(referencia) || m_magnitud * direccion <= 0)
         return false;
 
     Vector2 fuerza_choque = ((ParticulaDinamica *)particula)->fuerza_de_choque(referencia, direccion);
@@ -41,7 +41,7 @@ bool Velocidad::aplicar(Vector2 direccion, Particula *particula, Particula *refe
 
 void Velocidad::modificar(Vector2 &velocidad, float &velocidad_angular, cr::InfoCuerpo *info)
 {
-    velocidad += m_magnitud;
+    velocidad += m_magnitud_reservada;
 }
 
 FuerzaAplicada::FuerzaAplicada(Vector2 magnitud)
@@ -51,7 +51,7 @@ FuerzaAplicada::FuerzaAplicada(Vector2 magnitud)
 
 bool FuerzaAplicada::aplicar(Vector2 direccion, Particula *particula, Particula *referencia)
 {
-    if (!referencia->puede_interactuar(referencia) || m_magnitud * direccion <= 0)
+    if (!particula->puede_interactuar(referencia) || m_magnitud * direccion <= 0)
         return false;
 
     Vector2 fuerza_direccionada = m_magnitud.proyeccion(direccion);
@@ -65,13 +65,7 @@ bool FuerzaAplicada::aplicar(Vector2 direccion, Particula *particula, Particula 
 void FuerzaAplicada::modificar(Vector2 &velocidad, float &velocidad_angular, cr::InfoCuerpo *info)
 {
     if (info->masa > 0)
-        velocidad += m_magnitud / info->masa;
-}
-
-Fuerza *FuerzaAplicada::en_dir(Vector2 direccion)
-{
-    m_magnitud = m_magnitud.proyeccion(direccion);
-    return this;
+        velocidad += m_magnitud_reservada / info->masa;
 }
 
 MagnitudEscalar::MagnitudEscalar(float magnitud)
