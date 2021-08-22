@@ -12,8 +12,8 @@ namespace sistema
         virtual ~Fuerza() = default;
 
         virtual bool aplicar(Vector2 direccion, Particula *particula, Particula *referencia) = 0;
-        virtual void actualizar() = 0;
         virtual void modificar(Vector2 &velocidad, float &velocidad_angular, cr::InfoCuerpo *info) = 0;
+        virtual void actualizar() = 0;
     };
 
     class MagnitudVectorial : public Fuerza

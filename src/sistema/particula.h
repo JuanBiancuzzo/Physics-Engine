@@ -9,17 +9,37 @@ namespace sistema
     class Interaccion;
     class Fuerza;
 
+    class ConjuntoFuerzas
+    {
+    protected:
+        cr::InfoCuerpo *m_info;
+        std::vector<std::shared_ptr<Fuerza>> m_fuerzas;
+        bool m_actualizado;
+        Vector2 m_velocidad;
+        float m_velocidad_angular;
+
+    public:
+        ConjuntoFuerzas(cr::InfoCuerpo *info);
+
+        void agregar_fuerza(std::shared_ptr<Fuerza> fuerza);
+        void modificar(Vector2 &velocidad, float &velocidad_angular);
+        bool aplicar(Vector2 direccion, Particula *particula, Particula *referencia);
+
+        void actualizar();
+        bool vacio();
+    };
+
     class Particula : public Historial<Particula *>
     {
     protected:
-        cr::CuerpoRigido *m_cuerpo;
+        cr::InfoCuerpo *m_info;
 
     public:
-        std::vector<std::shared_ptr<Fuerza>> m_fuerzas;
+        ConjuntoFuerzas m_fuerzas;
         std::vector<Interaccion> m_interacciones;
 
     public:
-        Particula(cr::CuerpoRigido *cuerpo);
+        Particula(cr::InfoCuerpo *info);
         virtual ~Particula() = default;
 
         void aplicar_fuerza(std::shared_ptr<Fuerza> &fuerza);
@@ -36,7 +56,6 @@ namespace sistema
     class ParticulaDinamica : public Particula
     {
     public:
-        cr::InfoCuerpo *m_info;
         float m_coeficiente;
 
     public:
@@ -55,7 +74,7 @@ namespace sistema
     class ParticulaEstatica : public Particula
     {
     public:
-        ParticulaEstatica(cr::CuerpoRigido *cuerpo);
+        ParticulaEstatica(cr::InfoCuerpo *info);
 
         bool expandir() override;
         void actualizar() override;

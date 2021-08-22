@@ -2,14 +2,55 @@
 
 using namespace sistema;
 
-Particula::Particula(cr::CuerpoRigido *cuerpo)
-    : m_cuerpo(cuerpo)
+ConjuntoFuerzas::ConjuntoFuerzas(cr::InfoCuerpo *info)
+    : m_info(info), m_actualizado(false), m_velocidad_angular(.0f)
+{
+}
+
+void ConjuntoFuerzas::agregar_fuerza(std::shared_ptr<Fuerza> fuerza)
+{
+    m_actualizado = false;
+    m_fuerzas.emplace_back(fuerza);
+}
+
+void ConjuntoFuerzas::modificar(Vector2 &velocidad, float &velocidad_angular)
+{
+    if (!m_actualizado)
+        for (std::shared_ptr<Fuerza> fuerza : m_fuerzas)
+            fuerza->modificar(m_velocidad, m_velocidad_angular, m_info);
+
+    velocidad = m_velocidad;
+    velocidad_angular = m_velocidad_angular;
+    m_actualizado = true;
+}
+
+bool ConjuntoFuerzas::aplicar(Vector2 direccion, Particula *particula, Particula *referencia)
+{
+    bool resultado = false;
+    for (std::shared_ptr<Fuerza> fuerza : m_fuerzas)
+        resultado |= fuerza->aplicar(direccion, particula, referencia);
+    return resultado;
+}
+
+void ConjuntoFuerzas::actualizar()
+{
+    for (std::shared_ptr<Fuerza> intercambio : m_fuerzas)
+        intercambio->actualizar();
+}
+
+bool ConjuntoFuerzas::vacio()
+{
+    return m_fuerzas.empty();
+}
+
+Particula::Particula(cr::InfoCuerpo *info)
+    : m_info(info), m_fuerzas(info)
 {
 }
 
 void Particula::aplicar_fuerza(std::shared_ptr<Fuerza> &fuerza)
 {
-    m_fuerzas.emplace_back(fuerza);
+    m_fuerzas.agregar_fuerza(fuerza);
 }
 
 void Particula::agregar_interaccion(Particula *referencia)
@@ -18,34 +59,36 @@ void Particula::agregar_interaccion(Particula *referencia)
         if (interaccion.particula == referencia)
             return;
 
-    cr::PuntoDeColision pdc = m_cuerpo->punto_de_colision(referencia->m_cuerpo);
+    cr::PuntoDeColision pdc = m_info->cuerpo->punto_de_colision(referencia->m_info->cuerpo);
     Interaccion interaccion = {referencia, pdc.normal, pdc.caracteristica};
 
     m_interacciones.emplace_back(interaccion);
 }
 
 ParticulaDinamica::ParticulaDinamica(cr::InfoCuerpo *info, Vector2 velocidad, float velocidad_angular, float coeficiente)
-    : Particula(info->cuerpo), m_info(info), m_coeficiente(coeficiente)
+    : Particula(info), m_coeficiente(coeficiente)
 {
     std::shared_ptr<Fuerza> velocidad_cuerpo(new Velocidad(velocidad));
     aplicar_fuerza(velocidad_cuerpo);
+
     std::shared_ptr<Fuerza> velocidad_angular_cuerpo(new VelocidadAngular(velocidad_angular));
     aplicar_fuerza(velocidad_angular_cuerpo);
 }
 
 bool ParticulaDinamica::expandir()
 {
-    if (m_fuerzas.empty())
+    if (m_fuerzas.vacio())
         return true;
 
     bool hay_interaccion = false;
+
     for (Interaccion interaccion : m_interacciones)
     {
-        for (std::shared_ptr<Fuerza> intercambio : m_fuerzas)
-            hay_interaccion |= intercambio->aplicar(interaccion.normal, this, interaccion.particula);
+        bool resultado = m_fuerzas.aplicar(interaccion.normal, this, interaccion.particula);
 
         if (resultado)
             agregar_elemento(interaccion.particula);
+        hay_interaccion |= resultado;
     }
 
     return !hay_interaccion;
@@ -54,8 +97,7 @@ bool ParticulaDinamica::expandir()
 void ParticulaDinamica::actualizar()
 {
     resetear();
-    for (std::shared_ptr<Fuerza> intercambio : m_fuerzas)
-        intercambio->actualizar();
+    m_fuerzas.actualizar();
 }
 
 bool ParticulaDinamica::puede_interactuar(Particula *referencia)
@@ -135,12 +177,22 @@ Vector2 ParticulaDinamica::velocidad()
 {
     // for (std::pair<Fuerza *, bool> intercambio : m_fuerzas)
     //     intercambio.first->modificar(m_velocidad, m_velocidad_angular, m_info);
-    return Vector2();
+    Vector2 velocidad;
+    float rotacion = 0;
+
+    m_fuerzas.modificar(velocidad, rotacion);
+
+    return velocidad;
 }
 
 float ParticulaDinamica::velocidad_angular()
 {
-    return .0f;
+    Vector2 velocidad;
+    float rotacion = 0;
+
+    m_fuerzas.modificar(velocidad, rotacion);
+
+    return rotacion;
 }
 
 // hay que corregirlo
@@ -160,8 +212,8 @@ Vector2 ParticulaDinamica::fuerza_de_choque(Particula *particula, Vector2 &direc
     return Vector2();
 }
 
-ParticulaEstatica::ParticulaEstatica(cr::CuerpoRigido *cuerpo)
-    : Particula(cuerpo)
+ParticulaEstatica::ParticulaEstatica(cr::InfoCuerpo *info)
+    : Particula(info)
 {
 }
 

@@ -40,7 +40,8 @@ TEST(SistemaTest, Dos_particulas_y_el_piso_sin_velocidad_ninguna_sus_fuerzas_fin
     particula2.aplicar_fuerza(fuerza2);
 
     cr::Poligono<2> cuerpo_linea({Vector2(1.0f, .0f), Vector2(-1.0f, .0f)});
-    ParticulaEstatica piso = ParticulaEstatica(&cuerpo_linea);
+    cr::InfoCuerpo info_linea(&cuerpo_linea, .0f);
+    ParticulaEstatica piso = ParticulaEstatica(&info_linea);
 
     std::vector<Particula *> particulas = {&particula1, &particula2, &piso};
     Sistema sistema(particulas);
@@ -73,7 +74,8 @@ TEST(SistemaTest, Dos_particulas_y_el_piso_el_primero_con_velocidad_y_rebota_con
     particula2.aplicar_fuerza(fuerza2);
 
     cr::Poligono<2> cuerpo_linea({Vector2(1.0f, .0f), Vector2(-1.0f, .0f)});
-    ParticulaEstatica piso = ParticulaEstatica(&cuerpo_linea);
+    cr::InfoCuerpo info_linea(&cuerpo_linea, .0f);
+    ParticulaEstatica piso = ParticulaEstatica(&info_linea);
 
     std::vector<Particula *> particulas = {&particula1, &particula2, &piso};
     Sistema sistema(particulas);
