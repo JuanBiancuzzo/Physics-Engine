@@ -44,7 +44,7 @@ struct Vector2
 
 inline std::ostream &operator<<(std::ostream &os, const Vector2 &s)
 {
-    return (os << "(" << s.x << ", " << s.y << ")" << std::endl);
+    return (os << "(" << s.x << ", " << s.y << ")");
 }
 
 struct Vector3
@@ -85,5 +85,5 @@ struct Vector3
 
 inline std::ostream &operator<<(std::ostream &os, const Vector3 &s)
 {
-    return (os << "(" << s.x << ", " << s.y << ", " << s.z << ")" << std::endl);
+    return (os << "(" << s.x << ", " << s.y << ", " << s.z << ")");
 }
