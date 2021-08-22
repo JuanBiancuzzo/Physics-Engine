@@ -27,7 +27,8 @@ bool Velocidad::aplicar(Vector2 direccion, Particula *particula, Particula *refe
     if (!particula->puede_interactuar(referencia) || m_magnitud * direccion <= 0)
         return false;
 
-    Vector2 fuerza_choque = ((ParticulaDinamica *)particula)->fuerza_de_choque(referencia, direccion);
+    Vector2 fuerza_choque = particula->fuerza_de_choque(referencia, direccion);
+    std::cout << fuerza_choque << ", " << direccion << std::endl;
 
     if (fuerza_choque * direccion <= 0)
         return false;

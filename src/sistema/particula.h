@@ -51,6 +51,12 @@ namespace sistema
 
         virtual Vector2 velocidad() = 0;
         virtual float velocidad_angular() = 0;
+
+        virtual float masa(float segunda_opcion) = 0;
+        virtual float coeficiente(float segunda_opcion) = 0;
+        virtual bool refleja_fuerza() = 0;
+
+        virtual Vector2 fuerza_de_choque(Particula *particula, Vector2 &direccion) = 0;
     };
 
     class ParticulaDinamica : public Particula
@@ -68,7 +74,11 @@ namespace sistema
         Vector2 velocidad() override;
         float velocidad_angular() override;
 
-        Vector2 fuerza_de_choque(Particula *particula, Vector2 &direccion);
+        float masa(float segunda_opcion) override;
+        float coeficiente(float segunda_opcion) override;
+        bool refleja_fuerza() override;
+
+        Vector2 fuerza_de_choque(Particula *particula, Vector2 &direccion) override;
     };
 
     class ParticulaEstatica : public Particula
@@ -82,5 +92,11 @@ namespace sistema
 
         Vector2 velocidad() override;
         float velocidad_angular() override;
+
+        float masa(float segunda_opcion) override;
+        float coeficiente(float segunda_opcion) override;
+        bool refleja_fuerza() override;
+
+        Vector2 fuerza_de_choque(Particula *particula, Vector2 &direccion) override;
     };
 }

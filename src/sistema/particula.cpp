@@ -175,8 +175,6 @@ bool Particula::choque_de_velocidades(Particula *particula, Vector2 &normal, Car
 
 Vector2 ParticulaDinamica::velocidad()
 {
-    // for (std::pair<Fuerza *, bool> intercambio : m_fuerzas)
-    //     intercambio.first->modificar(m_velocidad, m_velocidad_angular, m_info);
     Vector2 velocidad;
     float rotacion = 0;
 
@@ -195,21 +193,36 @@ float ParticulaDinamica::velocidad_angular()
     return rotacion;
 }
 
-// hay que corregirlo
+float ParticulaDinamica::masa(float segunda_opcion)
+{
+    return m_info->masa;
+}
+
+float ParticulaDinamica::coeficiente(float segunda_opcion)
+{
+    return m_coeficiente;
+}
+
+bool ParticulaDinamica::refleja_fuerza()
+{
+    return false;
+}
+
+// esta funcionando mal porque se le pregunta particula->velocidad() y por lo tanto se actualiza
+// entonces y produce que su velocidad sea otra que no deberia
 Vector2 ParticulaDinamica::fuerza_de_choque(Particula *particula, Vector2 &direccion)
 {
-    // float masa = (particula->m_es_estatico) ? m_info->masa : particula->m_info->masa;
-    // float coeficiente = (particula->m_es_estatico) ? m_coeficiente : particula->m_coeficiente;
+    float masa = particula->masa(m_info->masa);
+    float coeficiente = particula->coeficiente(m_coeficiente);
 
-    // float coeficiente_total = (m_coeficiente + coeficiente) / 4.0f + .5f;
+    float coeficiente_total = (m_coeficiente + coeficiente) / 4.0f + .5f;
 
-    // Vector2 velocidad_relativa = velocidad().proyeccion(direccion) - particula->velocidad().proyeccion(direccion);
-    // float promedio_de_masas = (m_info->masa + masa) / 2.0f;
+    Vector2 velocidad_relativa = velocidad().proyeccion(direccion) - particula->velocidad().proyeccion(direccion);
+    float promedio_de_masas = (m_info->masa + masa) / 2.0f;
 
-    // Vector2 fuerza = (velocidad_relativa * m_info->masa * masa) / (promedio_de_masas);
+    Vector2 fuerza = (velocidad_relativa * m_info->masa * masa) / (promedio_de_masas);
 
-    // return fuerza * coeficiente_total * (particula->m_es_estatico ? 2.0f : 1.0f);
-    return Vector2();
+    return fuerza * coeficiente_total * (particula->refleja_fuerza() ? 2.0f : 1.0f);
 }
 
 ParticulaEstatica::ParticulaEstatica(cr::InfoCuerpo *info)
@@ -240,4 +253,24 @@ Vector2 ParticulaEstatica::velocidad()
 float ParticulaEstatica::velocidad_angular()
 {
     return .0f;
+}
+
+float ParticulaEstatica::masa(float segunda_opcion)
+{
+    return segunda_opcion;
+}
+
+float ParticulaEstatica::coeficiente(float segunda_opcion)
+{
+    return segunda_opcion;
+}
+
+bool ParticulaEstatica::refleja_fuerza()
+{
+    return true;
+}
+
+Vector2 ParticulaEstatica::fuerza_de_choque(Particula *particula, Vector2 &direccion)
+{
+    return Vector2();
 }
