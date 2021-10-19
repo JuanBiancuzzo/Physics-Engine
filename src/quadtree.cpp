@@ -27,7 +27,10 @@ void eliminar_de_lista(std::vector<T> &lista, T elemento)
 {
     for (auto it = lista.begin(); it < lista.end(); it++)
         if (*it == elemento)
+        {
             lista.erase(it);
+            return;
+        }
 }
 
 template <typename T>
@@ -91,13 +94,6 @@ Node::Node(Vector2 posicion, float ancho, float alto)
 Node::Node(cr::AABB &aabb)
     : m_area(aabb), m_cant_entidades(0)
 {
-}
-
-Node::~Node()
-{
-    if (!m_subdivisiones.empty())
-        for (Node *subdivision : m_subdivisiones)
-            delete subdivision;
 }
 
 bool Node::insertar(Entidad *entidad)

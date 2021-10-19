@@ -41,7 +41,6 @@ namespace qt
     public:
         Node(Vector2 posicion, float ancho, float alto);
         Node(cr::AABB &aabb);
-        ~Node();
 
         bool insertar(Entidad *entidad);
         bool eliminar(Entidad *entidad);
