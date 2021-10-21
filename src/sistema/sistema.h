@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "vector.h"
+#include "../vector.h"
 
 namespace sistema
 {
