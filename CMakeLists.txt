@@ -6,13 +6,13 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp -o3")
 set(SOURCE "${PROJECT_SOURCE_DIR}/src")
 set(SOURCE_CUERPOS "${PROJECT_SOURCE_DIR}/src/cuerpos")
+set(SOURCE_SISTEMA "${PROJECT_SOURCE_DIR}/src/sistema")
 
 add_library(Core
   ${SOURCE}/motorDeFisicas.cpp
   ${SOURCE}/quadtree.cpp
-  ${SOURCE}/sistema.cpp
-  ${SOURCE}/colisionesContinuas.cpp
   ${SOURCE}/vector.cpp
+  ${SOURCE_SISTEMA}/sistema.cpp
   ${SOURCE_CUERPOS}/cuerpoRigido.cpp
   ${SOURCE_CUERPOS}/gjk.cpp
   ${SOURCE_CUERPOS}/poligono.cpp
@@ -40,7 +40,6 @@ target_sources(tests PRIVATE
     ${TEST}/sistema_test.cpp
     ${TEST}/cuerpos_test.cpp
     ${TEST}/quadtree_test.cpp
-    ${TEST}/colisionesContinuas_test.cpp
 )
 set_target_properties(tests PROPERTIES COMPILE_FLAGS "${cxx_strict}")
 target_link_libraries(tests gtest gtest_main Core)
