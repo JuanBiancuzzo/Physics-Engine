@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../src/sistema.h"
+#include "../src/sistema/sistema.h"
 
 using namespace sistema;
 
