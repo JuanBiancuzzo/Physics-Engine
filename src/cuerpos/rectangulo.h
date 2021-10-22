@@ -5,8 +5,7 @@
 
 namespace cr
 {
-
-    class AABB : public CuerpoRigido
+    class Rectangulo : public CuerpoRigido
     {
     public:
         float m_ancho, m_alto;
@@ -15,7 +14,7 @@ namespace cr
         std::array<Vector2, 4> m_vertices;
 
     public:
-        AABB(Vector2 posicion, float ancho, float alto);
+        Rectangulo(Vector2 posicion, float rotacion, float ancho, float alto);
 
         void modificar_posicion(Vector2 valor) override;
         void modificar_rotacion(float valor) override;
@@ -26,4 +25,4 @@ namespace cr
         CuerpoRigido *copia(Vector2 posicion) override;
         float calcular_inercia(float masa) override;
     };
-}
+};

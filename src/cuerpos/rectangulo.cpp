@@ -1,40 +1,43 @@
-#include "AABB.h"
+#include "rectangulo.h"
 
 using namespace cr;
 
-AABB::AABB(Vector2 posicion, float ancho, float alto)
-    : CuerpoRigido(posicion), m_ancho(ancho), m_alto(alto)
+Rectangulo::Rectangulo(Vector2 posicion, float rotacion, float ancho, float alto)
+    : CuerpoRigido(posicion, rotacion), m_ancho(ancho), m_alto(alto)
 {
     calcular_vertices();
 }
 
-void AABB::modificar_posicion(Vector2 valor)
+void Rectangulo::modificar_posicion(Vector2 valor)
 {
     m_posicion += valor;
     for (Vector2 vertice : m_vertices)
         vertice += valor;
 }
 
-void AABB::modificar_rotacion(float valor)
+void Rectangulo::modificar_rotacion(float valor)
 {
+    m_rotacion += valor;
+    for (Vector2 vertice : m_vertices)
+        vertice = (vertice - m_posicion).rotar(valor) + m_posicion;
 }
 
-void AABB::calcular_vertices()
+void Rectangulo::calcular_vertices()
 {
-    m_vertices[0] = Vector2(m_posicion.x + m_ancho, m_posicion.y - m_alto);
-    m_vertices[1] = Vector2(m_posicion.x + m_ancho, m_posicion.y + m_alto);
-    m_vertices[2] = Vector2(m_posicion.x - m_ancho, m_posicion.y + m_alto);
-    m_vertices[3] = Vector2(m_posicion.x - m_ancho, m_posicion.y - m_alto);
+    m_vertices[0] = m_posicion + (Vector2(m_ancho, .0f).rotar(m_rotacion));
+    m_vertices[1] = m_posicion + (Vector2(-m_ancho, .0f).rotar(m_rotacion));
+    m_vertices[2] = m_posicion + (Vector2(.0f, m_alto).rotar(m_rotacion));
+    m_vertices[3] = m_posicion + (Vector2(.0f, -m_alto).rotar(m_rotacion));
 }
 
-Vector2 AABB::punto_soporte(Vector2 direccion)
+Vector2 Rectangulo::punto_soporte(Vector2 dir)
 {
     Vector2 punto_soporte;
     float distanciaMaxima = std::numeric_limits<float>::min();
 
     for (Vector2 vertice : m_vertices)
     {
-        float distancia = (vertice - m_posicion) * direccion;
+        float distancia = (vertice - m_posicion) * dir;
         if (distancia > distanciaMaxima)
         {
             distanciaMaxima = distancia;
@@ -45,7 +48,7 @@ Vector2 AABB::punto_soporte(Vector2 direccion)
     return punto_soporte;
 }
 
-sistema::Caracteristica AABB::caracteristica_en_dir(Vector2 dir)
+sistema::Caracteristica Rectangulo::caracteristica_en_dir(Vector2 dir)
 {
     sistema::Caracteristica caracteristica;
     float distanciaMaxima = std::numeric_limits<float>::min();
@@ -67,12 +70,12 @@ sistema::Caracteristica AABB::caracteristica_en_dir(Vector2 dir)
     return caracteristica;
 }
 
-CuerpoRigido *AABB::copia(Vector2 posicion)
+CuerpoRigido *Rectangulo::copia(Vector2 posicion)
 {
-    return new AABB(m_posicion + posicion, m_ancho, m_alto);
+    return new Rectangulo(m_posicion + posicion, m_rotacion, m_ancho, m_alto);
 }
 
-float AABB::calcular_inercia(float masa)
+float Rectangulo::calcular_inercia(float masa)
 {
     float masa_individual = masa / 4;
     float inercia = .0f;

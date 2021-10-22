@@ -3,18 +3,46 @@
 
 using namespace cr;
 
-CuerpoRigido::CuerpoRigido(Vector2 posicion)
-    : m_posicion(posicion)
+CuerpoRigido::CuerpoRigido(Vector2 posicion, float rotacion)
+    : m_posicion(posicion), m_rotacion(rotacion)
 {
 }
 
-PuntoDeColision CuerpoRigido::colisiona(CuerpoRigido *cuerpo_rigido)
+CuerpoRigido::CuerpoRigido(Vector2 posicion)
+    : m_posicion(posicion), m_rotacion(.0f)
 {
-    Gjk gjk(this, cuerpo_rigido);
+}
 
-    Vector2 diferencia = cuerpo_rigido->m_posicion - m_posicion;
-    float distancia = diferencia.modulo();
-    Vector2 normal = diferencia.normal();
+void CuerpoRigido::modificar_posicion(Vector2 valor)
+{
+    m_posicion += valor;
+}
 
-    return {normal, distancia, gjk.colisionan()};
+void CuerpoRigido::modificar_rotacion(float valor)
+{
+    m_rotacion += valor;
+}
+
+PuntoDeColision CuerpoRigido::punto_de_colision(CuerpoRigido *cuerpo_rigido)
+{
+    gjk::Gjk gjk(this, cuerpo_rigido);
+    gjk::Info_colision info = gjk.info_de_colision();
+
+    sistema::Caracteristica cuerpo1 = this->caracteristica_en_dir(info.normal);
+    sistema::Caracteristica cuerpo2 = cuerpo_rigido->caracteristica_en_dir(info.normal * -1.0f);
+    sistema::Caracteristica interseccion = cuerpo1.intersecta(cuerpo2);
+
+    return {interseccion, info.normal, info.colision};
+}
+
+bool CuerpoRigido::colisiona(CuerpoRigido *cuerpo_rigido)
+{
+    gjk::Gjk gjk(this, cuerpo_rigido);
+
+    return gjk.colisionan();
+}
+
+InfoCuerpo::InfoCuerpo(CuerpoRigido *_cuerpo, float _masa)
+    : cuerpo(_cuerpo), masa(_masa), inercia(_cuerpo->calcular_inercia(_masa))
+{
 }
