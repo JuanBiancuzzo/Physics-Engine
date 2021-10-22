@@ -14,6 +14,7 @@ add_library(Core
   ${SOURCE}/vector.cpp
   ${SOURCE_SISTEMA}/sistema.cpp
   ${SOURCE_SISTEMA}/atributos.cpp
+  ${SOURCE_SISTEMA}/historial.h
   ${SOURCE_CUERPOS}/cuerpoRigido.cpp
   ${SOURCE_CUERPOS}/gjk.cpp
   ${SOURCE_CUERPOS}/poligono.cpp
