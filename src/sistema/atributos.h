@@ -6,7 +6,7 @@ namespace sistema
     class Interactuar
     {  
     public:
-        virtual void interactuar(Particula *referencia, Interaccion interaccion) = 0;
+        virtual bool interactuar(Particula *referencia, Interaccion interaccion) = 0;
     };
 
     class Avanzar
@@ -22,7 +22,7 @@ namespace sistema
     public:
         Fuerza(Vector2 magnitud);
 
-        void interactuar(Particula *referencia, Interaccion interaccion);
+        bool interactuar(Particula *referencia, Interaccion interaccion);
         void avanzar(Particula *referencia);
 
         void operator+=(Fuerza otro);
@@ -35,7 +35,7 @@ namespace sistema
     public:
         Velocidad(Vector2 magnitud);
 
-        void interactuar(Particula *referencia, Interaccion interaccion);
+        bool interactuar(Particula *referencia, Interaccion interaccion);
 
         void operator+=(Velocidad otro);
     };
@@ -59,7 +59,7 @@ namespace sistema
     public:
         VelocidadAngular(float magnitud);
 
-        void interactuar(Particula *referencia, Interaccion interaccion);
+        bool interactuar(Particula *referencia, Interaccion interaccion);
 
         void operator+=(VelocidadAngular otro);
     };

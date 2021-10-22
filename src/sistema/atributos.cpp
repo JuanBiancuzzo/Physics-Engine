@@ -7,7 +7,7 @@ Fuerza::Fuerza(Vector2 magnitud = Vector2())
 {
 }
 
-void Fuerza::interactuar(Particula *referencia, Interaccion interaccion)
+bool Fuerza::interactuar(Particula *referencia, Interaccion interaccion)
 {
 }
 
@@ -25,7 +25,7 @@ Velocidad::Velocidad(Vector2 magnitud = Vector2())
 {
 }
 
-void Velocidad::interactuar(Particula *referencia, Interaccion interaccion)
+bool Velocidad::interactuar(Particula *referencia, Interaccion interaccion)
 {
 }
 
@@ -53,7 +53,7 @@ VelocidadAngular::VelocidadAngular(float magnitud = .0f)
 {
 }
 
-void VelocidadAngular::interactuar(Particula *referencia, Interaccion interaccion)
+bool VelocidadAngular::interactuar(Particula *referencia, Interaccion interaccion)
 {
 }
 
