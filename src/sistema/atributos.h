@@ -24,6 +24,8 @@ namespace sistema
 
         void interactuar(Particula *referencia, Interaccion interaccion);
         void avanzar(Particula *referencia);
+
+        void operator+=(Fuerza otro);
     };
 
     class Velocidad : public Interactuar
@@ -34,6 +36,8 @@ namespace sistema
         Velocidad(Vector2 magnitud);
 
         void interactuar(Particula *referencia, Interaccion interaccion);
+
+        void operator+=(Velocidad otro);
     };
 
     class Torque : public Avanzar
@@ -44,6 +48,8 @@ namespace sistema
         Torque(float magnitud);
 
         void avanzar(Particula *referencia);
+
+        void operator+=(Torque otro);
     };
 
     class VelocidadAngular : public Interactuar
@@ -54,5 +60,7 @@ namespace sistema
         VelocidadAngular(float magnitud);
 
         void interactuar(Particula *referencia, Interaccion interaccion);
+
+        void operator+=(VelocidadAngular otro);
     };
 }
