@@ -13,6 +13,7 @@ add_library(Core
   ${SOURCE}/quadtree.cpp
   ${SOURCE}/vector.cpp
   ${SOURCE_SISTEMA}/sistema.cpp
+  ${SOURCE_SISTEMA}/atributos.cpp
   ${SOURCE_CUERPOS}/cuerpoRigido.cpp
   ${SOURCE_CUERPOS}/gjk.cpp
   ${SOURCE_CUERPOS}/poligono.cpp
