@@ -7,8 +7,8 @@ TEST(CuerposTest, Colision_entre_circulo_y_aabb_en_rango)
 {
     AABB rect(Vector2(), 64.0f, 64.0f);
     Circulo circulo(Vector2(10.0f, 10.0f), 1.0f);
-    PuntoDeColision punto_de_colision_cr = circulo.colisiona(&rect);
-    PuntoDeColision punto_de_colision_rc = rect.colisiona(&circulo);
+    PuntoDeColision punto_de_colision_cr = circulo.punto_de_colision(&rect);
+    PuntoDeColision punto_de_colision_rc = rect.punto_de_colision(&circulo);
 
     ASSERT_TRUE(punto_de_colision_cr.colisiono);
     ASSERT_TRUE(punto_de_colision_rc.colisiono);
@@ -18,8 +18,8 @@ TEST(CuerposTest, Colision_entre_circulo_y_aabb_en_rango_y_estan_en_la_misma_pos
 {
     AABB rect(Vector2(), 64.0f, 64.0f);
     Circulo circulo(Vector2(), 1.0f);
-    PuntoDeColision punto_de_colision_cr = circulo.colisiona(&rect);
-    PuntoDeColision punto_de_colision_rc = rect.colisiona(&circulo);
+    PuntoDeColision punto_de_colision_cr = circulo.punto_de_colision(&rect);
+    PuntoDeColision punto_de_colision_rc = rect.punto_de_colision(&circulo);
 
     ASSERT_TRUE(punto_de_colision_cr.colisiono);
     ASSERT_TRUE(punto_de_colision_rc.colisiono);
@@ -29,8 +29,8 @@ TEST(CuerposTest, Colision_entre_circulo_y_aabb_en_rango_y_estan_en_la_misma_pos
 {
     AABB rect(Vector2(45.0f, 34.0f), 64.0f, 64.0f);
     Circulo circulo(Vector2(45.0f, 34.0f), 1.0f);
-    PuntoDeColision punto_de_colision_cr = circulo.colisiona(&rect);
-    PuntoDeColision punto_de_colision_rc = rect.colisiona(&circulo);
+    PuntoDeColision punto_de_colision_cr = circulo.punto_de_colision(&rect);
+    PuntoDeColision punto_de_colision_rc = rect.punto_de_colision(&circulo);
 
     ASSERT_TRUE(punto_de_colision_cr.colisiono);
     ASSERT_TRUE(punto_de_colision_rc.colisiono);
@@ -40,8 +40,8 @@ TEST(CuerposTest, Colision_entre_circulo_y_aabb_fuera_de_rango)
 {
     AABB rect(Vector2(1.0f, .0f), 64.0f, 64.0f);
     Circulo circulo(Vector2(100.0f, 100.0f), 1.0f);
-    PuntoDeColision punto_de_colision_cr = circulo.colisiona(&rect);
-    PuntoDeColision punto_de_colision_rc = rect.colisiona(&circulo);
+    PuntoDeColision punto_de_colision_cr = circulo.punto_de_colision(&rect);
+    PuntoDeColision punto_de_colision_rc = rect.punto_de_colision(&circulo);
 
     ASSERT_FALSE(punto_de_colision_cr.colisiono);
     ASSERT_FALSE(punto_de_colision_rc.colisiono);
@@ -51,8 +51,8 @@ TEST(CuerposTest, Colision_entre_circulo_y_aabb_fuera_de_rango_en_una_diagonal)
 {
     AABB rect(Vector2(.0f, .0f), 64.0f, 64.0f);
     Circulo circulo(Vector2(100.0f, -100.0f), 1.0f);
-    PuntoDeColision punto_de_colision_cr = circulo.colisiona(&rect);
-    PuntoDeColision punto_de_colision_rc = rect.colisiona(&circulo);
+    PuntoDeColision punto_de_colision_cr = circulo.punto_de_colision(&rect);
+    PuntoDeColision punto_de_colision_rc = rect.punto_de_colision(&circulo);
 
     ASSERT_FALSE(punto_de_colision_cr.colisiono);
     ASSERT_FALSE(punto_de_colision_rc.colisiono);
@@ -62,8 +62,8 @@ TEST(CuerposTest, Colision_entre_circulo_de_radio_nulo_y_aabb_en_fuera_de_rango_
 {
     AABB rect(Vector2(.0f, .0f), 64.0f, 64.0f);
     Circulo circulo(Vector2(4.0f, 20.0f), .0f);
-    PuntoDeColision punto_de_colision_cr = circulo.colisiona(&rect);
-    PuntoDeColision punto_de_colision_rc = rect.colisiona(&circulo);
+    PuntoDeColision punto_de_colision_cr = circulo.punto_de_colision(&rect);
+    PuntoDeColision punto_de_colision_rc = rect.punto_de_colision(&circulo);
 
     ASSERT_TRUE(punto_de_colision_cr.colisiono);
     ASSERT_TRUE(punto_de_colision_rc.colisiono);
@@ -73,8 +73,8 @@ TEST(CuerposTest, Colision_entre_circulo_y_aabb_y_apenas_se_tocan_y_es_valido)
 {
     AABB rect(Vector2(), 10.0f, 10.0f);
     Circulo circulo(Vector2(20.0f, .0f), 10.0f);
-    PuntoDeColision punto_de_colision_cr = circulo.colisiona(&rect);
-    PuntoDeColision punto_de_colision_rc = rect.colisiona(&circulo);
+    PuntoDeColision punto_de_colision_cr = circulo.punto_de_colision(&rect);
+    PuntoDeColision punto_de_colision_rc = rect.punto_de_colision(&circulo);
 
     ASSERT_TRUE(punto_de_colision_cr.colisiono);
     ASSERT_TRUE(punto_de_colision_rc.colisiono);
@@ -84,8 +84,8 @@ TEST(CuerposTest, Colision_entre_circulo_de_radio_nulo_y_aabb_y_apenas_se_tocan_
 {
     AABB rect(Vector2(), 10.0f, 10.0f);
     Circulo circulo(Vector2(10.0f, .0f), .0f);
-    PuntoDeColision punto_de_colision_cr = circulo.colisiona(&rect);
-    PuntoDeColision punto_de_colision_rc = rect.colisiona(&circulo);
+    PuntoDeColision punto_de_colision_cr = circulo.punto_de_colision(&rect);
+    PuntoDeColision punto_de_colision_rc = rect.punto_de_colision(&circulo);
 
     ASSERT_TRUE(punto_de_colision_cr.colisiono);
     ASSERT_TRUE(punto_de_colision_rc.colisiono);
@@ -95,8 +95,8 @@ TEST(CuerposTest, Colision_entre_circulo_de_radio_nulo_y_aabb_y_estan_puestos_en
 {
     AABB rect(Vector2(), 10.0f, 10.0f);
     Circulo circulo(Vector2(), .0f);
-    PuntoDeColision punto_de_colision_cr = circulo.colisiona(&rect);
-    PuntoDeColision punto_de_colision_rc = rect.colisiona(&circulo);
+    PuntoDeColision punto_de_colision_cr = circulo.punto_de_colision(&rect);
+    PuntoDeColision punto_de_colision_rc = rect.punto_de_colision(&circulo);
 
     ASSERT_TRUE(punto_de_colision_cr.colisiono);
     ASSERT_TRUE(punto_de_colision_rc.colisiono);

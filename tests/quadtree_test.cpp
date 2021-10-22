@@ -14,7 +14,7 @@ public:
 
     bool colisiona(cr::CuerpoRigido *area)
     {
-        return (m_cuerpo->colisiona(area).colisiono);
+        return m_cuerpo->colisiona(area);
     }
 };
 

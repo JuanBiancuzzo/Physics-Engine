@@ -17,7 +17,7 @@ add_library(Core
   ${SOURCE_SISTEMA}/historial.h
   ${SOURCE_CUERPOS}/cuerpoRigido.cpp
   ${SOURCE_CUERPOS}/gjk.cpp
-  ${SOURCE_CUERPOS}/poligono.cpp
+  ${SOURCE_CUERPOS}/poligono.h
   ${SOURCE_CUERPOS}/circulo.cpp
   ${SOURCE_CUERPOS}/AABB.cpp
 )
