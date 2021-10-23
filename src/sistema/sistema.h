@@ -3,14 +3,14 @@
 #include <vector>
 #include "../vector.h"
 #include "historial.h"
-#include "../cuerpos/cuerpoRigido.h"
+#include "../cuerpos/gjk.h"
 
 namespace sistema
 {
     // forward declaration 
     class Particula;
     class ParticulaDinamica;
-    class Interaccion;
+    class ParticulaEstatica;
 }
 
 namespace atributo
@@ -20,6 +20,11 @@ namespace atributo
     {
         sistema::Particula *m_particula;
         Vector2 m_direccion;
+
+        bool operator==(Interaccion otro)
+        {
+            return m_particula == otro.m_particula;
+        }
     };
 
     class Atributo
@@ -112,7 +117,8 @@ namespace sistema
     public:
         Sistema(std::vector<Particula *> particulas);
 
-        void agregar_interaccion(Particula *particula, Particula *referencia, Vector2 &direccion);
+        void agregar_interaccion(Particula *particula, ParticulaDinamica *referencia);
+        void agregar_interaccion(Particula *particula, ParticulaEstatica *referencia);
         void expandir_interacciones(float dt);
     };
 
@@ -129,7 +135,8 @@ namespace sistema
     public:
         Particula();
 
-        void agregar_interaccion(atributo::Interaccion interaccion);
+        virtual void agregar_interaccion(ParticulaDinamica *referencia) = 0;
+        virtual void agregar_interaccion(ParticulaEstatica *referencia) = 0;
 
         void agregar_atributo(atributo::Velocidad velocidad);
         void agregar_atributo(atributo::Fuerza fuerza);
@@ -148,10 +155,13 @@ namespace sistema
     class ParticulaDinamica : public Particula
     {
     public:
-        InfoCuerpo *m_cuerpo;
+        InfoCuerpo m_cuerpo;
 
     public:
-        ParticulaDinamica(InfoCuerpo *cuerpo);
+        ParticulaDinamica(InfoCuerpo cuerpo);
+
+        void agregar_interaccion(ParticulaDinamica *referencia);
+        void agregar_interaccion(ParticulaEstatica *referencia);
 
         bool expandir();
         void actualizar();
@@ -160,14 +170,21 @@ namespace sistema
         float masa(float segunda_opcion);
         float coeficiente(float segunda_opcion);
         bool refleja_fuerza();
+
+        Vector2 velocidad();
+        float velocidad_angular();
     };
 
     class ParticulaEstatica : public Particula
     {
+    public:
         cr::CuerpoRigido *m_cuerpo;
 
     public:
         ParticulaEstatica(cr::CuerpoRigido *cuerpo);
+
+        void agregar_interaccion(ParticulaDinamica *referencia);
+        void agregar_interaccion(ParticulaEstatica *referencia);
 
         bool expandir();
         void actualizar();

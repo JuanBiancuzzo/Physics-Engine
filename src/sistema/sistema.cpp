@@ -22,11 +22,14 @@ Sistema::Sistema(std::vector<Particula *> particulas)
 {
 }
 
-void Sistema::agregar_interaccion(Particula *particula, Particula *referencia, Vector2 &direccion)
+void Sistema::agregar_interaccion(Particula *particula, ParticulaDinamica *referencia)
 {
-    atributo::Interaccion interaccion = {referencia, direccion};
+    particula->agregar_interaccion(referencia);
+}
 
-    particula->agregar_interaccion(interaccion);
+void Sistema::agregar_interaccion(Particula *particula, ParticulaEstatica *referencia)
+{
+    particula->agregar_interaccion(referencia);
 }
 
 void Sistema::expandir_interacciones(float dt)
@@ -51,12 +54,18 @@ Particula::Particula()
 {
 }
 
-void Particula::agregar_interaccion(atributo::Interaccion interaccion)
+void ParticulaDinamica::agregar_interaccion(ParticulaDinamica *referencia)
 {
-    for (atributo::Interaccion interaccion_actual : m_interacciones)
-        if (interaccion_actual.m_particula == interaccion.m_particula)
-            return;
-    m_interacciones.emplace_back(interaccion);
+    cr::PuntoDeColision pdc = m_cuerpo.cuerpo->punto_de_colision(referencia->m_cuerpo.cuerpo);
+    atributo::Interaccion interaccion = {referencia, pdc.normal};
+    insertar_sin_repetir<atributo::Interaccion>(m_interacciones, interaccion);
+}
+
+void ParticulaDinamica::agregar_interaccion(ParticulaEstatica *referencia)
+{
+    cr::PuntoDeColision pdc = m_cuerpo.cuerpo->punto_de_colision(referencia->m_cuerpo);
+    atributo::Interaccion interaccion = {referencia, pdc.normal};
+    insertar_sin_repetir<atributo::Interaccion>(m_interacciones, interaccion);
 }
 
 void Particula::agregar_atributo(atributo::Velocidad velocidad)
@@ -79,7 +88,7 @@ void Particula::agregar_atributo(atributo::Torque torque)
     m_torque += torque;
 }
 
-ParticulaDinamica::ParticulaDinamica(InfoCuerpo *cuerpo)
+ParticulaDinamica::ParticulaDinamica(InfoCuerpo cuerpo)
     : m_cuerpo(cuerpo)
 {
 }
@@ -116,12 +125,12 @@ void ParticulaDinamica::avanzar(float dt)
 
 float ParticulaDinamica::masa(float segunda_opcion)
 {
-    return m_cuerpo->masa;
+    return m_cuerpo.masa;
 }
 
 float ParticulaDinamica::coeficiente(float segunda_opcion)
 {
-    return m_cuerpo->coeficiente;
+    return m_cuerpo.coeficiente;
 }
 
 bool ParticulaDinamica::refleja_fuerza()
@@ -129,9 +138,33 @@ bool ParticulaDinamica::refleja_fuerza()
     return false;
 }
 
+Vector2 ParticulaDinamica::velocidad()
+{
+    return m_velocidad.m_magnitud;
+}
+
+float ParticulaDinamica::velocidad_angular()
+{
+    return m_velocidad_angular.m_magnitud;
+}
+
 ParticulaEstatica::ParticulaEstatica(cr::CuerpoRigido *cuerpo)
     : m_cuerpo(cuerpo)
 {
+}
+
+void ParticulaEstatica::agregar_interaccion(ParticulaDinamica *referencia)
+{
+    cr::PuntoDeColision pdc = m_cuerpo->punto_de_colision(referencia->m_cuerpo.cuerpo);
+    atributo::Interaccion interaccion = {referencia, pdc.normal};
+    insertar_sin_repetir<atributo::Interaccion>(m_interacciones, interaccion);
+}
+
+void ParticulaEstatica::agregar_interaccion(ParticulaEstatica *referencia)
+{
+    cr::PuntoDeColision pdc = m_cuerpo->punto_de_colision(referencia->m_cuerpo);
+    atributo::Interaccion interaccion = {referencia, pdc.normal};
+    insertar_sin_repetir<atributo::Interaccion>(m_interacciones, interaccion);
 }
 
 bool ParticulaEstatica::expandir()
@@ -189,7 +222,7 @@ bool atributo::Fuerza::interactuar(ParticulaDinamica *referencia, Interaccion in
 
 void atributo::Fuerza::avanzar(ParticulaDinamica *referencia, float dt)
 {
-    Vector2 resultado = (m_magnitud * dt) / referencia->m_cuerpo->masa;
+    Vector2 resultado = (m_magnitud * dt) / referencia->m_cuerpo.masa;
     referencia->m_velocidad.m_magnitud += resultado;
 }
 
@@ -257,7 +290,7 @@ void atributo::Torque::actualizar()
 
 void atributo::Torque::avanzar(ParticulaDinamica *referencia, float dt)
 {
-    referencia->m_velocidad_angular.m_magnitud += (m_magnitud * dt) / referencia->m_cuerpo->inercia;
+    referencia->m_velocidad_angular.m_magnitud += (m_magnitud * dt) / referencia->m_cuerpo.inercia;
 }
 
 void atributo::Torque::operator+=(atributo::Torque otro)
