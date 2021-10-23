@@ -33,6 +33,7 @@ struct Vector2
     Vector2 proyeccion(const Vector2 &otro) const;
     Vector2 normal() const;
     Vector2 perpendicular() const;
+    Vector2 rotar(float radianes) const; 
 
     bool nulo() const;
 };

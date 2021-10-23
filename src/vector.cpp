@@ -104,6 +104,13 @@ Vector2 Vector2::perpendicular() const
     return Vector2(-1.0f * y, x);
 }
 
+Vector2 Vector2::rotar(float radianes) const
+{
+    float x_prima = x * cos(radianes) - y * sin(radianes);
+    float y_prima = x * sin(radianes) + y * cos(radianes);
+    return Vector2(x_prima, y_prima);
+}
+
 bool Vector2::nulo() const
 {
     return (*this == *this * .0f);
