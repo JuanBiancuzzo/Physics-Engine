@@ -12,7 +12,6 @@ add_library(Core
   ${SOURCE}/motorDeFisicas.cpp
   ${SOURCE}/quadtree.cpp
   ${SOURCE}/vector.cpp
-  ${SOURCE_SISTEMA}/atributos.cpp
   ${SOURCE_SISTEMA}/sistema.cpp
   ${SOURCE_SISTEMA}/historial.h
   ${SOURCE_CUERPOS}/cuerpoRigido.cpp
