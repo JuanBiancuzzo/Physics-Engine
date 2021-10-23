@@ -1,8 +1,17 @@
 #pragma once
-#include "sistema.h"
+
+#include "../vector.h"
 
 namespace sistema
 {
+    class Particula;
+    
+    struct Interaccion
+    {
+        Particula *m_particula;
+        Vector2 m_direccion;
+    };
+
     class Interactuar
     {  
     public:
@@ -12,7 +21,7 @@ namespace sistema
     class Avanzar
     {  
     public:
-        virtual void avanzar(Particula *referencia) = 0; 
+        virtual void avanzar(Particula *referencia, float dt) = 0; 
     };
 
     class Fuerza : public Interactuar, public Avanzar
@@ -23,7 +32,7 @@ namespace sistema
         Fuerza(Vector2 magnitud);
 
         bool interactuar(Particula *referencia, Interaccion interaccion);
-        void avanzar(Particula *referencia);
+        void avanzar(Particula *referencia, float dt);
 
         void operator+=(Fuerza otro);
     };
@@ -47,7 +56,7 @@ namespace sistema
     public:
         Torque(float magnitud);
 
-        void avanzar(Particula *referencia);
+        void avanzar(Particula *referencia, float dt);
 
         void operator+=(Torque otro);
     };

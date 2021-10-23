@@ -9,9 +9,10 @@ Fuerza::Fuerza(Vector2 magnitud = Vector2())
 
 bool Fuerza::interactuar(Particula *referencia, Interaccion interaccion)
 {
+    return true;
 }
 
-void Fuerza::avanzar(Particula *referencia)
+void Fuerza::avanzar(Particula *referencia, float)
 {
 }
 
@@ -27,6 +28,7 @@ Velocidad::Velocidad(Vector2 magnitud = Vector2())
 
 bool Velocidad::interactuar(Particula *referencia, Interaccion interaccion)
 {
+    return true;
 }
 
 void Velocidad::operator+=(Velocidad otro)
@@ -39,7 +41,7 @@ Torque::Torque(float magnitud = .0f)
 {
 }
 
-void Torque::avanzar(Particula *referencia)
+void Torque::avanzar(Particula *referencia, float)
 {
 }
 
@@ -55,6 +57,7 @@ VelocidadAngular::VelocidadAngular(float magnitud = .0f)
 
 bool VelocidadAngular::interactuar(Particula *referencia, Interaccion interaccion)
 {
+    return true;
 }
 
 void VelocidadAngular::operator+=(VelocidadAngular otro)

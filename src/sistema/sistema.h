@@ -20,7 +20,7 @@ namespace sistema
         Sistema(std::vector<Particula *> particulas);
 
         void agregar_interaccion(Particula *particula, Particula *referencia, Vector2 &direccion);
-        void expandir_interacciones();
+        void expandir_interacciones(float dt);
     };
 
     class Particula : public Historial<Particula *>
@@ -44,7 +44,8 @@ namespace sistema
         void agregar_atributo(Torque torque);
         
         virtual bool expandir() = 0;
-        virtual void actualizar() = 0;
+        virtual bool actualizar() = 0;
+        virtual void avanzar(float dt) = 0;
     };
 
     class ParticulaDinamica : public Particula
@@ -56,7 +57,8 @@ namespace sistema
         ParticulaDinamica(cr::InfoCuerpo *cuerpo);
 
         bool expandir();
-        void actualizar();
+        bool actualizar();
+        void avanzar(float dt);
     };
 
     class ParticulaEstatica : public Particula
@@ -67,58 +69,7 @@ namespace sistema
         ParticulaEstatica(cr::CuerpoRigido *cuerpo);
 
         bool expandir();
-        void actualizar();
+        bool actualizar();
+        void avanzar(float dt);
     };
-
-    struct Interaccion
-    {
-        Particula *m_particula;
-        Vector2 m_direccion;
-    };
-
-    // class Particula
-    // {
-    // public:
-    //     Velocidad m_velocidad;
-    //     Fuerza m_fuerza;
-    //     VelocidadAngular m_velocidad_angular;
-    //     Torque m_torque;
-
-    //     float m_masa, m_coeficiente;
-    //     bool m_estatica;
-    //     std::vector<Interaccion *> m_interacciones;
-
-    // private:
-    //     Vector2 m_velocidad_guardada, m_fuerza_guardada;
-    //     std::vector<Particula *> m_historial;
-
-    // public:
-    //     Particula(float masa, Vector2 velocidad, Vector2 fuerza, float coeficiente);
-    //     Particula(); // estatica
-    //     ~Particula();
-
-    //     void agregar_interaccion(Particula *referencia, Vector2 &direccion);
-    //     bool expandir();
-
-    //     void agregar_al_historial(Particula *particula);
-    //     bool visitaste(Particula *particula);
-
-    //     void actualizar();
-
-    //     void velocidad_por_choque(Vector2 fuerza_choque);
-    //     void aplicar_fuerza(Vector2 fuerza);
-    // };
-
-    // class Interaccion
-    // {
-    // public:
-    //     Particula *m_particula;
-    //     Vector2 m_direccion;
-
-    // public:
-    //     Interaccion(Particula *particula, Vector2 &direccion);
-
-    //     bool expandir(Particula *particula);
-    // };
-
 }

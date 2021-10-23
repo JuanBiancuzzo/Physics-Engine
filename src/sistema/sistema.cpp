@@ -22,7 +22,7 @@ void Sistema::agregar_interaccion(Particula *particula, Particula *referencia, V
     particula->agregar_interaccion({referencia, direccion});
 }
 
-void Sistema::expandir_interacciones()
+void Sistema::expandir_interacciones(float dt)
 {
     bool terminado = false;
     for (int i = 0; i < 10 && !terminado; i++)
@@ -34,6 +34,9 @@ void Sistema::expandir_interacciones()
         for (Particula *particula : m_particulas)
             particula->actualizar();
     }
+
+    for (Particula *particula : m_particulas)
+        particula->avanzar(dt);
 }
 
 Particula::Particula()
@@ -86,12 +89,17 @@ bool ParticulaDinamica::expandir()
     return resultado;
 }
 
-void ParticulaDinamica::actualizar()
+bool ParticulaDinamica::actualizar()
+{
+    return true;
+}
+
+void ParticulaDinamica::avanzar(float dt)
 {
     std::vector<Avanzar *> actualizables = {&m_fuerza, &m_torque};
 
     for (Avanzar *actualizable : actualizables)
-        actualizable->avanzar(this);
+        actualizable->avanzar(this, dt);
 }
 
 ParticulaEstatica::ParticulaEstatica(cr::CuerpoRigido *cuerpo)
@@ -104,7 +112,12 @@ bool ParticulaEstatica::expandir()
     return true;
 }
 
-void ParticulaEstatica::actualizar()
+bool ParticulaEstatica::actualizar()
+{
+    return true;
+}
+
+void ParticulaEstatica::avanzar(float dt)
 {
 }
 
