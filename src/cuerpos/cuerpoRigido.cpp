@@ -41,8 +41,3 @@ bool CuerpoRigido::colisiona(CuerpoRigido *cuerpo_rigido)
 
     return gjk.colisionan();
 }
-
-InfoCuerpo::InfoCuerpo(CuerpoRigido *_cuerpo, float _masa)
-    : cuerpo(_cuerpo), masa(_masa), inercia(_cuerpo->calcular_inercia(_masa))
-{
-}

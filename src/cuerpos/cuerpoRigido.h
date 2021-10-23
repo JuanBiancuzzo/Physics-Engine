@@ -34,12 +34,4 @@ namespace cr
         PuntoDeColision punto_de_colision(CuerpoRigido *cuerpo_rigido);
         bool colisiona(CuerpoRigido *cuerpo_rigido);
     };
-
-    struct InfoCuerpo
-    {
-        CuerpoRigido *cuerpo;
-        float masa, inercia;
-
-        InfoCuerpo(CuerpoRigido *_cuerpo, float _masa);
-    };
 }
