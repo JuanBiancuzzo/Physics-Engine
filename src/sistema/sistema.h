@@ -2,7 +2,6 @@
 
 #include <vector>
 #include "../vector.h"
-// #include "atributos.h"
 #include "historial.h"
 #include "../cuerpos/cuerpoRigido.h"
 
@@ -10,6 +9,7 @@ namespace sistema
 {
     // forward declaration 
     class Particula;
+    class ParticulaDinamica;
     class Interaccion;
 }
 
@@ -31,13 +31,13 @@ namespace atributo
     class Interactuar
     {  
     public:
-        virtual bool interactuar(sistema::Particula *referencia, Interaccion interaccion) = 0;
+        virtual bool interactuar(sistema::ParticulaDinamica *referencia, Interaccion interaccion) = 0;
     };
 
     class Avanzar
     {  
     public:
-        virtual void avanzar(sistema::Particula *referencia, float dt) = 0; 
+        virtual void avanzar(sistema::ParticulaDinamica *referencia, float dt) = 0; 
     };
 
     class Fuerza : public Atributo, public Interactuar, public Avanzar
@@ -48,8 +48,8 @@ namespace atributo
         Fuerza(Vector2 magnitud);
 
         void actualizar();
-        bool interactuar(sistema::Particula *referencia, Interaccion interaccion);
-        void avanzar(sistema::Particula *referencia, float dt);
+        bool interactuar(sistema::ParticulaDinamica *referencia, Interaccion interaccion);
+        void avanzar(sistema::ParticulaDinamica *referencia, float dt);
 
         void operator+=(Fuerza otro);
     };
@@ -62,7 +62,7 @@ namespace atributo
         Velocidad(Vector2 magnitud);
 
         void actualizar();
-        bool interactuar(sistema::Particula *referencia, Interaccion interaccion);
+        bool interactuar(sistema::ParticulaDinamica *referencia, Interaccion interaccion);
 
         void operator+=(Velocidad otro);
     };
@@ -75,7 +75,7 @@ namespace atributo
         Torque(float magnitud);
 
         void actualizar();
-        void avanzar(sistema::Particula *referencia, float dt);
+        void avanzar(sistema::ParticulaDinamica *referencia, float dt);
 
         void operator+=(Torque otro);
     };
@@ -88,7 +88,7 @@ namespace atributo
         VelocidadAngular(float magnitud);
 
         void actualizar();
-        bool interactuar(sistema::Particula *referencia, Interaccion interaccion);
+        bool interactuar(sistema::ParticulaDinamica *referencia, Interaccion interaccion);
 
         void operator+=(VelocidadAngular otro);
     };
