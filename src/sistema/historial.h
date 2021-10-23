@@ -13,6 +13,9 @@ namespace sistema
     public:
         void agregar_elemento(T elemento)
         {
+            for (T e : m_historial)
+                if (e == elemento)
+                    return;
             m_historial.emplace_back(elemento);
         }
 
