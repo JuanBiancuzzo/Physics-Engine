@@ -3,6 +3,7 @@
 #include <vector>
 #include "../vector.h"
 #include "historial.h"
+#include "valorReservado.h"
 #include "../cuerpos/gjk.h"
 
 namespace sistema
@@ -14,19 +15,17 @@ namespace sistema
 
     struct Interaccion
     {
-        sistema::Particula *m_particula;
-        Vector2 m_direccion;
+        sistema::Particula *particula;
+        Vector2 direccion;
 
         bool operator==(Interaccion otro)
         {
-            return m_particula == otro.m_particula;
+            return particula == otro.particula;
         }
     };
 
     class Atributo
     {
-    public:
-        virtual void actualizar() = 0;
     };
 
     class Interactuar
@@ -41,56 +40,40 @@ namespace sistema
         virtual void avanzar(sistema::ParticulaDinamica *referencia, float dt) = 0; 
     };
 
-    class Fuerza : public Atributo, public Interactuar, public Avanzar
+    class Fuerza : public Atributo, public Interactuar, public Avanzar, public ValorReservado<Vector2>
     {
-    public:
-        Vector2 m_magnitud;
     public:
         Fuerza(Vector2 magnitud);
 
-        void actualizar();
         bool interactuar(sistema::ParticulaDinamica *referencia, Interaccion interaccion);
         void avanzar(sistema::ParticulaDinamica *referencia, float dt);
-
         void operator+=(Fuerza otro);
     };
 
-    class Velocidad : public Atributo, public Interactuar
+    class Velocidad : public Atributo, public Interactuar, public ValorReservado<Vector2>
     {
-    public:
-        Vector2 m_magnitud;
     public:
         Velocidad(Vector2 magnitud);
 
-        void actualizar();
         bool interactuar(sistema::ParticulaDinamica *referencia, Interaccion interaccion);
-
         void operator+=(Velocidad otro);
     };
 
-    class Torque : public Atributo, public Avanzar
+    class Torque : public Atributo, public Avanzar, public ValorReservado<float>
     {
-    public:
-        float m_magnitud;
     public:
         Torque(float magnitud);
 
-        void actualizar();
         void avanzar(sistema::ParticulaDinamica *referencia, float dt);
-
         void operator+=(Torque otro);
     };
 
-    class VelocidadAngular : public Atributo, public Interactuar
+    class VelocidadAngular : public Atributo, public Interactuar, public ValorReservado<float>
     {
-    public:
-        float m_magnitud;
     public:
         VelocidadAngular(float magnitud);
 
-        void actualizar();
         bool interactuar(sistema::ParticulaDinamica *referencia, Interaccion interaccion);
-
         void operator+=(VelocidadAngular otro);
     };
 

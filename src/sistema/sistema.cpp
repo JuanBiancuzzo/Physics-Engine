@@ -101,17 +101,17 @@ bool ParticulaDinamica::expandir()
     for (Interaccion interaccion : m_interacciones){
         for (Interactuar *interactuable : interactuables)
             resultado &= interactuable->interactuar(this, interaccion);
-        agregar_elemento(interaccion.m_particula);   
+        agregar_elemento(interaccion.particula);   
     }
     return resultado;
 }
 
 void ParticulaDinamica::actualizar()
 {
-    std::vector<Atributo *> atributos = {&m_fuerza, &m_velocidad, &m_torque, &m_velocidad_angular};
-
-    for (Atributo *atributo : atributos)
-        atributo->actualizar();
+    m_fuerza.actualizar();
+    m_velocidad.actualizar();
+    m_torque.actualizar();
+    m_velocidad_angular.actualizar();
     resetear();
 }
 
@@ -140,12 +140,12 @@ bool ParticulaDinamica::refleja_fuerza()
 
 Vector2 ParticulaDinamica::velocidad()
 {
-    return m_velocidad.m_magnitud;
+    return m_velocidad.valor();
 }
 
 float ParticulaDinamica::velocidad_angular()
 {
-    return m_velocidad_angular.m_magnitud;
+    return m_velocidad_angular.valor();
 }
 
 ParticulaEstatica::ParticulaEstatica(cr::CuerpoRigido *cuerpo)
@@ -197,38 +197,37 @@ bool ParticulaEstatica::refleja_fuerza()
 }
 
 Fuerza::Fuerza(Vector2 magnitud = Vector2())
-    : m_magnitud(magnitud)
-{
-}
-
-void Fuerza::actualizar()
+    : ValorReservado<Vector2>(magnitud)
 {
 }
 
 bool Fuerza::interactuar(ParticulaDinamica *referencia, Interaccion interaccion)
 {
-    if (referencia->en_historial(interaccion.m_particula))
+    if (referencia->en_historial(interaccion.particula))
         return false;
 
-    Vector2 fuerza_resultante = referencia->m_fuerza.m_magnitud.proyeccion(interaccion.m_direccion);
-    if (!(fuerza_resultante * interaccion.m_direccion))
+    Vector2 fuerza_resultante = referencia->m_fuerza.valor().proyeccion(interaccion.direccion);
+    bool resultado_valido = fuerza_resultante * interaccion.direccion;
+
+    if (!resultado_valido)
         return false;
     
     referencia->m_fuerza += (fuerza_resultante * -1.0f);
-    interaccion.m_particula->m_fuerza += fuerza_resultante;
+    interaccion.particula->m_fuerza += fuerza_resultante;
 
     return true;
 }
 
 void Fuerza::avanzar(ParticulaDinamica *referencia, float dt)
 {
-    Vector2 resultado = (m_magnitud * dt) / referencia->m_cuerpo.masa;
-    referencia->m_velocidad.m_magnitud += resultado;
+    Vector2 resultado = (valor() * dt) / referencia->m_cuerpo.masa;
+    referencia->m_velocidad.nuevo_valor(resultado);
+    referencia->m_velocidad.actualizar();
 }
 
 void Fuerza::operator+=(Fuerza otro)
 {
-    m_magnitud += otro.m_magnitud;
+    nuevo_valor(otro.valor());
 }
 
 Vector2 fuerza_de_choque(ParticulaDinamica *particula, Particula *referencia, Vector2 &direccion)
@@ -241,7 +240,7 @@ Vector2 fuerza_de_choque(ParticulaDinamica *particula, Particula *referencia, Ve
 
     float coeficiente = (coeficiente1 + coeficiente2) / 4.0f + .5f;
 
-    Vector2 velocidad_de_choque = particula->m_velocidad.m_magnitud.proyeccion(direccion) - referencia->m_velocidad.m_magnitud.proyeccion(direccion);
+    Vector2 velocidad_de_choque = particula->m_velocidad.valor().proyeccion(direccion) - referencia->m_velocidad.valor().proyeccion(direccion);
     float promedio_de_masas = (masa1 + masa2) / 2.0f;
 
     Vector2 fuerza = (velocidad_de_choque * masa1 * masa2) / (promedio_de_masas);
@@ -250,60 +249,51 @@ Vector2 fuerza_de_choque(ParticulaDinamica *particula, Particula *referencia, Ve
 }
 
 Velocidad::Velocidad(Vector2 magnitud = Vector2())
-    : m_magnitud(magnitud)
-{
-}
-
-void Velocidad::actualizar()
+    : ValorReservado(magnitud)
 {
 }
 
 bool Velocidad::interactuar(ParticulaDinamica *referencia, Interaccion interaccion)
 {
-    if (referencia->en_historial(interaccion.m_particula))
+    if (referencia->en_historial(interaccion.particula))
         return false;
 
-    Vector2 fuerza_choque = fuerza_de_choque(referencia, interaccion.m_particula, interaccion.m_direccion);
+    Vector2 fuerza_choque = fuerza_de_choque(referencia, interaccion.particula, interaccion.direccion);
+    bool resultado_valido = fuerza_choque * interaccion.direccion > 0 && referencia->m_velocidad.valor() * interaccion.direccion > 0;
 
-    if (!(fuerza_choque * interaccion.m_direccion) || !(referencia->m_velocidad.m_magnitud * interaccion.m_direccion))
+    if (!resultado_valido)
         return false;
 
     referencia->m_fuerza += (fuerza_choque * -1.0f);
-    interaccion.m_particula->m_fuerza += fuerza_choque;
+    interaccion.particula->m_fuerza += fuerza_choque;
 
     return true;
 }
 
 void Velocidad::operator+=(Velocidad otro)
 {
-    m_magnitud += otro.m_magnitud;
+    nuevo_valor(otro.valor());
 }
 
 Torque::Torque(float magnitud = .0f)
-    : m_magnitud(magnitud)
-{
-}
-
-void Torque::actualizar()
+    : ValorReservado<float>(magnitud)
 {
 }
 
 void Torque::avanzar(ParticulaDinamica *referencia, float dt)
 {
-    referencia->m_velocidad_angular.m_magnitud += (m_magnitud * dt) / referencia->m_cuerpo.inercia;
+    float resultado = (valor() * dt) / referencia->m_cuerpo.inercia;
+    referencia->m_velocidad_angular.nuevo_valor(resultado);
+    referencia->m_velocidad_angular.actualizar();
 }
 
 void Torque::operator+=(Torque otro)
 {
-    m_magnitud += otro.m_magnitud;
+    nuevo_valor(otro.valor());
 }
 
 VelocidadAngular::VelocidadAngular(float magnitud = .0f)
-    : m_magnitud(magnitud)
-{
-}
-
-void VelocidadAngular::actualizar()
+    : ValorReservado(magnitud)
 {
 }
 
@@ -314,5 +304,5 @@ bool VelocidadAngular::interactuar(ParticulaDinamica *referencia, Interaccion in
 
 void VelocidadAngular::operator+=(VelocidadAngular otro)
 {
-    m_magnitud += otro.m_magnitud;
+    nuevo_valor(otro.valor());
 }
