@@ -11,10 +11,6 @@ namespace sistema
     class Particula;
     class ParticulaDinamica;
     class ParticulaEstatica;
-}
-
-namespace atributo
-{
 
     struct Interaccion
     {
@@ -97,10 +93,7 @@ namespace atributo
 
         void operator+=(VelocidadAngular otro);
     };
-}
 
-namespace sistema
-{
     struct InfoCuerpo
     {
         cr::CuerpoRigido *cuerpo;
@@ -125,12 +118,12 @@ namespace sistema
     class Particula : public Historial<Particula *>
     {
     public: 
-        atributo::Velocidad m_velocidad;
-        atributo::Fuerza m_fuerza;
-        atributo::VelocidadAngular m_velocidad_angular;
-        atributo::Torque m_torque;
+        Velocidad m_velocidad;
+        Fuerza m_fuerza;
+        VelocidadAngular m_velocidad_angular;
+        Torque m_torque;
 
-        std::vector<atributo::Interaccion> m_interacciones;
+        std::vector<Interaccion> m_interacciones;
 
     public:
         Particula();
@@ -138,10 +131,10 @@ namespace sistema
         virtual void agregar_interaccion(ParticulaDinamica *referencia) = 0;
         virtual void agregar_interaccion(ParticulaEstatica *referencia) = 0;
 
-        void agregar_atributo(atributo::Velocidad velocidad);
-        void agregar_atributo(atributo::Fuerza fuerza);
-        void agregar_atributo(atributo::VelocidadAngular velocidad_angular);
-        void agregar_atributo(atributo::Torque torque);
+        void agregar_atributo(Velocidad velocidad);
+        void agregar_atributo(Fuerza fuerza);
+        void agregar_atributo(VelocidadAngular velocidad_angular);
+        void agregar_atributo(Torque torque);
         
         virtual bool expandir() = 0;
         virtual void actualizar() = 0;

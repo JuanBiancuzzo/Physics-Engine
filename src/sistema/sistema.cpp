@@ -57,33 +57,33 @@ Particula::Particula()
 void ParticulaDinamica::agregar_interaccion(ParticulaDinamica *referencia)
 {
     cr::PuntoDeColision pdc = m_cuerpo.cuerpo->punto_de_colision(referencia->m_cuerpo.cuerpo);
-    atributo::Interaccion interaccion = {referencia, pdc.normal};
-    insertar_sin_repetir<atributo::Interaccion>(m_interacciones, interaccion);
+    Interaccion interaccion = {referencia, pdc.normal};
+    insertar_sin_repetir<Interaccion>(m_interacciones, interaccion);
 }
 
 void ParticulaDinamica::agregar_interaccion(ParticulaEstatica *referencia)
 {
     cr::PuntoDeColision pdc = m_cuerpo.cuerpo->punto_de_colision(referencia->m_cuerpo);
-    atributo::Interaccion interaccion = {referencia, pdc.normal};
-    insertar_sin_repetir<atributo::Interaccion>(m_interacciones, interaccion);
+    Interaccion interaccion = {referencia, pdc.normal};
+    insertar_sin_repetir<Interaccion>(m_interacciones, interaccion);
 }
 
-void Particula::agregar_atributo(atributo::Velocidad velocidad)
+void Particula::agregar_atributo(Velocidad velocidad)
 {
     m_velocidad += velocidad;
 }
 
-void Particula::agregar_atributo(atributo::Fuerza fuerza)
+void Particula::agregar_atributo(Fuerza fuerza)
 {
     m_fuerza += fuerza;
 }
 
-void Particula::agregar_atributo(atributo::VelocidadAngular velocidad_angular)
+void Particula::agregar_atributo(VelocidadAngular velocidad_angular)
 {
     m_velocidad_angular += velocidad_angular;
 }
 
-void Particula::agregar_atributo(atributo::Torque torque)
+void Particula::agregar_atributo(Torque torque)
 {
     m_torque += torque;
 }
@@ -95,11 +95,11 @@ ParticulaDinamica::ParticulaDinamica(InfoCuerpo cuerpo)
 
 bool ParticulaDinamica::expandir()
 {
-    std::vector<atributo::Interactuar *> interactuables = {&m_fuerza, &m_velocidad, &m_velocidad_angular};
+    std::vector<Interactuar *> interactuables = {&m_fuerza, &m_velocidad, &m_velocidad_angular};
     bool resultado = true;
 
-    for (atributo::Interaccion interaccion : m_interacciones){
-        for (atributo::Interactuar *interactuable : interactuables)
+    for (Interaccion interaccion : m_interacciones){
+        for (Interactuar *interactuable : interactuables)
             resultado &= interactuable->interactuar(this, interaccion);
         agregar_elemento(interaccion.m_particula);   
     }
@@ -108,18 +108,18 @@ bool ParticulaDinamica::expandir()
 
 void ParticulaDinamica::actualizar()
 {
-    std::vector<atributo::Atributo *> atributos = {&m_fuerza, &m_velocidad, &m_torque, &m_velocidad_angular};
+    std::vector<Atributo *> atributos = {&m_fuerza, &m_velocidad, &m_torque, &m_velocidad_angular};
 
-    for (atributo::Atributo *atributo : atributos)
+    for (Atributo *atributo : atributos)
         atributo->actualizar();
     resetear();
 }
 
 void ParticulaDinamica::avanzar(float dt)
 {
-    std::vector<atributo::Avanzar *> actualizables = {&m_fuerza, &m_torque};
+    std::vector<Avanzar *> actualizables = {&m_fuerza, &m_torque};
 
-    for (atributo::Avanzar *actualizable : actualizables)
+    for (Avanzar *actualizable : actualizables)
         actualizable->avanzar(this, dt);
 }
 
@@ -156,15 +156,15 @@ ParticulaEstatica::ParticulaEstatica(cr::CuerpoRigido *cuerpo)
 void ParticulaEstatica::agregar_interaccion(ParticulaDinamica *referencia)
 {
     cr::PuntoDeColision pdc = m_cuerpo->punto_de_colision(referencia->m_cuerpo.cuerpo);
-    atributo::Interaccion interaccion = {referencia, pdc.normal};
-    insertar_sin_repetir<atributo::Interaccion>(m_interacciones, interaccion);
+    Interaccion interaccion = {referencia, pdc.normal};
+    insertar_sin_repetir<Interaccion>(m_interacciones, interaccion);
 }
 
 void ParticulaEstatica::agregar_interaccion(ParticulaEstatica *referencia)
 {
     cr::PuntoDeColision pdc = m_cuerpo->punto_de_colision(referencia->m_cuerpo);
-    atributo::Interaccion interaccion = {referencia, pdc.normal};
-    insertar_sin_repetir<atributo::Interaccion>(m_interacciones, interaccion);
+    Interaccion interaccion = {referencia, pdc.normal};
+    insertar_sin_repetir<Interaccion>(m_interacciones, interaccion);
 }
 
 bool ParticulaEstatica::expandir()
@@ -196,16 +196,16 @@ bool ParticulaEstatica::refleja_fuerza()
     return true;
 }
 
-atributo::Fuerza::Fuerza(Vector2 magnitud = Vector2())
+Fuerza::Fuerza(Vector2 magnitud = Vector2())
     : m_magnitud(magnitud)
 {
 }
 
-void atributo::Fuerza::actualizar()
+void Fuerza::actualizar()
 {
 }
 
-bool atributo::Fuerza::interactuar(ParticulaDinamica *referencia, Interaccion interaccion)
+bool Fuerza::interactuar(ParticulaDinamica *referencia, Interaccion interaccion)
 {
     if (referencia->en_historial(interaccion.m_particula))
         return false;
@@ -220,13 +220,13 @@ bool atributo::Fuerza::interactuar(ParticulaDinamica *referencia, Interaccion in
     return true;
 }
 
-void atributo::Fuerza::avanzar(ParticulaDinamica *referencia, float dt)
+void Fuerza::avanzar(ParticulaDinamica *referencia, float dt)
 {
     Vector2 resultado = (m_magnitud * dt) / referencia->m_cuerpo.masa;
     referencia->m_velocidad.m_magnitud += resultado;
 }
 
-void atributo::Fuerza::operator+=(atributo::Fuerza otro)
+void Fuerza::operator+=(Fuerza otro)
 {
     m_magnitud += otro.m_magnitud;
 }
@@ -249,16 +249,16 @@ Vector2 fuerza_de_choque(ParticulaDinamica *particula, Particula *referencia, Ve
     return fuerza * coeficiente * (referencia->refleja_fuerza() ? 2.0f : 1.0f);
 }
 
-atributo::Velocidad::Velocidad(Vector2 magnitud = Vector2())
+Velocidad::Velocidad(Vector2 magnitud = Vector2())
     : m_magnitud(magnitud)
 {
 }
 
-void atributo::Velocidad::actualizar()
+void Velocidad::actualizar()
 {
 }
 
-bool atributo::Velocidad::interactuar(ParticulaDinamica *referencia, atributo::Interaccion interaccion)
+bool Velocidad::interactuar(ParticulaDinamica *referencia, Interaccion interaccion)
 {
     if (referencia->en_historial(interaccion.m_particula))
         return false;
@@ -274,45 +274,45 @@ bool atributo::Velocidad::interactuar(ParticulaDinamica *referencia, atributo::I
     return true;
 }
 
-void atributo::Velocidad::operator+=(atributo::Velocidad otro)
+void Velocidad::operator+=(Velocidad otro)
 {
     m_magnitud += otro.m_magnitud;
 }
 
-atributo::Torque::Torque(float magnitud = .0f)
+Torque::Torque(float magnitud = .0f)
     : m_magnitud(magnitud)
 {
 }
 
-void atributo::Torque::actualizar()
+void Torque::actualizar()
 {
 }
 
-void atributo::Torque::avanzar(ParticulaDinamica *referencia, float dt)
+void Torque::avanzar(ParticulaDinamica *referencia, float dt)
 {
     referencia->m_velocidad_angular.m_magnitud += (m_magnitud * dt) / referencia->m_cuerpo.inercia;
 }
 
-void atributo::Torque::operator+=(atributo::Torque otro)
+void Torque::operator+=(Torque otro)
 {
     m_magnitud += otro.m_magnitud;
 }
 
-atributo::VelocidadAngular::VelocidadAngular(float magnitud = .0f)
+VelocidadAngular::VelocidadAngular(float magnitud = .0f)
     : m_magnitud(magnitud)
 {
 }
 
-void atributo::VelocidadAngular::actualizar()
+void VelocidadAngular::actualizar()
 {
 }
 
-bool atributo::VelocidadAngular::interactuar(ParticulaDinamica *referencia, Interaccion interaccion)
+bool VelocidadAngular::interactuar(ParticulaDinamica *referencia, Interaccion interaccion)
 {
     return true;
 }
 
-void atributo::VelocidadAngular::operator+=(atributo::VelocidadAngular otro)
+void VelocidadAngular::operator+=(VelocidadAngular otro)
 {
     m_magnitud += otro.m_magnitud;
 }
