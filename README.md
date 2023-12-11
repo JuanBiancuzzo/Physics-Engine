@@ -1,11 +1,7 @@
-# Game of Life meets physics
-
-La idea de este proyecto es principalmente crear un juego lo mas desde 0 que pueda. Tambien es una forma de aprender herramientas nuevas que nunca use como lo puede ser OpengGl o Vulkan
-
-El juego consiste de falling sand simulator, pero con el twist que realmente es una simulacion de muchas particulas que despues se va a mostrar como si fuera una matriz. El motivo de esto es que a mi me gusta mucho los falling sand simulators pero me gustaria poder agregarle fisicas mas realistas, pero en el proceso de pensar como hacerlo note lo complicado que se hace estan en una matriz entonces descarte la idea de la matriz para el computo del motivimiento, resultando en lo que quiero hacer actualmente
+# Physics Engine
+La intención de este proyecto es crear un motor de físicas, con un método propio, para experimentar con la creación de un proyecto a mayor escala.
 
 ## Idea de progreso
-El primer paso, y en el que estoy, es crear un motor de fisicas que pueda manejar muchas particulas interactuando entre si, y lo divide en lo siguiente
 * [Cuerpos rigidos](#Cuerpos-rigidos)
 * [Deteccion de colisiones](#Deteccion-de-colisiones)
 * [Resolucion de interseccion](#Resolucion-de-interseccion)
